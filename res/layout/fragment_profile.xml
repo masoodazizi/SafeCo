@@ -1,0 +1,198 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.parse.f8.view.ProfileFragment" >
+
+    <!-- TODO: Update blank fragment layout -->
+
+<!--     <TextView -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="match_parent" -->
+<!--         android:text="Profile Fragment" /> -->
+
+<LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="10dp"
+    android:background="@color/background_body"
+    android:orientation="vertical" >
+
+	<LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/border"
+        android:orientation="horizontal" >
+            
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+           
+            <ImageView
+                android:id="@+id/profile_photo"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_margin="3dp"
+                android:src="@drawable/abc_ab_bottom_solid_dark_holo" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+            
+            <TextView
+                android:id="@+id/txtName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#333" />
+            
+            <TextView
+                android:id="@+id/profile_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:textColor="#333"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/txtEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/txtGender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+	    
+	
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+         android:background="@drawable/border"
+        android:orientation="vertical" >
+        
+        <TextView
+            android:id="@+id/lbl_update_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Update Status:"
+            android:textColor="@color/hackerway"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/txt_status_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="6"
+            android:inputType="textMultiLine"
+            android:textColor="@color/black" >
+
+            <requestFocus />
+        </EditText>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/lbl_with"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="With: "
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/monetize" />
+
+            <EditText
+                android:id="@+id/txt_with"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="Mathias"
+                android:textColor="@color/navy"
+                android:textSize="12dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/lbl_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Time: "
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/monetize" />
+
+            <EditText
+                android:id="@+id/txt_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_weight="1"
+                android:ems="6"
+                android:textColor="@color/navy"
+                android:textSize="12dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/lbl_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Location: "
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/monetize" />
+
+            <EditText
+                android:id="@+id/txt_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_weight="1"
+                android:ems="6"
+                android:text="RWTH Aachen Informatik-Zentrum, Ahornstraße 55 , 52074 Aachen"
+                android:textColor="@color/navy"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_post"
+            android:layout_width="262dp"
+            android:layout_height="34dp"
+            android:background="@color/thegarage"
+            android:text="Post" />
+
+    </LinearLayout>
+
+</LinearLayout>
+
+</ScrollView>
