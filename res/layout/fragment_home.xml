@@ -2,12 +2,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_color"
-    tools:context="com.parse.f8.view.HomeFragment">
+    tools:context="com.parse.f8.view.HomeFragment" >
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Home Fragment" />
+<!--     <TextView -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="match_parent" -->
+<!--         android:text="Home Fragment" /> -->
+
+    <ListView
+        android:id="@+id/list_newsfeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:divider="@android:color/transparent"
+  		android:dividerHeight="10.0sp" >
+    </ListView>
 
 </FrameLayout>
+<!--     android:background="@color/background_color" -->

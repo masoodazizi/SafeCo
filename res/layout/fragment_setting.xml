@@ -5,23 +5,296 @@
     android:layout_height="match_parent"
     android:background="@color/background_color"
     android:orientation="vertical"
+    android:layout_marginLeft="10dp"
     tools:context="com.parse.f8.view.SettingFragment" >
 
-    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/button1"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:textColor="@color/navy"
+            android:text="Simple" />
+
+        <Button
+            android:id="@+id/button2"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:textColor="@color/navy"
+            android:text="Advanced" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/lbl_privacyProfiles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/black"
+        android:layout_marginLeft="5dp"
+        android:text="Privacy Profiles: "
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <RadioGroup 
+        android:id="@+id/rgroup_simpleprivacy"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:layout_marginLeft="5dp"
+	    android:layout_marginBottom="30dp"
+	    android:orientation="vertical">
+	    <RadioButton 
+	        android:id="@+id/rbtn_simpleprivacy_normal"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="Normal (Default)"
+	        android:textColor="@color/green"
+	        android:checked="true"
+	        android:onClick="onRadioButtonClicked"/>
+	    <RadioButton 
+	        android:id="@+id/rbtn_simpleprivacy_fair"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="Fair"
+	        android:textColor="@color/yellow"
+	        android:onClick="onRadioButtonClicked"/>
+   	    <RadioButton 
+   	        android:id="@+id/rbtn_simpleprivacy_strict"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="Strict"
+	        android:textColor="@color/Orange"
+	        android:onClick="onRadioButtonClicked"/>
+	    <RadioButton 
+	        android:id="@+id/rbtn_simpleprivacy_full"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="Full"
+	        android:textColor="@color/red"
+	        android:onClick="onRadioButtonClicked"/>
+   	    <RadioButton 
+   	        android:id="@+id/rbtn_simpleprivacy_custom"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="Custom"
+	        android:textColor="@color/blue"
+	        android:onClick="onRadioButtonClicked"/>
+	</RadioGroup>
 
     <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_margin="10dp"
-        android:layout_weight="1"
-        android:background="@color/grow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/lbl_customprivacy_blank"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="2" />
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:orientation="vertical" >
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/lbl_customprivacy_low"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="Low"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/DarkBlue" />
+
+            <TextView
+                android:id="@+id/lbl_customprivacy_medium"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Medium"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/DarkBlue" />
+
+            <TextView
+                android:id="@+id/lbl_customprivacy_high"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="High"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/DarkBlue" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" >
+
+        <TextView
+            android:id="@+id/lbl_customprivacy_identity"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="2"
+            android:text="Identity: "
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/DarkBlue" />
+
+        <RadioGroup
+            android:id="@+id/rgroup_customprivacy_identity"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/rbtn_customprivacy_identity_low"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:onClick="onRadioButtonClicked" />
+
+            <RadioButton
+                android:id="@+id/rbtn_customprivacy_identity_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onRadioButtonClicked" />
+
+            <RadioButton
+                android:id="@+id/rbtn_customprivacy_identity_high"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onRadioButtonClicked" />
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" >
+
+        <TextView
+            android:id="@+id/lbl_customprivacy_time"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="2"
+            android:text="Time: "
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/DarkBlue" />
+
+        <RadioGroup
+            android:id="@+id/rgroup_customprivacy_time"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"            
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/rbtn_customprivacy_time_low"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:onClick="onRadioButtonClicked" />
+
+            <RadioButton
+                android:id="@+id/rbtn_customprivacy_time_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onRadioButtonClicked" />
+
+            <RadioButton
+                android:id="@+id/rbtn_customprivacy_time_high"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onRadioButtonClicked" />
+
+        </RadioGroup>
+
+    </LinearLayout>
+    
+	<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" >
+
+        <TextView
+            android:id="@+id/lbl_customprivacy_location"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="2"
+            android:text="Location: "
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/DarkBlue" />
+
+        <RadioGroup
+            android:id="@+id/rgroup_customprivacy_location"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"            
+            android:layout_weight="1"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/rbtn_customprivacy_location_low"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:onClick="onRadioButtonClicked" />
+
+            <RadioButton
+                android:id="@+id/rbtn_customprivacy_location_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onRadioButtonClicked" />
+
+            <RadioButton
+                android:id="@+id/rbtn_customprivacy_location_high"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="onRadioButtonClicked" />
+
+        </RadioGroup>
+
+    </LinearLayout>
+    
+</LinearLayout>
+
+<!--     <LinearLayout -->
+<!--         android:layout_width="fill_parent" -->
+<!--         android:layout_height="fill_parent" -->
+<!--         android:layout_margin="10dp" -->
+<!--         android:layout_weight="1" -->
+<!--         android:background="@color/grow" -->
+<!--         android:orientation="horizontal" > -->
+
+<!--         <LinearLayout -->
+<!--             android:layout_width="fill_parent" -->
+<!--             android:layout_height="fill_parent" -->
+<!--             android:layout_weight="1" -->
+<!--             android:orientation="vertical" > -->
 
 <!--             <com.facebook.widget.ProfilePictureView -->
 <!--                 android:id="@+id/profile_pic" -->
@@ -32,60 +305,58 @@
 <!--                 android:gravity="center_horizontal" -->
 <!--                 facebook:preset_size="small" /> -->
             
-            <ImageView
-                android:id="@+id/profile_photo"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_margin="3dp"
-                android:src="@drawable/abc_ab_bottom_solid_dark_holo" />
+<!--             <ImageView -->
+<!--                 android:id="@+id/profile_photo" -->
+<!--                 android:layout_width="120dp" -->
+<!--                 android:layout_height="120dp" -->
+<!--                 android:layout_margin="3dp" -->
+<!--                 android:src="@drawable/abc_ab_bottom_solid_dark_holo" /> -->
 
-        </LinearLayout>
+<!--         </LinearLayout> -->
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:orientation="vertical" >
+<!--         <LinearLayout -->
+<!--             android:layout_width="fill_parent" -->
+<!--             android:layout_height="fill_parent" -->
+<!--             android:layout_weight="1" -->
+<!--             android:orientation="vertical" > -->
             
-            <TextView
-                android:id="@+id/profile_username"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:textColor="#333"
-                android:textSize="18sp" />
+<!--             <TextView -->
+<!--                 android:id="@+id/profile_username" -->
+<!--                 android:layout_width="wrap_content" -->
+<!--                 android:layout_height="wrap_content" -->
+<!--                 android:layout_gravity="center" -->
+<!--                 android:layout_marginTop="10dp" -->
+<!--                 android:textColor="#333" -->
+<!--                 android:textSize="18sp" /> -->
 
-            <TextView
-                android:id="@+id/txtName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+<!--             <TextView -->
+<!--                 android:id="@+id/txtName" -->
+<!--                 android:layout_width="wrap_content" -->
+<!--                 android:layout_height="wrap_content" -->
+<!--                 android:textAppearance="?android:attr/textAppearanceMedium" /> -->
 
-            <TextView
-                android:id="@+id/txtEmail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+<!--             <TextView -->
+<!--                 android:id="@+id/txtEmail" -->
+<!--                 android:layout_width="wrap_content" -->
+<!--                 android:layout_height="wrap_content" -->
+<!--                 android:textAppearance="?android:attr/textAppearanceMedium" /> -->
 
-            <TextView
-                android:id="@+id/txtGender"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+<!--             <TextView -->
+<!--                 android:id="@+id/txtGender" -->
+<!--                 android:layout_width="wrap_content" -->
+<!--                 android:layout_height="wrap_content" -->
+<!--                 android:textAppearance="?android:attr/textAppearanceMedium" /> -->
 
-        </LinearLayout>
+<!--         </LinearLayout> -->
 
-    </LinearLayout>
+<!--     </LinearLayout> -->
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_margin="10dp"
-        android:layout_weight="1"
-        android:background="@color/black"
-        android:orientation="vertical" >
+<!--     <LinearLayout -->
+<!--         android:layout_width="fill_parent" -->
+<!--         android:layout_height="fill_parent" -->
+<!--         android:layout_margin="10dp" -->
+<!--         android:layout_weight="1" -->
+<!--         android:background="@color/black" -->
+<!--         android:orientation="vertical" > -->
 
-    </LinearLayout>
-
-</LinearLayout>
+<!--     </LinearLayout> -->

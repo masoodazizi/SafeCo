@@ -45,14 +45,14 @@ public class SettingFragment extends Fragment {
 	    View settingView = inflater.inflate(R.layout.fragment_setting, container, false);
 //		profilePictureView = (ProfilePictureView) settingView.findViewById(R.id.profile_pic);
 //		profilePictureView.setCropped(true);
-	    userNameView = (TextView) settingView.findViewById(R.id.profile_username);
-	
-	    txt = (TextView) settingView.findViewById(R.id.txtName);
-
-	    
-	    SharedPreferences settings = this.getActivity().getSharedPreferences(MY_PREFS_NAME, 0);
-	    String highScore = settings.getString("name", "No name defined");
-		txt.setText(highScore);
+//	    userNameView = (TextView) settingView.findViewById(R.id.profile_username);
+//	
+//	    txt = (TextView) settingView.findViewById(R.id.txtName);
+//
+//	    
+//	    SharedPreferences settings = this.getActivity().getSharedPreferences(MY_PREFS_NAME, 0);
+//	    String highScore = settings.getString("name", "No name defined");
+//		txt.setText(highScore);
 	    
 //		String imgPath = settings.getString("imgUrl", null);
 //		URL newurl = null;

@@ -190,7 +190,7 @@ public class ProfileFragment extends Fragment {
 	
 	private String getCurrentTime(String dateFormat) {
 		
-		///// TIMEZONE ISSUE !!! //////
+		///// FIXME Timezone doesn't work properly! displayed right, but saved one hour wrong.
 		
 //		DateFormat dateFormat1 = android.text.format.DateFormat.getBestDateTimePattern(, "MMMM")(getActivity().getApplicationContext());
 		SimpleDateFormat df = new SimpleDateFormat(dateFormat, Locale.GERMANY);

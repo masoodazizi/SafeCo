@@ -27,6 +27,7 @@
     <string name="logout">Log Out</string>
     <string name="session_invalid_error">Your current session is no longer valid. Please log in again.</string>
     <string name="logn_generic_error">Something went wrong. Please retry.</string>
+    <string name="show_posts_error">Error: Data could not be fetched from Parse Server.</string>
     <string name="device_offline_message">"Your device appears to be offline. Some content may be unavailable."</string>
     <string name="terms_privacy">Terms and Privacy</string>
     <string name="terms_link">https://m.facebook.com/policies?_rdr</string>
