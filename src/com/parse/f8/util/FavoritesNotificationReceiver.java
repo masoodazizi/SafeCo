@@ -36,7 +36,7 @@ import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.f8.R;
 import com.parse.f8.model.Talk;
-import com.parse.f8.view.TalkActivity;
+import com.parse.f8.other.TalkActivity;
 
 /**
  * A BroadcastReceiver to handle Intents sent by the AlarmManager for local

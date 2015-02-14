@@ -36,7 +36,7 @@ import com.parse.f8.model.Room;
 import com.parse.f8.model.Slot;
 import com.parse.f8.model.Speaker;
 import com.parse.f8.model.Talk;
-import com.parse.f8.view.AlertsActivity;
+import com.parse.f8.other.AlertsActivity;
 
 public class F8App extends Application {
 

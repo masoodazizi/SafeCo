@@ -110,7 +110,8 @@ class MyAdapter extends FragmentPagerAdapter
 		}	
 		if(arg0==2)
 		{
-			fragment=new SettingFragment();
+//			fragment=new SettingFragment();
+			fragment=(Fragment) new SettingAdvMain();
 		}	
 		return fragment;
 	}

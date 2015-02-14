@@ -1,29 +1,23 @@
 package com.parse.f8.view;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.List;
 
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import com.facebook.widget.ProfilePictureView;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.f8.R;
 
 /**
@@ -31,6 +25,8 @@ import com.parse.f8.R;
  * 
  */
 public class SettingFragment extends Fragment {
+	
+	public static final String USER_INFO_PREFS = "UserInfoPrefs";
 
 	private RadioGroup radioGroupSimplePrivacy;
 	private RadioGroup radioGroupCustomIdentity;
@@ -51,16 +47,25 @@ public class SettingFragment extends Fragment {
 	private RadioButton rbtnLocMed;
 	private RadioButton rbtnLocHigh;
 	
+	private String userId;
 	
 	public SettingFragment() {
 		// Required empty public constructor
+		
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	        Bundle savedInstanceState) {
 
+		userId = fetchUserInfo("fbId");
 	    View settingView = inflater.inflate(R.layout.fragment_setting, container, false);
+	    
+	    Bundle args = getArguments();
+	    if (args != null && args.containsKey("key")) {
+	        String key = args.getString("key");
+	        Log.d("Bundle", key);
+	    }
 	    
 	    radioGroupSimplePrivacy = (RadioGroup) settingView.findViewById(R.id.rgroup_simpleprivacy);
 		radioGroupCustomIdentity = (RadioGroup) settingView.findViewById(R.id.rgroup_customprivacy_identity);
@@ -94,18 +99,30 @@ public class SettingFragment extends Fragment {
 		        case R.id.rbtn_simpleprivacy_normal:
 		          Log.d("MyDebug", "Chose rbtn_simpleprivacy_normal");
 		          enableCustomRadioGroups(false);
+		          savePrivacyProfileDataToParse("identityLvl", 0);
+		          savePrivacyProfileDataToParse("timeLvl", 0);
+		          savePrivacyProfileDataToParse("locationLvl", 0);
 		          break;
 		        case R.id.rbtn_simpleprivacy_fair:
 		          Log.d("MyDebug", "Chose rbtn_simpleprivacy_fair");
 		          enableCustomRadioGroups(false);
+		          savePrivacyProfileDataToParse("identityLvl", 0);
+		          savePrivacyProfileDataToParse("timeLvl", 1);
+		          savePrivacyProfileDataToParse("locationLvl", 1);
 		          break;
 		        case R.id.rbtn_simpleprivacy_strict:
 		          Log.d("MyDebug", "Chose rbtn_simpleprivacy_strict");
 		          enableCustomRadioGroups(false);
+		          savePrivacyProfileDataToParse("identityLvl", 1);
+		          savePrivacyProfileDataToParse("timeLvl", 2);
+		          savePrivacyProfileDataToParse("locationLvl", 2);
 		          break;
 		        case R.id.rbtn_simpleprivacy_full:
 		          Log.d("MyDebug", "Chose rbtn_simpleprivacy_full");
 		          enableCustomRadioGroups(false);
+		          savePrivacyProfileDataToParse("identityLvl", 2);
+		          savePrivacyProfileDataToParse("timeLvl", 1);
+		          savePrivacyProfileDataToParse("locationLvl", 1);
 		          break;
 		        case R.id.rbtn_simpleprivacy_custom:
 		          Log.d("MyDebug", "Chose rbtn_simpleprivacy_custom");
@@ -149,12 +166,15 @@ public class SettingFragment extends Fragment {
 		          break;
 		        case R.id.rbtn_customprivacy_identity_low:
 		          Log.d("MyDebug", "Chose rbtn_customprivacy_identity_low");
+		          savePrivacyProfileDataToParse("identityLvl", 0);
 		          break;
 		        case R.id.rbtn_customprivacy_identity_medium:
 		          Log.d("MyDebug", "Chose rbtn_customprivacy_identity_medium");
+		          savePrivacyProfileDataToParse("identityLvl", 1);
 		          break;
 		        case R.id.rbtn_customprivacy_identity_high:
 		          Log.d("MyDebug", "Chose rbtn_customprivacy_identity_high");
+		          savePrivacyProfileDataToParse("identityLvl", 2);
 		          break;
 		        default:
 		          Log.d("MyDebug", "Nothing!");
@@ -174,12 +194,15 @@ public class SettingFragment extends Fragment {
 		          break;
 		        case R.id.rbtn_customprivacy_time_low:
 		          Log.d("MyDebug", "Chose rbtn_customprivacy_time_low");
+		          savePrivacyProfileDataToParse("timeLvl", 0);
 		          break;
 		        case R.id.rbtn_customprivacy_time_medium:
 		          Log.d("MyDebug", "Chose rbtn_customprivacy_time_medium");
+		          savePrivacyProfileDataToParse("timeLvl", 1);
 		          break;
 		        case R.id.rbtn_customprivacy_time_high:
 		          Log.d("MyDebug", "Chose rbtn_customprivacy_time_high");
+		          savePrivacyProfileDataToParse("timeLvl", 2);
 		          break;
 		        default:
 		          Log.d("MyDebug", "Nothing!");
@@ -199,12 +222,15 @@ public class SettingFragment extends Fragment {
 		          break;
 		        case R.id.rbtn_customprivacy_location_low:
 		          Log.d("MyDebug", "Chose rbtn_customprivacy_location_low");
+		          savePrivacyProfileDataToParse("locationLvl", 0);
 		          break;
 		        case R.id.rbtn_customprivacy_location_medium:
 		          Log.d("MyDebug", "Chose rbtn_customprivacy_location_medium");
+		          savePrivacyProfileDataToParse("locationLvl", 1);
 		          break;
 		        case R.id.rbtn_customprivacy_location_high:
 		          Log.d("MyDebug", "Chose rbtn_customprivacy_location_high");
+		          savePrivacyProfileDataToParse("locationLvl", 2);
 		          break;
 		        default:
 		          Log.d("MyDebug", "Nothing!");
@@ -214,7 +240,57 @@ public class SettingFragment extends Fragment {
 		});
 	}
 	
+	private void savePrivacyProfileDataToParse(final String type, final int value) {
+		
+		ParseQuery<ParseObject> query = ParseQuery.getQuery("PrivacyProfile");
+		query.whereEqualTo("userId", userId);
+		query.findInBackground(new FindCallback<ParseObject>() {
+			
+			@Override
+			public void done(List<ParseObject> userObj, ParseException e) {
+				
+				// TASK Initialize the user field in PrivacyProfile class of Parse to create related row
+				// Check could it be better or not
+		        if (e == null) {
+		        	if (userObj.size()==0) {
+		        		
+		        		ParseObject parseObj = new ParseObject("PrivacyProfile");
+		        		parseObj.put("userId", userId);
+		        		parseObj.put(type, value);
+		        		parseObj.saveInBackground();
+		        	}
+		        	
+		        	else if (userObj.size()==1) {
+		        		
+		        		ParseObject user = userObj.get(0);
+		        		user.put(type, value);
+		        		user.saveInBackground();
+		        	}
+		        	
+		        	else {
+		        		Log.d("ParseError", "More than one userID exists!");
+		        		Toast.makeText(getActivity().getApplicationContext(), 
+		        				"Error! There are multiple user stored with your profile",
+		        				   Toast.LENGTH_LONG).show();
+		        	}
+		            
+		        } else {
+		            Log.d("ParseError", "Error: " + e.getMessage());
+		        }
+			}
+		});
+
+	}
 	
+
+	
+	private String fetchUserInfo(String type) {
+		
+		SharedPreferences userInfoPref = getActivity().getSharedPreferences(USER_INFO_PREFS, 0);
+		String userInfo = userInfoPref.getString(type, "None");
+		
+		return userInfo;
+	}
 	
 }
 	

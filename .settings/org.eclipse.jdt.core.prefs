@@ -3,5 +3,5 @@ org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6
 org.eclipse.jdt.core.compiler.compliance=1.6
 org.eclipse.jdt.core.compiler.source=1.6
 org.eclipse.jdt.core.compiler.taskCaseSensitive=enabled
-org.eclipse.jdt.core.compiler.taskPriorities=NORMAL,HIGH,LOW
-org.eclipse.jdt.core.compiler.taskTags=TODO,FIXME,CHECK
+org.eclipse.jdt.core.compiler.taskPriorities=NORMAL,NORMAL,HIGH,LOW
+org.eclipse.jdt.core.compiler.taskTags=TODO,TASK,FIXME,CHECK

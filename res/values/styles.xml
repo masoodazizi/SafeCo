@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.f8" parent="@style/Theme.Base">
+    <style name="Theme.f8" parent="@style/Theme.Base.AppCompat.Light.DarkActionBar">
 <!--         parent="@style/Theme.AppCompat" -->
 <!--         <item name="actionBarStyle">@style/ActionBar.Transparent.f8</item> -->
         <item name="android:colorBackground">@color/background_body</item>
@@ -29,4 +29,9 @@
 
     <style name="MapsTheme" parent="@style/Theme.AppCompat"></style>
 
+    <style name="ListFont" parent="@android:style/Widget.ListView">
+	    <item name="android:textColor">#FF0000</item>
+	    <item name="android:typeface">sans</item>
+	</style>
+    
 </resources>

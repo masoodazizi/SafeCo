@@ -1,0 +1,41 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fragment_adventry"
+    android:background="@color/background_color"
+    tools:context="com.parse.f8.view.SettingAdvEntry" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:orientation="vertical" >
+
+	    <TextView
+	        android:id="@+id/lbl_addNewEntry"
+	        android:layout_width="match_parent"
+	        android:layout_height="fill_parent"
+	        android:layout_margin="5dp"
+	        android:text="Add new entry:"
+	        android:textAppearance="?android:attr/textAppearanceMedium"
+	        android:textColor="@color/Black" />
+	    
+	    <ListView
+	        android:id="@+id/listAdvEntry"
+	        android:layout_width="match_parent"
+	        android:layout_height="354dp"
+	        android:layout_margin="5dp" >
+	
+	    </ListView>
+
+	    <Button
+	        android:id="@+id/btn_addEntry"
+	        android:layout_width="match_parent"
+	        android:layout_height="fill_parent"
+	        android:text="Add Entry" />
+
+<!-- FIXME The button is not displayed in the layout! -->
+	    
+    </LinearLayout>
+
+</FrameLayout>

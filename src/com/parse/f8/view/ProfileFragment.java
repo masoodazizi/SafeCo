@@ -99,7 +99,7 @@ public class ProfileFragment extends Fragment {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
+
 				onPostButtonClicked(v);
 			}
 		});
@@ -109,7 +109,7 @@ public class ProfileFragment extends Fragment {
 	
 	
 	private void onPostButtonClicked(View v) {
-		// TODO Auto-generated method stub
+
 		
 		text_status = (EditText) getActivity().findViewById(R.id.txt_status_text);
 		String status = text_status.getText().toString();
@@ -177,6 +177,7 @@ public class ProfileFragment extends Fragment {
 		TextView user_name_text = (TextView) profileView.findViewById(R.id.txtName);
 		String userName = fetchUserInfo("name");
 		user_name_text.setText(userName);
+		Log.d("MyDebug", fetchUserInfo("fbId"));
 		//....
 	}
 

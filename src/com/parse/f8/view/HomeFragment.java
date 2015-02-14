@@ -42,6 +42,8 @@ public class HomeFragment extends Fragment {
 		// Required empty public constructor
 	}
 	
+	// FIXME homeView gets inflated earlier than loading data from Parse and does not show them!
+	
 	@Override
 	public View onCreateView(LayoutInflater inflator, ViewGroup container,
 			Bundle savedInstanceState){
@@ -91,7 +93,6 @@ class NewsFeedListAdapter extends BaseAdapter {
 			
 			@Override
 			public void done(List<ParseObject> postList, ParseException e) {
-				// TODO Auto-generated method stub
 				if (e == null) {
 					for (ParseObject post : postList) {
 						String username = post.getString("owner");

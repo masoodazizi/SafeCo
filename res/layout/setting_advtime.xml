@@ -1,0 +1,159 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollview_advTime"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical"
+    tools:context="com.parse.f8.view.SettingAdvTime" >
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Restricted List"
+        android:textColor="@color/Black"
+        android:textSize="20sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Time"
+        android:textColor="@color/Black"
+        android:textSize="25sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@android:color/black" />
+
+    <Spinner
+        android:id="@+id/spinner_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:prompt="@string/spinner_advTime_prompt"
+        android:layout_marginBottom="20dp" />
+
+
+    <RadioGroup
+        android:id="@+id/rgroup_advTime"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:orientation="vertical" >
+
+        <RadioButton
+            android:id="@+id/rbtn_advTime_mornings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mornings (6:00a.m. - 10:00a.m.)"
+            android:textColor="@color/Black" />
+
+        <RadioButton
+            android:id="@+id/rbtn_advTime_afternoons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Afternoons (12:00p.m. - 03:00p.m.)"
+            android:textColor="@color/Black" />
+
+        <RadioButton
+            android:id="@+id/rbtn_advTime_evenings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Evenings (18:00p.m. - 23:00p.m.)"
+            android:textColor="@color/Black" />
+
+        <RadioButton
+            android:id="@+id/rbtn_advTime_nights"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nights (12:00a.m. - 06:00a.m.)"
+            android:textColor="@color/Black" />
+        
+        <RadioButton
+            android:id="@+id/rbtn_advTime_between"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Between two specific times:"
+            android:textColor="@color/Black" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp" >
+
+            <Button
+                android:id="@+id/btn_advTimePicker1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:enabled="false"
+                android:text="Start Time" />
+
+            <TextView
+                android:id="@+id/lbl_advTime_until"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:layout_weight="4"
+                android:text="Until"
+                android:enabled="false"
+                android:textColor="@color/Gray"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/btn_advTimePicker2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:enabled="false"
+                android:text="End Time" />
+            
+        </LinearLayout>
+        
+    </RadioGroup>
+
+	
+
+</LinearLayout>
+    
+</ScrollView>
+
+
+<!--     <TimePicker -->
+<!--         android:id="@+id/timePicker_advTime1" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:background="@color/Gray" -->
+<!--         android:visibility="gone" -->
+<!--         android:layout_marginLeft="20dp" /> -->
+
+<!--     <TextView -->
+<!--         android:id="@+id/lbl_advTime_and" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:layout_marginLeft="40dp" -->
+<!--         android:text="And" -->
+<!--         android:textSize="15sp" -->
+<!--         android:visibility="gone" -->
+<!--         android:textColor="@color/Black" /> -->
+
+<!--     <TimePicker -->
+<!--         android:id="@+id/timePicker_advTime2" -->
+<!--         android:layout_width="wrap_content" -->
+<!--         android:layout_height="wrap_content" -->
+<!--         android:background="@color/Gray" -->
+<!--         android:visibility="gone" -->
+<!--         android:layout_marginLeft="20dp" /> -->

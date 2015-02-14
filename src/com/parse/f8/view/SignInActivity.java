@@ -151,7 +151,7 @@ public class SignInActivity extends ActionBarActivity {
 								String userId = user.getId();
 								saveProfilePhoto(userId);
 								
-								saveUserInfoPref(user, "name");
+								saveUserInfoPref(user);
 							    
 //								ParseUser.getCurrentUser().put("birthday",
 //										user.getBirthday());
@@ -205,6 +205,8 @@ public class SignInActivity extends ActionBarActivity {
         
 		new ImageDownloader(getApplicationContext()).execute(profilePicPath);		
 	}
+
+	// FIXME Delay to load profile data in profile fragment, makes empty values.
 	
 //	private File generateImagePath(String fileName) {
 //		
@@ -217,11 +219,12 @@ public class SignInActivity extends ActionBarActivity {
 //		return imageFilePath;
 //	}
 	
-	private void saveUserInfoPref(GraphUser user, String type) {
+	private void saveUserInfoPref(GraphUser user) {
 		
 		SharedPreferences userInfoPref = getSharedPreferences(USER_INFO_PREFS, 0);
 	    SharedPreferences.Editor editor = userInfoPref.edit();
-	    editor.putString(type , user.getName().toString());
+	    editor.putString("name" , user.getName().toString());
+	    editor.putString("fbId", user.getId().toString());
 	    
 //		editor.putString(type , user.getInnerJSONObject().toString());
 		//editor.putString("email", user.get());
