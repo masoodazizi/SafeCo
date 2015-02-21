@@ -177,7 +177,7 @@ public class ProfileFragment extends Fragment {
 		TextView user_name_text = (TextView) profileView.findViewById(R.id.txtName);
 		String userName = fetchUserInfo("name");
 		user_name_text.setText(userName);
-		Log.d("MyDebug", fetchUserInfo("fbId"));
+		Log.d("MyDebug", "FB ID = " + fetchUserInfo("fbId"));
 		//....
 	}
 

@@ -1,8 +1,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/fragment_simple"
+    android:layout_height="fill_parent"
+    android:id="@+id/fragment_setting_layout"
     android:background="@color/background_color"
     tools:context="com.parse.f8.view.SettingFragment" >
 
@@ -11,12 +11,11 @@
 	    android:layout_height="match_parent"
 	    android:orientation="vertical" >
 	
-	<LinearLayout 
+	<LinearLayout
 	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
+	    android:layout_height="match_parent"
 	    android:layout_margin="10dp"
-	    android:background="@color/background_body"
-	    android:orientation="vertical" >    
+	    android:orientation="vertical" >
 	    
 <!-- 	    <LinearLayout -->
 <!-- 	        android:layout_width="match_parent" -->
@@ -46,7 +45,7 @@
 	        android:id="@+id/lbl_privacyProfiles"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_marginTop="20dp"
+	        android:layout_marginTop="10dp"
 	        android:textColor="@color/black"
 	        android:layout_marginLeft="5dp"
 	        android:text="Privacy Profiles: "
@@ -57,7 +56,7 @@
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
 		    android:layout_marginLeft="5dp"
-		    android:layout_marginBottom="30dp"
+		    android:layout_marginBottom="10dp"
 		    android:orientation="vertical">
 		    <RadioButton 
 		        android:id="@+id/rbtn_simpleprivacy_normal"
@@ -92,9 +91,15 @@
 		        android:textColor="@color/blue"/>
 		</RadioGroup>
 	
+	    <View
+             android:layout_width="fill_parent"
+             android:layout_height="1dp"
+             android:background="@color/Gray"/>
+	    
 	    <LinearLayout
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
+	        android:layout_marginTop="5dp"
 	        android:orientation="horizontal" >
 	
 	        <TextView
@@ -234,7 +239,8 @@
 		<LinearLayout
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:layout_marginTop="10dp" >
+	        android:layout_marginTop="10dp"
+	        android:layout_marginBottom="10dp" >
 	
 	        <TextView
 	            android:id="@+id/lbl_customprivacy_location"
@@ -276,16 +282,36 @@
 	
 	    </LinearLayout>
 	    
+		<View
+             android:layout_width="fill_parent"
+             android:layout_height="1dp"
+             android:background="@color/Gray"/>
+		
 		<TextView
-		    android:id="@+id/lbl_simpleprivacy_blank"
-		    android:layout_width="match_parent"
-		    android:layout_height="50dp" />
+		    android:id="@+id/txtbtn_advsetting"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginTop="20dp"
+		    android:padding="10dp"
+		    android:layout_marginLeft="5dp"
+		    android:text="@string/advanced_settings"
+		    android:clickable="true"
+		    android:textAppearance="?android:attr/textAppearanceButton"
+		    android:visibility="invisible"
+		    android:enabled="false"
+		    android:textColor="@color/Black" />
 	
 	</LinearLayout>	
 		
 	</ScrollView>
 
 </FrameLayout>
+
+
+<!-- 		<TextView -->
+<!-- 		    android:id="@+id/lbl_simpleprivacy_blank" -->
+<!-- 		    android:layout_width="match_parent" -->
+<!-- 		    android:layout_height="50dp" /> -->
 
 <!--     xmlns:facebook="http://schemas.android.com/apk/res-auto" -->
 <!--     <LinearLayout -->

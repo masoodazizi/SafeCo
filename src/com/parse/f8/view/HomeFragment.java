@@ -37,6 +37,7 @@ import android.os.Build;
 public class HomeFragment extends Fragment {
 	
 	ListView newsFeedListView;
+	ArrayList<SingleItem> newsFeedList = new ArrayList();
 	
 	public HomeFragment(){
 		// Required empty public constructor
@@ -50,37 +51,15 @@ public class HomeFragment extends Fragment {
 		// Inflate the layout for this fragment
 		View homeView = inflator.inflate(R.layout.fragment_home, container, false);
 		
+		fetchNewsFeedList();
+		
 		newsFeedListView = (ListView) homeView.findViewById(R.id.list_newsfeed);
-		newsFeedListView.setAdapter(new NewsFeedListAdapter(this.getActivity()));
+		
 		
 		
 		return homeView;
 		
 	}
-	
-}
-
-class NewsFeedListAdapter extends BaseAdapter {
-
-	ArrayList<SingleItem> newsFeedList ;
-	Context context;
-	
-	NewsFeedListAdapter(Context ctx) {
-	
-		context=ctx;
-		newsFeedList = new ArrayList<SingleItem>();
-		Resources res=ctx.getResources();
-		String[] titles=res.getStringArray(R.array.drawer_schedule_content);
-		String[] descs=res.getStringArray(R.array.drawer_schedule_times);
-		int[] imgs={R.drawable.grow,R.drawable.lunch,R.drawable.registration,R.drawable.monetize,R.drawable.hackerway,R.drawable.build};
-		
-//		for(int i=0;i<6;i++) {
-//			
-//			newsFeedList.add(new SingleItem(titles[i], descs[i], imgs[i]));
-//		}
-		
-		fetchNewsFeedList();
-	}	
 	
 	public void fetchNewsFeedList() {
 		
@@ -102,11 +81,12 @@ class NewsFeedListAdapter extends BaseAdapter {
 						String locTag = post.getString("loc0");
 						newsFeedList.add(new SingleItem(0, username, status, friendTag, timeTag, locTag));
 					}
+					newsFeedListView.setAdapter(new NewsFeedListAdapter(HomeFragment.this.getActivity(),newsFeedList));
 				}
 				else {
-					Toast.makeText(context.getApplicationContext(),	R.string.show_posts_error, Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity().getApplicationContext(),	R.string.show_posts_error, Toast.LENGTH_LONG).show();
 					Log.d("Parse_Error", "Error: Data not fetched " + e.getMessage());
-				}
+				} 
 			}
 		});
 		
@@ -114,17 +94,44 @@ class NewsFeedListAdapter extends BaseAdapter {
 		
 	}
 	
+}
+
+class NewsFeedListAdapter extends BaseAdapter {
+
+	
+	Context context;
+	ArrayList<SingleItem> newsFeedList1;
+	
+	NewsFeedListAdapter(Context ctx, ArrayList<SingleItem> feedlist) {
+	
+		context=ctx;
+		newsFeedList1 =feedlist;
+		Resources res=ctx.getResources();
+		String[] titles=res.getStringArray(R.array.drawer_schedule_content);
+		String[] descs=res.getStringArray(R.array.drawer_schedule_times);
+		int[] imgs={R.drawable.grow,R.drawable.lunch,R.drawable.registration,R.drawable.monetize,R.drawable.hackerway,R.drawable.build};
+		
+//		for(int i=0;i<6;i++) {
+//			
+//			newsFeedList.add(new SingleItem(titles[i], descs[i], imgs[i]));
+//		}
+		
+		
+	}	
+	
+
+	
 	
 	@Override
 	public int getCount() {
 		
-		return newsFeedList.size();
+		return newsFeedList1.size();
 	}
 
 	@Override
 	public Object getItem(int i) {
 		
-		return newsFeedList.get(i);
+		return newsFeedList1.get(i);
 	}
 
 	@Override
@@ -147,7 +154,7 @@ class NewsFeedListAdapter extends BaseAdapter {
 		TextView timeTag = (TextView) itemView.findViewById(R.id.txt_time_home);
 		TextView locTag = (TextView) itemView.findViewById(R.id.txt_loc_home);
 		
-		SingleItem itemObj = newsFeedList.get(i);
+		SingleItem itemObj = newsFeedList1.get(i);
 		
 		img.setImageResource(itemObj.image);
 		userName.setText(itemObj.username);

@@ -108,5 +108,6 @@
     <string name="select_location">Select the location on the map:</string>
     <string name="no_address">No address selected...</string>
     <string name="select_couser">Select the users who have co-location:</string>
+    <string name="advanced_settings"><u>Advanced Settings...</u></string>
     
 </resources>

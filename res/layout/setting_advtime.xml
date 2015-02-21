@@ -41,9 +41,8 @@
         android:id="@+id/spinner_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:prompt="@string/spinner_advTime_prompt"
         android:layout_marginBottom="20dp" />
-
+<!--         android:prompt="@string/spinner_advTime_prompt" -->
 
     <RadioGroup
         android:id="@+id/rgroup_advTime"

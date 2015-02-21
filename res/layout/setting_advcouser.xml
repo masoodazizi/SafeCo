@@ -1,74 +1,83 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_couser"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_color"
     android:orientation="vertical"
     tools:context="com.parse.f8.view.SettingAdvCoUser" >
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Restricted List"
-        android:textColor="@color/Black"
-        android:textSize="20sp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="Co-User"
-        android:textColor="@color/Black"
-        android:textSize="25sp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@android:color/black" />
-
-    <TextView
-        android:id="@+id/lbl_advLocAddr"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:textColor="@color/Black"
-        android:text="@string/select_couser" />
-
+    
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp" >
+            android:layout_width="match_parent"
+		    android:layout_height="match_parent"
+		    android:orientation="vertical" >
 
-        <EditText
-            android:id="@+id/txt_couser_enter"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:ems="10"
-            android:textColor="@color/Black" />
+	    <TextView
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:gravity="center"
+	        android:text="Restricted List"
+	        android:textColor="@color/Black"
+	        android:textSize="20sp" />
+	
+	    <TextView
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_margin="10dp"
+	        android:text="Co-User"
+	        android:textColor="@color/Black"
+	        android:textSize="25sp" />
+	
+	    <View
+	        android:layout_width="match_parent"
+	        android:layout_height="1dp"
+	        android:layout_marginBottom="10dp"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginRight="10dp"
+	        android:background="@android:color/black" />
+	
+	    <TextView
+	        android:id="@+id/lbl_advCoUserSelect"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_margin="5dp"
+	        android:textColor="@color/Black"
+	        android:text="@string/select_couser" />
+	
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_marginBottom="10dp" >
+	
+	        <EditText
+	            android:id="@+id/txt_couser_enter"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_margin="5dp"
+	            android:layout_weight="1"
+	            android:ems="10"
+	            android:textColor="@color/Black" />
+	
+	        <Button
+	            android:id="@+id/btn_add_couser"
+	            style="?android:attr/buttonStyleSmall"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_marginRight="5dp"
+	            android:layout_weight="3"
+	            android:text="Add" />
+	
+	    </LinearLayout>
+	
+	    <ListView
+	        android:id="@+id/list_cousers_added"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_margin="10dp"
+	        android:visibility="invisible"
+	        android:background="@drawable/button_border" >
+	    </ListView>
 
-        <Button
-            android:id="@+id/btn_add_couser"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:layout_weight="3"
-            android:text="Add" />
-
-    </LinearLayout>
-
-    <ListView
-        android:id="@+id/list_cousers_added"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:background="@drawable/button_border" >
-    </ListView>
-
-</LinearLayout>
+	</LinearLayout>
+	
+</FrameLayout>    

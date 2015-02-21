@@ -73,7 +73,7 @@ public class SettingAdvTime extends Fragment {
 				(getActivity(), R.array.spinner_time_list, android.R.layout.simple_spinner_item);
 		advTimeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinnerAdvTime.setAdapter(advTimeAdapter);
-		
+		spinnerAdvTime.setPrompt("Select a time period:");
 		spinnerAdvTime.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -189,6 +189,7 @@ public class SettingAdvTime extends Fragment {
                         Log.d("MyDebug", timeStr);
                         if (startValue) {
                         	btnAdvStartTime = (Button) v.findViewById(R.id.btn_advTimePicker1);
+                        	// TASK Time on the button is not shown properly when it's like: 02:05. It shows 2:5
                         	btnAdvStartTime.setText(timeStr);
                         	saveAdvSettingPref("timeStart", timeStr);
                         }

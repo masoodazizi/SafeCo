@@ -1,17 +1,27 @@
 package com.parse.f8.view;
 
+import java.util.List;
+
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.f8.R;
 import com.parse.f8.R.layout;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -20,11 +30,17 @@ import android.widget.Toast;
  * A simple {@link Fragment} subclass.
  * 
  */
-// FIXME The "Add Entry" button is not displayed in the layout!
+// FIXME widgets from background fragment work on the foreground active fragment!
 
 public class SettingAdvEntry extends Fragment {
 
+	public static final String ADV_SETTING_PREFS = "AdvSettingPrefs";
+	public static final String USER_INFO_PREFS = "UserInfoPrefs";
+	public static final String PARSE_ADV_PRIVACY_CLASS = "RestrictedList";
 	String[] advEntryListItems;
+	Button buttonAddEntry;
+	private String userId;
+	
 	
 	public SettingAdvEntry() {
 		// Required empty public constructor
@@ -35,6 +51,7 @@ public class SettingAdvEntry extends Fragment {
 			Bundle savedInstanceState) {
 		
 		View advEntryView = inflater.inflate(R.layout.setting_adventry, container, false);
+		userId = fetchUserInfo("fbId");
 		
 		advEntryListItems = getResources().getStringArray(R.array.adventry_list_items);
 		ListView advEntryListView = (ListView) advEntryView.findViewById(R.id.listAdvEntry);
@@ -48,6 +65,7 @@ public class SettingAdvEntry extends Fragment {
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
 				Fragment newFragment = null;
+				Bundle bundle = new Bundle();
 				Log.d("myDebug", "Selected Item:" + Integer.toString(position) );
 				
 				switch (position) {
@@ -59,19 +77,22 @@ public class SettingAdvEntry extends Fragment {
 					break;
 				case 2:
 					newFragment = new SettingAdvCoUser();
+					bundle.putString("key", "coUser");
+					newFragment.setArguments(bundle); 
 					break;
 				case 3:
-					newFragment = new SettingAdvViUser();
+					newFragment = new SettingAdvCoUser();
+					bundle.putString("key", "viUser");
+					newFragment.setArguments(bundle); 
 					break;
 				case 4:
 					newFragment = new SettingFragment();
-					final Bundle bundle = new Bundle();
 					bundle.putString("key", "add");
-					Log.i("BUNDLE", bundle.toString());
 					newFragment.setArguments(bundle); 
 					break;
 				}
 				
+				Log.i("BUNDLE", bundle.toString());
 			    FragmentTransaction transaction = getFragmentManager().beginTransaction();
 			    transaction.replace(R.id.fragment_adventry, newFragment);
 			    transaction.addToBackStack(null);
@@ -82,8 +103,62 @@ public class SettingAdvEntry extends Fragment {
 			
 		});
 		
+		buttonAddEntry = (Button) advEntryView.findViewById(R.id.btn_addEntry);
+		buttonAddEntry.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				saveAdvPrefsInfoToParse();
+			}
+		});
+		
 		
 		return advEntryView;
 	}
+	
+	private void saveAdvPrefsInfoToParse() {
+		
+		final SharedPreferences userInfoPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
+		
+		ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_ADV_PRIVACY_CLASS);
+		query.whereEqualTo("userId", userId);
+		query.findInBackground(new FindCallback<ParseObject>() {
+			
+			@Override
+			public void done(List<ParseObject> userObj, ParseException e) {
+				
+		        if (e == null) {
+		        	
+		        	if (userObj == null) {
+		        		Log.d("ParseQueryError", "There is no user object with user ID " + userId + 
+		        				"is defined in <" + PARSE_ADV_PRIVACY_CLASS + "> Parse Class");
 
+		        	} else {
+		        		ParseObject user = userObj.get(0);
+		        		user.put("identityLvl", userInfoPref.getInt("identityLvl", 0));
+		        		user.put("timeLvl", userInfoPref.getInt("timeLvl", 0));
+		        		user.put("locationLvl", userInfoPref.getInt("locationLvl", 0));
+		        		user.put("timePeriod", userInfoPref.getString("timePeriod", "null"));
+		        		user.put("timeStart2", userInfoPref.getString("timeStart", "null"));
+		        		user.put("timeEnd2", userInfoPref.getString("timeEnd", "null"));
+		        		user.put("timeDayPart", userInfoPref.getString("timeDayPart", "null"));
+		        		user.put("locationAddr", userInfoPref.getString("locationAddr", "null"));
+		        		
+		        		user.saveEventually();
+		        	}
+		        } else {
+		            Log.d("ParseError", "Error: " + e.getMessage());
+		        }
+			}
+		});
+	}
+
+	private String fetchUserInfo(String type) {
+		
+		SharedPreferences userInfoPref = getActivity().getSharedPreferences(USER_INFO_PREFS, 0);
+		String userInfo = userInfoPref.getString(type, "None");
+		
+		return userInfo;
+	}
 }

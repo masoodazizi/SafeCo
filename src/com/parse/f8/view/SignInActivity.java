@@ -67,12 +67,16 @@ import com.facebook.model.GraphUser;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.f8.R;
 
 public class SignInActivity extends ActionBarActivity {
 
 	public static final String USER_INFO_PREFS = "UserInfoPrefs";
+	public static final String PARSE_ADV_PRIVACY_CLASS = "RestrictedList";
+	public static final String PARSE_SIMPLE_PRIVACY_CLASS = "PrivacyProfile";
 	private String profilePicPath = "";
 	
 	
@@ -101,7 +105,7 @@ public class SignInActivity extends ActionBarActivity {
 	}
 
 	private void onLoginButtonClicked() {
-		List<String> permissions = Arrays.asList("public_profile");
+		List<String> permissions = Arrays.asList("public_profile", "user_friends");
 		ParseFacebookUtils.logIn(permissions, this, new LogInCallback() {
 			@Override
 			public void done(ParseUser user, ParseException err) {
@@ -152,6 +156,9 @@ public class SignInActivity extends ActionBarActivity {
 								saveProfilePhoto(userId);
 								
 								saveUserInfoPref(user);
+								
+								initializeRowInParseClass(userId, PARSE_ADV_PRIVACY_CLASS);
+								initializeRowInParseClass(userId, PARSE_SIMPLE_PRIVACY_CLASS);
 							    
 //								ParseUser.getCurrentUser().put("birthday",
 //										user.getBirthday());
@@ -231,6 +238,16 @@ public class SignInActivity extends ActionBarActivity {
 		//editor.putString("name", user.toString());
 		editor.commit();
 		
+	}
+	
+	private void initializeRowInParseClass(String userId, String parseClass) {
+		
+		ParseObject parseObj = new ParseObject(parseClass);
+		parseObj.put("userId", userId);
+		if (parseClass == PARSE_SIMPLE_PRIVACY_CLASS) {
+			parseObj.put("profile", "normal");
+		}
+		parseObj.saveInBackground();
 	}
 	
 	
@@ -366,6 +383,8 @@ class ImageDownloader extends AsyncTask<String , Void, Bitmap> {
 		editor.putString("imgPath", imgPath);
 		editor.commit();
 	}
+	
+
 	
 }
 

@@ -156,7 +156,17 @@
             android:label="@string/title_activity_setting_adv_entry"
             android:theme="@style/ListFont" >
         </activity>
-        
+        <activity
+            android:name="com.parse.f8.view.SettingAdvCoUser"
+            android:label="title_activity_setting_adv_couser"
+            android:theme="@style/ListFont" >
+        </activity>
+        <activity
+            android:name="com.parse.f8.view.FBPickerFragment"
+            android:label="title_activity_fbpicker_fragment"
+            android:theme="@style/ListFont" >
+        </activity>
+                
     </application>
 
 </manifest>

@@ -8,6 +8,7 @@ import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -19,12 +20,19 @@ import android.view.MenuItem;
 
 public class MainActivity extends FragmentActivity implements TabListener {
 	
+	public static final String ADV_SETTING_PREFS = "AdvSettingPrefs";
 	ViewPager viewPager;
 	ActionBar actionBar;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		///// Initialization
+		
+		clearAdvSettingPref ();
+		// Clear Advanced setting shared preferences values;
+		
 		
 		viewPager=(ViewPager) findViewById(R.id.pager);
 		FragmentManager fragmentManager = getSupportFragmentManager();
@@ -86,7 +94,18 @@ public class MainActivity extends FragmentActivity implements TabListener {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	private void clearAdvSettingPref () {
+		
+		SharedPreferences advSettingPref = getSharedPreferences(ADV_SETTING_PREFS, 0);
+	    SharedPreferences.Editor editor = advSettingPref.edit();
+	    editor.clear();
+		editor.commit();
+	}
+	
 }
+
+
 
 class MyAdapter extends FragmentPagerAdapter
 {
@@ -110,8 +129,11 @@ class MyAdapter extends FragmentPagerAdapter
 		}	
 		if(arg0==2)
 		{
-//			fragment=new SettingFragment();
-			fragment=(Fragment) new SettingAdvMain();
+//			Bundle bundle = new Bundle();
+//			bundle.putString("key", "set");
+//			fragment.setArguments(bundle);
+			fragment=new SettingFragment();
+//			fragment=(Fragment) new SettingAdvMain();
 		}	
 		return fragment;
 	}
