@@ -27,10 +27,14 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -62,6 +66,8 @@ public class SettingAdvTime extends Fragment {
 		
 		advTimeDayPartListener(advTimeView);
 		
+		onSwitchClicked(advTimeView);
+		
 		return advTimeView;
 	}
 
@@ -81,11 +87,12 @@ public class SettingAdvTime extends Fragment {
 					int pos, long id) {
 				
 				String selectedItem = parent.getItemAtPosition(pos).toString();
-				Toast.makeText(parent.getContext(), 
-						"MyDebug:" + selectedItem,
-						Toast.LENGTH_SHORT).show();
 				Log.d("MyDebug", "Spinner selected item is: " + selectedItem);
-				saveAdvSettingPref("timePeriod", selectedItem);
+				if (pos != 0) {
+					saveAdvSettingPref("timePeriod", selectedItem);
+//					Toast.makeText(parent.getContext(), "MyDebug:" + selectedItem, Toast.LENGTH_SHORT).show();
+				}
+				
 			}
 
 			@Override
@@ -242,6 +249,66 @@ public class SettingAdvTime extends Fragment {
 	}
 	
 	
+	
+	public void onSwitchClicked(final View v) {
+		
+		spinnerAdvTime = (Spinner) v.findViewById(R.id.spinner_time); 
+		radioGroupAdvTime = (RadioGroup) v.findViewById(R.id.rgroup_advTime);
+		final RadioButton rbtnMorning = (RadioButton) v.findViewById(R.id.rbtn_advTime_mornings);
+		final LinearLayout layout = (LinearLayout) v.findViewById(R.id.layout_advtime);
+		btnAdvStartTime = (Button) v.findViewById(R.id.btn_advTimePicker1);
+		btnAdvEndTime = (Button) v.findViewById(R.id.btn_advTimePicker2);
+		Switch disableSwitch = (Switch) v.findViewById(R.id.switch_time);
+		disableSwitch.setChecked(true);
+		disableSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				
+				if(isChecked) {
+					enableRadioGroup(radioGroupAdvTime, true);
+					enableLinearLayout(layout, true);		
+				}
+				else {
+					spinnerAdvTime.setSelection(0);
+					rbtnMorning.setChecked(true);
+					enableRadioGroup(radioGroupAdvTime, false);
+					enableLinearLayout(layout, false);	
+					enableTimePickers(v, false);
+					btnAdvStartTime.setText(getString(R.string.start_time));
+					btnAdvEndTime.setText(getString(R.string.end_time));
+					removePrefsKeys();
+				}
+			}
+		});
+
+	}
+	
+	private void enableRadioGroup(RadioGroup radioGroup, Boolean enable) {
+		
+        for(int i = 0; i < radioGroup.getChildCount(); i++){
+            ((RadioButton)radioGroup.getChildAt(i)).setEnabled(enable);
+        }
+	}
+	
+	private void enableLinearLayout(LinearLayout layout, Boolean enable) {
+		
+		for ( int i = 0; i < layout.getChildCount();  i++ ){
+		    View view = layout.getChildAt(i);
+		    view.setEnabled(enable);		
+		}
+	}
+	
+	private void removePrefsKeys() {
+		
+		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
+	    SharedPreferences.Editor editor = advSettingPref.edit();
+	    editor.remove("timeStart");
+	    editor.remove("timeEnd");
+	    editor.remove("timeDayPart");
+	    editor.remove("timePeriod");
+		editor.commit();
+	}
 }
 
 

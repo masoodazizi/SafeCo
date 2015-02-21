@@ -9,15 +9,30 @@
     <LinearLayout
         android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
+	    android:layout_margin="5dp"
 	    android:orientation="vertical" >
 
+		<TextView
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:gravity="center"
+	        android:text="Restricted List"
+	        android:textColor="@color/Red"
+	        android:textSize="15sp" />
+		
+		<View
+	             android:layout_width="fill_parent"
+	             android:layout_height="1dp"
+	             android:layout_margin="5dp"
+	             android:background="@color/Brown"/>
+		            
+        
 	    <TextView
 	        android:id="@+id/lbl_addNewEntry"
 	        android:layout_width="match_parent"
 	        android:layout_height="fill_parent"
-	        android:layout_margin="5dp"
 	        android:layout_weight="1"
-	        android:text="Add new entry:"
+	        android:text="@string/Add_new_entry"
 	        android:textAppearance="?android:attr/textAppearanceMedium"
 	        android:textColor="@color/Black" />
 	    
@@ -25,7 +40,9 @@
 	        android:id="@+id/listAdvEntry"
 	        android:layout_width="match_parent"
 	        android:layout_height="fill_parent"
-	        android:layout_margin="5dp"
+	        android:padding="10dp"
+	        android:dividerHeight="1.0sp"
+	        android:divider="@color/Black"
 	        android:layout_weight="4" >
 	
 	    </ListView>

@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.f8.R;
+import com.parse.f8.R.id;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -103,6 +105,7 @@ public class SettingFragment extends Fragment {
 	    if (key == "add") {
 	    	prefs = "AdvSettingPrefs";
 	    	parseClass = "RestrictedList";
+	    	initializeAdvHeader(settingView);
 	    }
 	    else {
 	    	prefs = "SimplePrivacyPrefs";
@@ -466,7 +469,17 @@ public class SettingFragment extends Fragment {
 		});
 	}
 	
-private void savePrivacyProfileToParse(final String value) {
+	private void initializeAdvHeader(View v) {
+		
+		TextView txtRestrictedList = (TextView) v.findViewById(R.id.lbl_profileRestrictedList);
+		txtRestrictedList.setVisibility(View.VISIBLE);
+		View line = (View) v.findViewById(R.id.line_privacyProfile);
+		line.setVisibility(View.VISIBLE);
+		Switch switchPrivacyProfile = (Switch) v.findViewById(R.id.switch_privacyProfile);
+		switchPrivacyProfile.setVisibility(View.VISIBLE);
+	}
+	
+	private void savePrivacyProfileToParse(final String value) {
 		
 		ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_SIMPLE_PRIVACY_CLASS);
 		query.whereEqualTo("userId", userId);

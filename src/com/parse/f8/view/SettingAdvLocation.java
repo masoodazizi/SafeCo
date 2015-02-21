@@ -20,6 +20,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +52,8 @@ public class SettingAdvLocation extends Fragment {
 	static final LatLng INFORMATIC_LOC = new LatLng(50.778396, 6.060989);
 	private GoogleMap map;
 	private TextView textAdvLocAddr;
+	private Marker currentLocMarker = null;
+	private Boolean enableKey = true;
 
 	public SettingAdvLocation() {
 		// Required empty public constructor
@@ -58,18 +67,21 @@ public class SettingAdvLocation extends Fragment {
 		
 		setUpMap();
 		textAdvLocAddr = (TextView) advLocView.findViewById(R.id.txt_advLocAddr);
+		onSwitchClicked(advLocView);
+		
 		map.setOnMapClickListener(new OnMapClickListener() {
 			
 			@Override
 			public void onMapClick(LatLng latLng) {
 				
-				
-				//textAdvLocAddr.setText(latLong.toString());
-				String address = getAddress(latLng.latitude, latLng.longitude);
-				textAdvLocAddr.setText(address);
-				saveAdvSettingPref("locationAddr", address);
-				saveAdvSettingPref("locationGeo", latLng.toString());
-				showMarkerOnMap(latLng, "Your Selected Location");
+				if (enableKey) {
+					//textAdvLocAddr.setText(latLong.toString());
+					String address = getAddress(latLng.latitude, latLng.longitude);
+					textAdvLocAddr.setText(address);
+					saveAdvSettingPref("locationAddr", address);
+					saveAdvSettingPref("locationGeo", latLng.toString());
+					showMarkerOnMap(latLng, "Your Selected Location");
+				}
 			}
 		});
 		
@@ -103,7 +115,11 @@ public class SettingAdvLocation extends Fragment {
 		
 		// TASK load program icon but in smaller size. Normal size is pretty large.
 		// add => .icon(BitmapDescriptorFactory.fromResource(R.drawable.appicon))
-		Marker currentLocMarker = map.addMarker(new MarkerOptions().position(latLng)
+		if (currentLocMarker != null) {
+			currentLocMarker.remove();
+		}
+		
+		currentLocMarker = map.addMarker(new MarkerOptions().position(latLng)
 							.title(locTitle));
 	    // Move the camera instantly to hamburg with a zoom of 15.
 	    map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
@@ -158,6 +174,38 @@ public class SettingAdvLocation extends Fragment {
 	    editor.putString(type , value);
 		editor.commit();
 		
+	}
+	
+	public void onSwitchClicked(final View v) {
+		
+		Switch disableSwitch = (Switch) v.findViewById(R.id.switch_location);
+		disableSwitch.setChecked(true);
+		disableSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				
+				if(isChecked) {
+					enableKey = true;		
+				}
+				else {
+					
+					textAdvLocAddr.setText("");
+					enableKey = false;
+					removePrefsKeys();
+				}
+			}
+		});
+
+	}
+	
+	private void removePrefsKeys() {
+		
+		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
+	    SharedPreferences.Editor editor = advSettingPref.edit();
+	    editor.remove("locationAddr");
+	    editor.remove("locationGeo");
+		editor.commit();
 	}
 	
 }

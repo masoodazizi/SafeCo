@@ -8,35 +8,61 @@
     tools:context="com.parse.f8.view.SettingAdvTime" >
 
 <LinearLayout
+    android:id="@+id/layout_advtime"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="5dp"
     android:orientation="vertical" >
     
-
-    <TextView
+	<TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="Restricted List"
-        android:textColor="@color/Black"
-        android:textSize="20sp" />
+        android:textColor="@color/Red"
+        android:textSize="15sp" />
+	
+	<View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_margin="5dp"
+        android:background="@color/Brown"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="Time"
-        android:textColor="@color/Black"
-        android:textSize="25sp" />
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal" >
+
+		<TextView
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_marginLeft="5dp"
+		    android:layout_marginTop="10dp"
+		    android:layout_weight="1"
+		    android:text="Time"
+		    android:textColor="@color/DarkBlue"
+		    android:textSize="25sp" />
+
+		<Switch
+		    android:id="@+id/switch_time"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="bottom"
+		    android:layout_marginBottom="2dp"
+		    android:layout_marginRight="5dp"
+		    android:layout_weight="1" />
+
+	</LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginBottom="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@android:color/black" />
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@color/DarkBlue" />
 
+    
     <Spinner
         android:id="@+id/spinner_time"
         android:layout_width="match_parent"
@@ -86,45 +112,44 @@
             android:text="Between two specific times:"
             android:textColor="@color/Black" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+   	</RadioGroup>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" >
+
+        <Button
+            android:id="@+id/btn_advTimePicker1"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp" >
+            android:layout_weight="3"
+            android:enabled="false"
+            android:text="@string/start_time" />
 
-            <Button
-                android:id="@+id/btn_advTimePicker1"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:enabled="false"
-                android:text="Start Time" />
+        <TextView
+            android:id="@+id/lbl_advTime_until"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:layout_weight="4"
+            android:text="Until"
+            android:enabled="false"
+            android:textColor="@color/Gray"
+            android:textSize="15sp" />
 
-            <TextView
-                android:id="@+id/lbl_advTime_until"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:layout_weight="4"
-                android:text="Until"
-                android:enabled="false"
-                android:textColor="@color/Gray"
-                android:textSize="15sp" />
-
-            <Button
-                android:id="@+id/btn_advTimePicker2"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:enabled="false"
-                android:text="End Time" />
-            
-        </LinearLayout>
+        <Button
+            android:id="@+id/btn_advTimePicker2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:enabled="false"
+            android:text="@string/end_time" />
         
-    </RadioGroup>
-
-	
+    </LinearLayout>
+        
+   	
 
 </LinearLayout>
     

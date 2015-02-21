@@ -9,13 +9,31 @@
 	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="fill_parent"
+	    android:layout_margin="5dp"
 	    android:background="@color/background_color"
 	    android:orientation="vertical" >
+	    
+	<TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Restricted List"
+        android:textColor="@color/Red"
+        android:textSize="15sp" />
+	
+	<View
+             android:layout_width="fill_parent"
+             android:layout_height="1dp"
+             android:layout_margin="5dp"
+             android:background="@color/Brown"/>
 	    
 	    <ListView
 	        android:id="@+id/listAdvMain"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
+	        android:layout_margin="5dp"
+	        android:divider="@android:color/transparent"
+	        android:dividerHeight="10.0sp"
 	        android:layout_weight="1" >
 	    </ListView>
 	    

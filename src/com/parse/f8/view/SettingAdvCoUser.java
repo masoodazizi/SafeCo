@@ -33,9 +33,11 @@ public class SettingAdvCoUser extends Fragment {
 	Button btnFriendPicker;
 	EditText txtCoUserAdd;
 	ListView listViewFriends;
+	TextView advUserTitle;
 	TextView advCoUserSelect;
 	ArrayList<String> friendsList = new ArrayList<String>();
 	String key;
+	String advUserTitleText;
 	String advCoUserSelectText;
 	
 	public SettingAdvCoUser() {
@@ -56,12 +58,17 @@ public class SettingAdvCoUser extends Fragment {
 	    
 	    	    
 	    if (key == "coUser") {
+	    	advUserTitleText = "Co-User";
 	    	advCoUserSelectText = "Select the users must not have co-location with you:";
 	    }
 	    
 	    else if (key == "viUser") {
 	    	advCoUserSelectText = "Select the users must not view co-location posts you are tagged in:";
+	    	advUserTitleText = "View-User";
 	    }
+	    
+	    advUserTitle = (TextView) advCoUserView.findViewById(R.id.lbl_advuser);
+	    advUserTitle.setText(advUserTitleText);
 	    
 	    advCoUserSelect = (TextView) advCoUserView.findViewById(R.id.lbl_advCoUserSelect);
 	    advCoUserSelect.setText(advCoUserSelectText);

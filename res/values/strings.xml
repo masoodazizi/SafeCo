@@ -93,6 +93,7 @@
     </string-array>
     
     <string-array name="spinner_time_list">
+        <item>Select a time period...</item>
         <item>Every Day</item>
         <item>Every Weekend</item>
         <item>Every Monday</item>
@@ -109,5 +110,8 @@
     <string name="no_address">No address selected...</string>
     <string name="select_couser">Select the users who have co-location:</string>
     <string name="advanced_settings"><u>Advanced Settings...</u></string>
+    <string name="Add_new_entry" ><u>Add new entry:</u></string>
+    <string name="start_time">Start Time</string>
+    <string name="end_time">End Time</string>
     
 </resources>

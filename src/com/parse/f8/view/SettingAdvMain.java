@@ -44,7 +44,7 @@ public class SettingAdvMain extends Fragment {
 		advMainListItems = getResources().getStringArray(R.array.advsetting_list_items);
 		ListView mainAdvSettingList = (ListView) mainAdvView.findViewById(R.id.listAdvMain);
 		ListAdapter mainAdvSettingAdapter = new ArrayAdapter<String>
-					(getActivity(), android.R.layout.simple_list_item_1, advMainListItems);
+					(getActivity(), R.layout.entry_item_advmain, R.id.lbl_entryItem_advmain, advMainListItems);
 		mainAdvSettingList.setAdapter(mainAdvSettingAdapter);
 		
 		mainAdvSettingList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
