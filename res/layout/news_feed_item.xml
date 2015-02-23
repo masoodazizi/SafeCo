@@ -47,6 +47,7 @@
         android:layout_below="@+id/txt_status_home"
         android:layout_marginRight="5dp"
         android:text="With:"
+        android:textColor="@color/DarkGray"
         android:textAppearance="?android:attr/textAppearanceSmall" />
     
     <TextView
@@ -57,6 +58,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@id/txt_status_home"
         android:text="No Friends Tag"
+        android:textColor="@color/DarkGray"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
@@ -67,6 +69,7 @@
         android:layout_below="@+id/lbl_with_home"
         android:layout_marginRight="5dp"
         android:text="Time:"
+        android:textColor="@color/DarkGray"
         android:textAppearance="?android:attr/textAppearanceSmall" />
     
     <TextView
@@ -77,6 +80,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@id/txt_with_home"
         android:text="No Time Tag"
+        android:textColor="@color/DarkGray"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
@@ -87,6 +91,7 @@
         android:layout_below="@+id/lbl_time_home"
         android:layout_marginRight="5dp"
         android:text="Place:"
+        android:textColor="@color/DarkGray"
         android:textAppearance="?android:attr/textAppearanceSmall" />
     
     <TextView
@@ -97,5 +102,6 @@
         android:layout_alignParentRight="true"
         android:layout_below="@id/txt_time_home"
         android:text="No Location Tag"
+        android:textColor="@color/DarkGray"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 </RelativeLayout>
