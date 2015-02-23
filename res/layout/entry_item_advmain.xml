@@ -15,7 +15,7 @@
         android:gravity="left"
         android:text="Entry Item"
         android:textColor="@color/Black"
-        android:textSize="25px" >
+        android:textSize="20sp" >
 
     </TextView>
 

@@ -17,9 +17,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Restricted List"
+        android:text="@string/restricted_list"
         android:textColor="@color/Red"
-        android:textSize="15sp" />
+        android:textSize="20sp" />
 	
 	<View
              android:layout_width="fill_parent"

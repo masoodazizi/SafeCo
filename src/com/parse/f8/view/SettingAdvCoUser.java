@@ -19,8 +19,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 /**
@@ -39,6 +41,7 @@ public class SettingAdvCoUser extends Fragment {
 	String key;
 	String advUserTitleText;
 	String advCoUserSelectText;
+	ArrayAdapter<String> adapter;
 	
 	public SettingAdvCoUser() {
 		// Required empty public constructor
@@ -69,11 +72,14 @@ public class SettingAdvCoUser extends Fragment {
 	    
 	    advUserTitle = (TextView) advCoUserView.findViewById(R.id.lbl_advuser);
 	    advUserTitle.setText(advUserTitleText);
-	    
+	    listViewFriends = (ListView) advCoUserView.findViewById(R.id.list_cousers_added);
 	    advCoUserSelect = (TextView) advCoUserView.findViewById(R.id.lbl_advCoUserSelect);
 	    advCoUserSelect.setText(advCoUserSelectText);
-		
+	    txtCoUserAdd = (EditText) advCoUserView.findViewById(R.id.txt_couser_enter);
 		btnFriendPicker = (Button) advCoUserView.findViewById(R.id.btn_add_couser);
+		
+		onSwitchClicked(advCoUserView);
+		
 		btnFriendPicker.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -88,17 +94,14 @@ public class SettingAdvCoUser extends Fragment {
 //			    transaction.addToBackStack(null);
 //			    transaction.setTransition(4099);	
 //			    transaction.commit(); 
-			   
 				
-				txtCoUserAdd = (EditText) advCoUserView.findViewById(R.id.txt_couser_enter);
 				String friendName = txtCoUserAdd.getText().toString();
 				if (friendName != null) {
 					friendsList.add(friendName);
 				}
 				
-				listViewFriends = (ListView) advCoUserView.findViewById(R.id.list_cousers_added);
-				listViewFriends.setVisibility(0);
-				ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), 
+				listViewFriends.setVisibility(View.VISIBLE);
+				adapter = new ArrayAdapter<String>(getActivity(), 
 						android.R.layout.simple_list_item_1, friendsList);
 				listViewFriends.setAdapter(adapter);
 				
@@ -158,4 +161,48 @@ public class SettingAdvCoUser extends Fragment {
 	    return friendsList;
 	}
 	
+	public void onSwitchClicked(final View v) {
+		
+		Switch disableSwitch = (Switch) v.findViewById(R.id.switch_user);
+		disableSwitch.setChecked(true);
+		disableSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				
+				if(isChecked) {
+					enableWidgets(true);		
+				}
+				else {
+					
+					enableWidgets(false);
+					removePrefsKeys();
+				}
+			}
+		});
+
+	}
+
+	private void enableWidgets(Boolean enable) {
+		
+		txtCoUserAdd.setText("");
+		txtCoUserAdd.setEnabled(enable);
+		btnFriendPicker.setEnabled(enable);
+		if (!enable && (adapter != null)) {
+			adapter.clear();
+			listViewFriends.setVisibility(View.INVISIBLE);
+		}
+	}
+	
+	private void removePrefsKeys() {
+		
+		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
+	    SharedPreferences.Editor editor = advSettingPref.edit();
+	    editor.remove("coUserIds");
+	    editor.remove("viUserIds");
+		editor.commit();
+	}
 }
+
+
+

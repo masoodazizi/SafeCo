@@ -1,10 +1,7 @@
 package com.parse.f8.view;
 
-import java.lang.reflect.Array;
+import java.io.IOException;
 import java.util.List;
-
-import com.parse.f8.R;
-import com.parse.f8.R.layout;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -15,33 +12,23 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.common.GooglePlayServicesClient.OnConnectionFailedListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.f8.AddressConverter;
+import com.parse.f8.R;
 /**
  * A simple {@link Fragment} subclass.
  * 
@@ -76,7 +63,15 @@ public class SettingAdvLocation extends Fragment {
 				
 				if (enableKey) {
 					//textAdvLocAddr.setText(latLong.toString());
-					String address = getAddress(latLng.latitude, latLng.longitude);
+					String address = "Address not fetched!";
+					AddressConverter addressConverter = new AddressConverter
+							(getActivity().getApplicationContext(), latLng.latitude, latLng.longitude);
+					try {
+						address = addressConverter.getAddress();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+//					String address = getAddress(latLng.latitude, latLng.longitude);
 					textAdvLocAddr.setText(address);
 					saveAdvSettingPref("locationAddr", address);
 					saveAdvSettingPref("locationGeo", latLng.toString());
@@ -128,44 +123,7 @@ public class SettingAdvLocation extends Fragment {
 	    map.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
 	}
 	
-	private String getAddress(double latitude, double longitude) {
-         try {
-             Geocoder geocoder;
-             List<Address> addresses;
-             geocoder = new Geocoder(getActivity().getApplicationContext());
-             if (latitude != 0 || longitude != 0) {
-                 addresses = geocoder.getFromLocation(latitude, longitude, 1);
-	//             String address = addresses.get(0).getAddressLine(0);
-	//             String city = addresses.get(0).getAddressLine(1);
-	//             String country = addresses.get(0).getAddressLine(2);
-	             String addr = "";
-	             Address firstAddress = addresses.get(0);
-	             for (int i=0;i<5;i++) {
-	            	 if (i==0) {
-	            		 addr = firstAddress.getAddressLine(i);
-	            	 }
-	            	 else {
-	                	 if (firstAddress.getAddressLine(i) != null) {
-	                		 addr =addr + " , " + firstAddress.getAddressLine(i);
-	                	 }
-	                	 else {
-	                		 break;
-	                	 }
-	            	 }
-	             }
-	//             String fullAddress = address + " , " + city + ", country = "+country;
-	//                         Log.d("MyDebug", fullAddress);
-	             return addr;
-             } else {
-                 Toast.makeText(getActivity().getApplicationContext(), "latitude and longitude are null",
-                         Toast.LENGTH_LONG).show();
-                 return null;
-             }
-         } catch (Exception e) {
-             e.printStackTrace();
-             return null;
-         }
-     }
+
 	
 	private void saveAdvSettingPref(String type, String value) {
 		
@@ -209,6 +167,51 @@ public class SettingAdvLocation extends Fragment {
 	}
 	
 }
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+
+
+//private String getAddress(double latitude, double longitude) {
+//try {
+//  Geocoder geocoder;
+//  List<Address> addresses;
+//  geocoder = new Geocoder(getActivity().getApplicationContext());
+//  if (latitude != 0 || longitude != 0) {
+//      addresses = geocoder.getFromLocation(latitude, longitude, 1);
+////             String address = addresses.get(0).getAddressLine(0);
+////             String city = addresses.get(0).getAddressLine(1);
+////             String country = addresses.get(0).getAddressLine(2);
+//      String addr = "";
+//      Address firstAddress = addresses.get(0);
+//      for (int i=0;i<5;i++) {
+//     	 if (i==0) {
+//     		 addr = firstAddress.getAddressLine(i);
+//     	 }
+//     	 else {
+//         	 if (firstAddress.getAddressLine(i) != null) {
+//         		 addr =addr + " , " + firstAddress.getAddressLine(i);
+//         	 }
+//         	 else {
+//         		 break;
+//         	 }
+//     	 }
+//      }
+////             String fullAddress = address + " , " + city + ", country = "+country;
+////                         Log.d("MyDebug", fullAddress);
+//      return addr;
+//  } else {
+//      Toast.makeText(getActivity().getApplicationContext(), "latitude and longitude are null",
+//              Toast.LENGTH_LONG).show();
+//      return null;
+//  }
+//} catch (Exception e) {
+//  e.printStackTrace();
+//  return null;
+//}
+//}
+
 
 //class MapOverlay extends com.google.android.maps.Overlay
 //{

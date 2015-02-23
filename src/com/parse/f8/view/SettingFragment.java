@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +35,8 @@ import com.parse.f8.R.id;
 public class SettingFragment extends Fragment {
 	
 	public String prefs = "UserInfoPrefs";
+	public static final String USER_INFO_PREFS = "UserInfoPrefs";
+	public static final String ADV_SETTING_PREFS = "AdvSettingPrefs";
 	public static final String PARSE_SIMPLE_PRIVACY_CLASS = "PrivacyProfile";
 	
 	private RadioGroup radioGroupSimplePrivacy;
@@ -106,6 +109,7 @@ public class SettingFragment extends Fragment {
 	    	prefs = "AdvSettingPrefs";
 	    	parseClass = "RestrictedList";
 	    	initializeAdvHeader(settingView);
+	    	onSwitchClicked(settingView);
 	    }
 	    else {
 	    	prefs = "SimplePrivacyPrefs";
@@ -361,7 +365,7 @@ public class SettingFragment extends Fragment {
 	
 	private String fetchUserInfo(String type) {
 		
-		SharedPreferences userInfoPref = getActivity().getSharedPreferences(prefs, 0);
+		SharedPreferences userInfoPref = getActivity().getSharedPreferences(USER_INFO_PREFS, 0);
 		String userInfo = userInfoPref.getString(type, "None");
 		
 		return userInfo;
@@ -500,6 +504,43 @@ public class SettingFragment extends Fragment {
 		});
 
 	}
+	
+	public void onSwitchClicked(final View v) {
+		
+		Switch disableSwitch = (Switch) v.findViewById(R.id.switch_privacyProfile);
+		disableSwitch.setChecked(true);
+		disableSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				
+				if(isChecked) {
+					enableRadioGroup(radioGroupSimplePrivacy, true);		
+				}
+				else {
+					rbtnNormal.setChecked(true);
+					rbtnIdLow.setChecked(true);
+					rbtnTimeLow.setChecked(true);
+					rbtnLocLow.setChecked(true);
+					enableRadioGroup(radioGroupSimplePrivacy, false);
+					enableCustomRadioGroups(false);
+					removePrefsKeys();
+				}
+			}
+		});
+
+	}
+	
+	private void removePrefsKeys() {
+		
+		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
+	    SharedPreferences.Editor editor = advSettingPref.edit();
+	    editor.remove("locationLvl");
+	    editor.remove("timeLvl");
+	    editor.remove("identityLvl");
+		editor.commit();
+	}
+
 }
 	
 

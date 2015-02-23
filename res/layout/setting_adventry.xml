@@ -16,15 +16,15 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:gravity="center"
-	        android:text="Restricted List"
+	        android:text="@string/restricted_list"
 	        android:textColor="@color/Red"
-	        android:textSize="15sp" />
+	        android:textSize="20sp" />
 		
 		<View
-	             android:layout_width="fill_parent"
-	             android:layout_height="1dp"
-	             android:layout_margin="5dp"
-	             android:background="@color/Brown"/>
+             android:layout_width="fill_parent"
+             android:layout_height="1dp"
+             android:layout_margin="5dp"
+             android:background="@color/Brown"/>
 		            
         
 	    <TextView
@@ -42,7 +42,7 @@
 	        android:layout_height="fill_parent"
 	        android:padding="10dp"
 	        android:dividerHeight="1.0sp"
-	        android:divider="@color/Black"
+	        android:divider="@color/Gray"
 	        android:layout_weight="4" >
 	
 	    </ListView>

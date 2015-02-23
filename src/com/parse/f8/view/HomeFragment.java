@@ -37,7 +37,7 @@ import android.os.Build;
 public class HomeFragment extends Fragment {
 	
 	ListView newsFeedListView;
-	ArrayList<SingleItem> newsFeedList = new ArrayList();
+	ArrayList<SingleItem> newsFeedList = new ArrayList<SingleItem>();
 	
 	public HomeFragment(){
 		// Required empty public constructor
@@ -65,6 +65,7 @@ public class HomeFragment extends Fragment {
 		
 //		String status = null;
 //		String friendTag = null;
+		newsFeedList.clear();
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("Post");
 		query.orderByDescending("createdAt");
 		query.setLimit(10);

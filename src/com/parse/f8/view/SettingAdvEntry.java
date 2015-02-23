@@ -58,6 +58,7 @@ public class SettingAdvEntry extends Fragment {
 		ListAdapter advEntryAdapter = new ArrayAdapter<String>
 					(getActivity(), R.layout.entry_item, R.id.lbl_entryItemTitle ,advEntryListItems);
 		advEntryListView.setAdapter(advEntryAdapter);
+		// TASK create a manual adapter to set the item info on the list (e.g: "Not Set")
 		
 		advEntryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
