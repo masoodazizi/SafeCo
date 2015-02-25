@@ -166,7 +166,7 @@
             android:id="@+id/rbtn_advTime_evenings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Evenings (18:00p.m. - 23:00p.m.)"
+            android:text="Evenings (06:00p.m. - 11:00p.m.)"
             android:textColor="@color/Black" />
 
         <RadioButton

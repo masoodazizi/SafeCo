@@ -1,7 +1,12 @@
 package com.parse.f8.view;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -15,6 +20,7 @@ import com.parse.f8.R.menu;
 
 import android.support.v4.app.Fragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,26 +42,34 @@ import android.os.Build;
  */
 public class HomeFragment extends Fragment {
 	
+	public static final String PARSE_ADV_PRIVACY_CLASS = "RestrictedList";
+	public static final String PARSE_SIMPLE_PRIVACY_CLASS = "PrivacyProfile";
+	public static final String PARSE_POST_CLASS = "Post";
+	public static final String USER_INFO_PREFS = "UserInfoPrefs";
 	ListView newsFeedListView;
 	ArrayList<SingleItem> newsFeedList = new ArrayList<SingleItem>();
+	JSONObject privacyPrefsObj = new JSONObject();
+	ArrayList<String> privacyIdsHidden = new ArrayList<String>();
+	ArrayList<String> privacyIdsGeneralized = new ArrayList<String>();
+	String ownerId;
+	
 	
 	public HomeFragment(){
 		// Required empty public constructor
 	}
 	
-	// FIXME homeView gets inflated earlier than loading data from Parse and does not show them!
+	// FIXMED homeView gets inflated earlier than loading data from Parse and does not show them!
 	
 	@Override
 	public View onCreateView(LayoutInflater inflator, ViewGroup container,
 			Bundle savedInstanceState){
 		// Inflate the layout for this fragment
 		View homeView = inflator.inflate(R.layout.fragment_home, container, false);
+		ownerId = fetchUserInfo("fbId");
 		
 		fetchNewsFeedList();
 		
 		newsFeedListView = (ListView) homeView.findViewById(R.id.list_newsfeed);
-		
-		
 		
 		return homeView;
 		
@@ -66,7 +80,7 @@ public class HomeFragment extends Fragment {
 //		String status = null;
 //		String friendTag = null;
 		newsFeedList.clear();
-		ParseQuery<ParseObject> query = ParseQuery.getQuery("Post");
+		ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_POST_CLASS);
 		query.orderByDescending("createdAt");
 		query.setLimit(10);
 		query.findInBackground(new FindCallback<ParseObject>() {
@@ -75,11 +89,33 @@ public class HomeFragment extends Fragment {
 			public void done(List<ParseObject> postList, ParseException e) {
 				if (e == null) {
 					for (ParseObject post : postList) {
+						
+						// JSON PrivacyPrefsObj initialization
+						try {
+							privacyPrefsObj.put("timeLvl", 0);
+							privacyPrefsObj.put("locationLvl", 0);
+						} catch (JSONException e1) {
+							e1.printStackTrace();
+						}
+						
 						String username = post.getString("owner");
 						String status = post.getString("text");
 						String friendTag = post.getString("friend");
 						String timeTag = post.getDate("time0").toString();
 						String locTag = post.getString("loc0");
+						String userId = post.getString("userId");
+						List<String> friendIdList = post.getList("friends");
+						if (friendIdList != null) {
+							
+							for (String friendId : friendIdList) {
+								Log.d("MXfriends", friendId);
+								checkPrivacyPreferences(friendId);
+								checkRestrictedList(friendId, userId, friendIdList, timeTag, locTag);
+							}
+
+						}
+
+
 						newsFeedList.add(new SingleItem(0, username, status, friendTag, timeTag, locTag));
 					}
 					newsFeedListView.setAdapter(new NewsFeedListAdapter(HomeFragment.this.getActivity(),newsFeedList));
@@ -95,6 +131,146 @@ public class HomeFragment extends Fragment {
 		
 	}
 	
+	private void checkPrivacyPreferences(final String userId) {
+		
+		ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_SIMPLE_PRIVACY_CLASS);
+		query.whereEqualTo("user", userId); // TASK After test "user" shoud be replaced by "userId"!
+		query.findInBackground(new FindCallback<ParseObject>() {
+		// CHECK It might be faster, if parse data is loaded in MainActivity and stored in a shared preferences, then loaded to widgets here	
+			@Override
+			public void done(List<ParseObject> userObj, ParseException e) {
+
+		        if (e == null) {
+		        	
+		        	if (userObj == null || userObj.size()==0) {
+		        		Log.d("ParseQueryError", "There is no user object with user ID " + userId + 
+		        				" is defined in <" + PARSE_SIMPLE_PRIVACY_CLASS + "> Parse Class");
+
+		        	} else {
+		        		
+		        		ParseObject user = userObj.get(0);
+		        		if (user.getInt("identityLvl") == 1) {
+		        			privacyIdsGeneralized.add(userId);
+		        		}
+		        		else if (user.getInt("identityLvl") == 2) {
+		        			privacyIdsHidden.add(userId);
+		        		}
+		        		
+		        		int timeLvlParse = user.getInt("timeLvl");
+		        		int locationLvlParse = user.getInt("locationLvl");
+		        		int timeLvlJSON = 0;
+		        		int locationLvlJSON = 0;
+		        		try {
+							timeLvlJSON = privacyPrefsObj.getInt("timeLvl");
+							locationLvlJSON = privacyPrefsObj.getInt("locationLvl");
+						} catch (JSONException e2) {
+							e2.printStackTrace();
+						}
+		        		
+		        		if (timeLvlParse > timeLvlJSON) {
+		        			
+		        			try {
+								privacyPrefsObj.put("timeLvl", timeLvlParse);
+							} catch (JSONException e1) {
+								e1.printStackTrace();
+							}
+		        		}
+		        		
+		        		if (locationLvlParse > locationLvlJSON) {
+		        			
+		        			try {
+								privacyPrefsObj.put("locationLvl", locationLvlParse);
+							} catch (JSONException e1) {
+								e1.printStackTrace();
+							}
+		        		}
+		        		
+		        	}
+		        	
+		        } else {
+		            Log.d("ParseError", "Error: " + e.getMessage());
+		        }
+		        
+			}
+		});
+	}
+	
+	private void checkRestrictedList(final String userId, String postUserId, final List<String> friendIdList,
+											String timeTag, String locTag) {
+		
+		ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_ADV_PRIVACY_CLASS);
+		query.whereEqualTo("user", userId); // TASK After test "user" shoud be replaced by "userId"!
+		query.findInBackground(new FindCallback<ParseObject>() {
+		// CHECK It might be faster, if parse data is loaded in MainActivity and stored in a shared preferences, then loaded to widgets here	
+			@Override
+			public void done(List<ParseObject> userObj, ParseException e) {
+
+		        if (e == null) {
+		        	
+		        	if (userObj == null || userObj.size()==0) {
+		        		Log.d("ParseQueryError", "There is no user object with user ID " + userId + 
+		        				" is defined in <" + PARSE_ADV_PRIVACY_CLASS + "> Parse Class");
+
+		        	} else {
+		        		
+		        		Boolean userFlag = false;
+		        		Boolean Restrictionflag = false;
+		        		ParseObject user = userObj.get(0);
+		        		List<String> coUserIdList = user.getList("coUserIds");
+		        		List<String> viUserIdList = user.getList("viUserIds");
+		        		String timeStart = user.getString("timeStart2");
+		        		String timeEnd = user.getString("timeEnd2");
+		        		String timePeriod = user.getString("timePeriod");
+		        		String locAddr = user.getString("locationAddr"); 
+		        		
+		        		// CHECK consider if the person himself is in his restricted coUserId list!
+		        		for (String coUserId : coUserIdList) {
+		        			for (String friendId : friendIdList) {
+		        				if (coUserId == friendId) {
+		        					userFlag = true;
+		        				}
+		        			}
+		        		}
+		        		
+		        		for (String viUserId : viUserIdList) {
+		        			if (viUserId == ownerId) {
+		        				userFlag = true;
+		        			}
+		        		}
+		        		
+		        		if (userFlag) {
+		        			
+		        			List<String> time1 = Arrays.asList(timeStart.split(":"));
+		        			int time1H = Integer.parseInt(time1.get(0));
+		        			int time1M = Integer.parseInt(time1.get(1));
+		        			List<String> time2 = Arrays.asList(timeEnd.split(":"));
+		        			int time2H = Integer.parseInt(time2.get(0));
+		        			int time2M = Integer.parseInt(time2.get(1));
+		        			// TASK create a function to parse timeTag and extract time to compare
+		        			// TASK create a function to parse timeTag and extract day of week
+		        			
+		        			// TASK create a function to parse location and compare
+		        			
+		        			// TASK if both time and location return true, RestrictionTag is true and privacy prefs get checked!
+		        		}
+		        	}
+		        	
+		        } else {
+		            Log.d("ParseError", "Error: " + e.getMessage());
+		        }
+		        
+			}
+		});
+	}
+	
+	private String fetchUserInfo(String type) {
+		
+		SharedPreferences userInfoPref = this.getActivity().getSharedPreferences(USER_INFO_PREFS, 0);
+		String userInfo = userInfoPref.getString(type, null);
+		
+		return userInfo;
+	}
+	
 }
 
 class NewsFeedListAdapter extends BaseAdapter {
@@ -107,10 +283,10 @@ class NewsFeedListAdapter extends BaseAdapter {
 	
 		context=ctx;
 		newsFeedList1 =feedlist;
-		Resources res=ctx.getResources();
-		String[] titles=res.getStringArray(R.array.drawer_schedule_content);
-		String[] descs=res.getStringArray(R.array.drawer_schedule_times);
-		int[] imgs={R.drawable.grow,R.drawable.lunch,R.drawable.registration,R.drawable.monetize,R.drawable.hackerway,R.drawable.build};
+//		Resources res=ctx.getResources();
+//		String[] titles=res.getStringArray(R.array.drawer_schedule_content);
+//		String[] descs=res.getStringArray(R.array.drawer_schedule_times);
+//		int[] imgs={R.drawable.grow,R.drawable.lunch,R.drawable.registration,R.drawable.monetize,R.drawable.hackerway,R.drawable.build};
 		
 //		for(int i=0;i<6;i++) {
 //			
@@ -119,9 +295,6 @@ class NewsFeedListAdapter extends BaseAdapter {
 		
 		
 	}	
-	
-
-	
 	
 	@Override
 	public int getCount() {

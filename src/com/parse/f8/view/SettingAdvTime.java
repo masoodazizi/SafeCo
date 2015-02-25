@@ -119,21 +119,29 @@ public class SettingAdvTime extends Fragment {
 		          Log.d("MyDebug", "Chose rbtn_advTime_mornings");
 		          enableTimePickers(v, false);
 		          saveAdvSettingPref("timeDayPart", "mornings");
+		          saveAdvSettingPref("timeStart", "6:0");
+		          saveAdvSettingPref("timeEnd", "10:0");
 		          break;
 		        case R.id.rbtn_advTime_afternoons:
 		          Log.d("MyDebug", "Chose rbtn_advTime_afternoons");
 		          enableTimePickers(v, false);
 		          saveAdvSettingPref("timeDayPart", "afternoons");
+		          saveAdvSettingPref("timeStart", "12:0");
+		          saveAdvSettingPref("timeEnd", "15:0");
 		          break;
 		        case R.id.rbtn_advTime_evenings:
 		          Log.d("MyDebug", "Chose rbtn_advTime_evenings");
 		          enableTimePickers(v, false);
 		          saveAdvSettingPref("timeDayPart", "evenings");
+		          saveAdvSettingPref("timeStart", "18:0");
+		          saveAdvSettingPref("timeEnd", "23:0");
 		          break;
 		        case R.id.rbtn_advTime_nights:
 		          Log.d("MyDebug", "Chose rbtn_advTime_nights");
 		          enableTimePickers(v, false);
 		          saveAdvSettingPref("timeDayPart", "nights");
+		          saveAdvSettingPref("timeStart", "0:0");
+		          saveAdvSettingPref("timeEnd", "6:0");
 		          break;
 		        case R.id.rbtn_advTime_between:
 		          Log.d("MyDebug", "Chose rbtn_advTime_between");
@@ -155,6 +163,13 @@ public class SettingAdvTime extends Fragment {
 		
 		btnAdvStartTime = (Button) v.findViewById(R.id.btn_advTimePicker1);
 		btnAdvEndTime = (Button) v.findViewById(R.id.btn_advTimePicker2);
+		
+		if(btnAdvStartTime.getText().toString() != getString(R.string.start_time)) {
+			saveAdvSettingPref("timeStart", btnAdvStartTime.getText().toString());
+		}
+		if(btnAdvEndTime.getText().toString() != getString(R.string.end_time)) {
+			saveAdvSettingPref("timeEnd", btnAdvEndTime.getText().toString());
+		}
 		
 		btnAdvStartTime.setOnClickListener(new OnClickListener() {
 			

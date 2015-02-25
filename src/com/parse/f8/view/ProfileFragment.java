@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -185,6 +186,17 @@ public class ProfileFragment extends Fragment {
 		String status = text_status.getText().toString();
 		text_status.setText("");
 		postObj.put("text", status);
+		
+		// FRIEND UPDATE
+		EditText txtFriendList = (EditText) getActivity().findViewById(R.id.txt_with);
+		String friendListString = txtFriendList.getText().toString();
+		if (friendListString != null && friendListString != "") {
+			
+			List<String> friendsList = Arrays.asList(friendListString.split("\\s*,\\s*"));
+			postObj.put("friends", friendsList);
+			txtFriendList.setText("");
+		}
+			
 		
 		// TIME update
 		///// !!! Timezone Problem !!! /////
