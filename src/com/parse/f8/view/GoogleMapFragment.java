@@ -6,6 +6,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -24,6 +25,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,6 +47,7 @@ public class GoogleMapFragment extends Fragment {
 	private TextView textMapAddress;
 	private String latitudeSelected = "null";
 	private String longitudeSelected = "null";
+	private static View googleMapView;
 	
 	public GoogleMapFragment() {
 		// Required empty public constructor
@@ -56,7 +59,18 @@ public class GoogleMapFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		
-		View googleMapView = inflater.inflate(R.layout.fragment_googlemap, container, false);
+	    if (googleMapView != null) {
+	        ViewGroup parent = (ViewGroup) googleMapView.getParent();
+	        if (parent != null)
+	            parent.removeView(googleMapView);
+	    }
+	    try {
+	    	googleMapView = inflater.inflate(R.layout.fragment_googlemap, container, false);
+	    } catch (InflateException e) {
+	        /* map is already there, just return view as it is */
+	    }
+//		googleMapView = inflater.inflate(R.layout.fragment_googlemap, container, false);
+	    
 		textMapAddress = (TextView) googleMapView.findViewById(R.id.text_map_address);
 		
 		setUpMap();
@@ -82,6 +96,9 @@ public class GoogleMapFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				
+				if (currentLocMarker != null) {
+					currentLocMarker.remove();
+				}
 				FragmentManager fm = getFragmentManager();
 				fm.popBackStack();
 			}
@@ -90,11 +107,28 @@ public class GoogleMapFragment extends Fragment {
 		return googleMapView;
 	}
 	
-private void setUpMap() {
+//	private void setUpMapIfNeeded() {
+//		
+//		 // Do a null check to confirm that we have not already instantiated the map.
+//	    if (map == null) {
+//	        // Try to obtain the map from the SupportMapFragment.
+//	        map = ((SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.googlemap))
+//	                .getMap();
+//	        map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.googlemap)).getMap();
+//	        // Check if we were successful in obtaining the map.
+//	        if (map != null) {
+//	            setUpMap();
+//	        }
+//	    }
+//	}
+	
+	private void setUpMap() {
 		
 		LatLng latLng = INFORMATIC_LOC;
 		String locTitle = "Default Location";
-		map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.googlemap)).getMap();
+//		map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.googlemap)).getMap();
+        map = ((SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.googlemap))
+        .getMap();
 		map.setMyLocationEnabled(true);
 		map.getUiSettings().setRotateGesturesEnabled(true);
         map.getUiSettings().setTiltGesturesEnabled(true);
@@ -145,13 +179,15 @@ private void setUpMap() {
 		AddressConverter addressConverter = new AddressConverter
 				(getActivity().getApplicationContext(), latlng.latitude, latlng.longitude);
 		String address = "Address not fetchted!";
-		try {
-			address = addressConverter.getAddress();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		address = addressConverter.getAddress();
+
 		textMapAddress.setText(address);
 	}
+	
+	@Override
+	public void onResume() {
+        super.onResume();
+        setUpMap();
+    }
 
 }

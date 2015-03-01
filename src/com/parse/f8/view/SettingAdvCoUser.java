@@ -22,6 +22,9 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -37,6 +40,7 @@ public class SettingAdvCoUser extends Fragment {
 	ListView listViewFriends;
 	TextView advUserTitle;
 	TextView advCoUserSelect;
+	RadioGroup rGroupAdvUser;
 	ArrayList<String> friendsList = new ArrayList<String>();
 	String key;
 	String advUserTitleText;
@@ -46,7 +50,8 @@ public class SettingAdvCoUser extends Fragment {
 	public SettingAdvCoUser() {
 		// Required empty public constructor
 	}
-
+	// TASK Add radiobutton to choose everyone!
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -79,6 +84,39 @@ public class SettingAdvCoUser extends Fragment {
 		btnFriendPicker = (Button) advCoUserView.findViewById(R.id.btn_add_couser);
 		
 		onSwitchClicked(advCoUserView);
+		
+		rGroupAdvUser = (RadioGroup) advCoUserView.findViewById(R.id.radioGroup_advUser);
+		rGroupAdvUser.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				
+				if (checkedId == R.id.rbutton_everyone) {
+					
+					String friendsType = "noUser";
+				    if (key == "coUser") {
+				    	friendsType = "coUserIds";
+				    }
+				    
+				    else if (key == "viUser") {
+				    	friendsType = "viUserIds";
+				    }
+					saveAdvSettingPref(friendsType, "$everyone");
+					
+					txtCoUserAdd.setEnabled(false);
+					btnFriendPicker.setEnabled(false);
+					if (adapter != null) {
+						adapter.clear();
+						listViewFriends.setVisibility(View.INVISIBLE);
+					}
+				}
+				else if (checkedId == R.id.rbutton_selective) {
+					
+					txtCoUserAdd.setEnabled(true);
+					btnFriendPicker.setEnabled(true);
+				}
+			}
+		});
 		
 		btnFriendPicker.setOnClickListener(new OnClickListener() {
 			
@@ -113,7 +151,7 @@ public class SettingAdvCoUser extends Fragment {
 			    else if (key == "viUser") {
 			    	friendsType = "viUserIds";
 			    }
-				saveAdvSettingPref(friendsType, friendsList);
+				saveAdvSettingArrayPref(friendsType, friendsList);
 				
 				txtCoUserAdd.setText("");
 			}
@@ -123,7 +161,7 @@ public class SettingAdvCoUser extends Fragment {
 	}
 	
 	
-	private void saveAdvSettingPref(String type, ArrayList<String> values) {
+	private void saveAdvSettingArrayPref(String type, ArrayList<String> values) {
 		
 		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
 	    SharedPreferences.Editor editor = advSettingPref.edit();
@@ -192,6 +230,12 @@ public class SettingAdvCoUser extends Fragment {
 			adapter.clear();
 			listViewFriends.setVisibility(View.INVISIBLE);
 		}
+		for(int i = 0; i < rGroupAdvUser.getChildCount(); i++){
+            ((RadioButton)rGroupAdvUser.getChildAt(i)).setEnabled(enable);
+        }
+        if (!enable) {
+        	rGroupAdvUser.clearCheck();
+        }
 	}
 	
 	private void removePrefsKeys() {
@@ -201,6 +245,15 @@ public class SettingAdvCoUser extends Fragment {
 	    editor.remove("coUserIds");
 	    editor.remove("viUserIds");
 		editor.commit();
+	}
+	
+	private void saveAdvSettingPref(String type, String value) {
+		
+		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
+	    SharedPreferences.Editor editor = advSettingPref.edit();
+	    editor.putString(type , value);
+		editor.commit();
+		
 	}
 }
 

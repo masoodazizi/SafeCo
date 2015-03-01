@@ -20,6 +20,7 @@
     
     <!-- Parse -->    
     <uses-permission android:name="android.permission.INTERNET" />
+<!--     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/> -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -131,6 +132,7 @@
 
         <activity
             android:name="com.parse.f8.view.MainActivity"
+            android:windowSoftInputMode="stateHidden"
             android:label="@string/app_name" >
 
         </activity>

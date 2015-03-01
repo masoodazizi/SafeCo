@@ -94,15 +94,15 @@
     
     <string-array name="spinner_time_list">
         <item>Select a time period...</item>
-        <item>Every Day</item>
-        <item>Every Weekend</item>
+        <item>Every Sunday</item>
         <item>Every Monday</item>
         <item>Every Tuesday</item>
         <item>Every Wednesday</item>
         <item>Every Thursday</item>
         <item>Every Friday</item>
         <item>Every Saturday</item>
-        <item>Every Sunday</item>
+        <item>Every Weekend</item>
+        <item>Every Day</item>
     </string-array>
     
     <string name="spinner_advTime_prompt">Select a time period:</string>

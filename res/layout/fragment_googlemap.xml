@@ -56,11 +56,11 @@
                  android:padding="5dp" />
          </RelativeLayout>
          
-         <fragment
+         <fragment 
              android:id="@+id/googlemap"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             class="com.google.android.gms.maps.MapFragment" />
+             class="com.google.android.gms.maps.SupportMapFragment" />
 
      </LinearLayout>
 

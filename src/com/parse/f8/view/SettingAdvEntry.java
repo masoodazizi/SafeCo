@@ -5,6 +5,7 @@ import java.util.List;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.f8.R;
@@ -120,7 +121,7 @@ public class SettingAdvEntry extends Fragment {
 	
 	private void saveAdvPrefsInfoToParse() {
 		
-		final SharedPreferences userInfoPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
+		final SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
 		
 		ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_ADV_PRIVACY_CLASS);
 		query.whereEqualTo("userId", userId);
@@ -137,15 +138,20 @@ public class SettingAdvEntry extends Fragment {
 
 		        	} else {
 		        		ParseObject user = userObj.get(0);
-		        		user.put("identityLvl", userInfoPref.getInt("identityLvl", 0));
-		        		user.put("timeLvl", userInfoPref.getInt("timeLvl", 0));
-		        		user.put("locationLvl", userInfoPref.getInt("locationLvl", 0));
-		        		user.put("timePeriod", userInfoPref.getString("timePeriod", "null"));
-		        		user.put("timeStart2", userInfoPref.getString("timeStart", "null"));
-		        		user.put("timeEnd2", userInfoPref.getString("timeEnd", "null"));
-		        		user.put("timeDayPart", userInfoPref.getString("timeDayPart", "null"));
-		        		user.put("locationAddr", userInfoPref.getString("locationAddr", "null"));
+		        		user.put("identityLvl", advSettingPref.getInt("identityLvl", 0));
+		        		user.put("timeLvl", advSettingPref.getInt("timeLvl", 0));
+		        		user.put("locationLvl", advSettingPref.getInt("locationLvl", 0));
+		        		user.put("dayOfWeek", advSettingPref.getInt("dayOfWeek", 0));
+		        		user.put("timePeriod", advSettingPref.getString("timePeriod", "null"));
+		        		user.put("timeStart2", advSettingPref.getString("timeStart", "null"));
+		        		user.put("timeEnd2", advSettingPref.getString("timeEnd", "null"));
+		        		user.put("timeDayPart", advSettingPref.getString("timeDayPart", "null"));
+		        		user.put("locationAddr", advSettingPref.getString("locationAddr", "null"));
 		        		
+		        		double latitude = Double.parseDouble(advSettingPref.getString("latitude", "0"));
+		        		double longitude = Double.parseDouble(advSettingPref.getString("longitude", "0"));
+		        		ParseGeoPoint point = new ParseGeoPoint(latitude, longitude);
+		        		user.put("locationGeo", point);
 		        		user.saveEventually();
 		        	}
 		        } else {

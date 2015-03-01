@@ -1,6 +1,7 @@
 package com.parse.f8.view;
 
 import java.io.IOException;
+import java.sql.Savepoint;
 import java.util.List;
 
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +47,8 @@ public class SettingAdvLocation extends Fragment {
 	public SettingAdvLocation() {
 		// Required empty public constructor
 	}
-
+	// TASK Add radiobutton to have an option to show first level generalization
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -66,15 +69,17 @@ public class SettingAdvLocation extends Fragment {
 					String address = "Address not fetched!";
 					AddressConverter addressConverter = new AddressConverter
 							(getActivity().getApplicationContext(), latLng.latitude, latLng.longitude);
-					try {
-						address = addressConverter.getAddress();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+					address = addressConverter.getAddress();
+					String address1 = addressConverter.generalizeFirstLevel();
+					Log.d("MXAddrGen", address1);
+					String address2 = addressConverter.generalizeSecondLevel();
+					Log.d("MXAddrGen", address2);
 //					String address = getAddress(latLng.latitude, latLng.longitude);
 					textAdvLocAddr.setText(address);
 					saveAdvSettingPref("locationAddr", address);
 					saveAdvSettingPref("locationGeo", latLng.toString());
+					saveAdvSettingPref("latitude", Double.toString(latLng.latitude));
+					saveAdvSettingPref("longitude", Double.toString(latLng.longitude));
 					showMarkerOnMap(latLng, "Your Selected Location");
 				}
 			}
@@ -166,6 +171,10 @@ public class SettingAdvLocation extends Fragment {
 		editor.commit();
 	}
 	
+	private void generalizeLoctionAddress(String address) {
+		
+		
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////

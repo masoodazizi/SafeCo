@@ -2,6 +2,8 @@ package com.parse.f8.view;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -10,6 +12,7 @@ import org.json.JSONObject;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.f8.R;
@@ -101,22 +104,23 @@ public class HomeFragment extends Fragment {
 						String username = post.getString("owner");
 						String status = post.getString("text");
 						String friendTag = post.getString("friend");
-						String timeTag = post.getDate("time0").toString();
+						Date timeTag = post.getDate("time0");
 						String locTag = post.getString("loc0");
 						String userId = post.getString("userId");
 						List<String> friendIdList = post.getList("friends");
+						ParseGeoPoint locGeoTag = (ParseGeoPoint) post.get("locGeo");
+						
 						if (friendIdList != null) {
-							
 							for (String friendId : friendIdList) {
 								Log.d("MXfriends", friendId);
-								checkPrivacyPreferences(friendId);
-								checkRestrictedList(friendId, userId, friendIdList, timeTag, locTag);
+//								checkPrivacyPreferences(friendId);
+//								checkRestrictedList(friendId, userId, friendIdList, timeTag, locGeoTag);
 							}
 
 						}
 
 
-						newsFeedList.add(new SingleItem(0, username, status, friendTag, timeTag, locTag));
+						newsFeedList.add(new SingleItem(0, username, status, friendTag, timeTag.toString(), locTag));
 					}
 					newsFeedListView.setAdapter(new NewsFeedListAdapter(HomeFragment.this.getActivity(),newsFeedList));
 				}
@@ -149,41 +153,7 @@ public class HomeFragment extends Fragment {
 		        	} else {
 		        		
 		        		ParseObject user = userObj.get(0);
-		        		if (user.getInt("identityLvl") == 1) {
-		        			privacyIdsGeneralized.add(userId);
-		        		}
-		        		else if (user.getInt("identityLvl") == 2) {
-		        			privacyIdsHidden.add(userId);
-		        		}
-		        		
-		        		int timeLvlParse = user.getInt("timeLvl");
-		        		int locationLvlParse = user.getInt("locationLvl");
-		        		int timeLvlJSON = 0;
-		        		int locationLvlJSON = 0;
-		        		try {
-							timeLvlJSON = privacyPrefsObj.getInt("timeLvl");
-							locationLvlJSON = privacyPrefsObj.getInt("locationLvl");
-						} catch (JSONException e2) {
-							e2.printStackTrace();
-						}
-		        		
-		        		if (timeLvlParse > timeLvlJSON) {
-		        			
-		        			try {
-								privacyPrefsObj.put("timeLvl", timeLvlParse);
-							} catch (JSONException e1) {
-								e1.printStackTrace();
-							}
-		        		}
-		        		
-		        		if (locationLvlParse > locationLvlJSON) {
-		        			
-		        			try {
-								privacyPrefsObj.put("locationLvl", locationLvlParse);
-							} catch (JSONException e1) {
-								e1.printStackTrace();
-							}
-		        		}
+		        		setPrivacyPrefs(user, userId);
 		        		
 		        	}
 		        	
@@ -196,7 +166,7 @@ public class HomeFragment extends Fragment {
 	}
 	
 	private void checkRestrictedList(final String userId, String postUserId, final List<String> friendIdList,
-											String timeTag, String locTag) {
+											final Date timeTag, final ParseGeoPoint locGeoTag) {
 		
 		ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_ADV_PRIVACY_CLASS);
 		query.whereEqualTo("user", userId); // TASK After test "user" shoud be replaced by "userId"!
@@ -213,43 +183,93 @@ public class HomeFragment extends Fragment {
 
 		        	} else {
 		        		
-		        		Boolean userFlag = false;
+		        		Boolean couserFlag = false;
+		        		Boolean viuserFlag = false;
+		        		Boolean timeFlag = false;
+		        		Boolean locFlag = false;
 		        		Boolean Restrictionflag = false;
 		        		ParseObject user = userObj.get(0);
 		        		List<String> coUserIdList = user.getList("coUserIds");
 		        		List<String> viUserIdList = user.getList("viUserIds");
 		        		String timeStart = user.getString("timeStart2");
 		        		String timeEnd = user.getString("timeEnd2");
-		        		String timePeriod = user.getString("timePeriod");
+		        		int dayOfWeek = user.getInt("dayOfWeek");
 		        		String locAddr = user.getString("locationAddr"); 
+		        		ParseGeoPoint userGeoLocation = (ParseGeoPoint) user.get("locationGeo");
 		        		
 		        		// CHECK consider if the person himself is in his restricted coUserId list!
-		        		for (String coUserId : coUserIdList) {
-		        			for (String friendId : friendIdList) {
-		        				if (coUserId == friendId) {
-		        					userFlag = true;
+		        		if (coUserIdList != null) {
+			        		for (String coUserId : coUserIdList) {
+			        			for (String friendId : friendIdList) {
+			        				if (coUserId == friendId) {
+			        					couserFlag = true;
+			        				}
+			        			}
+			        		}
+		        		}
+		        		if (couserFlag) {
+		        			
+			        		if (viUserIdList != null) {
+				        		for (String viUserId : viUserIdList) {
+				        			if (viUserId == ownerId) {
+				        				viuserFlag = true;
+				        			}
+				        		}
+			        		}
+		        		}
+
+		        		
+		        		if (viuserFlag) {
+		        			
+		        			// TIME check!
+		        			Calendar timeCal = Calendar.getInstance();
+		        			timeCal.setTime(timeTag);
+
+		        			Boolean dayFlag = false;
+		        			int dayTag = timeCal.get(Calendar.DAY_OF_WEEK);
+		        			if(dayOfWeek == 9) {
+		        				dayFlag = true;
+		        			}
+		        			else if (dayOfWeek == 8) {
+		        				if (dayTag == 1 || dayTag == 7) {
+		        					dayFlag = true;
 		        				}
 		        			}
-		        		}
-		        		
-		        		for (String viUserId : viUserIdList) {
-		        			if (viUserId == ownerId) {
-		        				userFlag = true;
+		        			else {
+		        				if (dayOfWeek == dayTag) {
+		        					dayFlag = true;
+		        				}
 		        			}
-		        		}
-		        		
-		        		if (userFlag) {
 		        			
-		        			List<String> time1 = Arrays.asList(timeStart.split(":"));
-		        			int time1H = Integer.parseInt(time1.get(0));
-		        			int time1M = Integer.parseInt(time1.get(1));
-		        			List<String> time2 = Arrays.asList(timeEnd.split(":"));
-		        			int time2H = Integer.parseInt(time2.get(0));
-		        			int time2M = Integer.parseInt(time2.get(1));
-		        			// TASK create a function to parse timeTag and extract time to compare
-		        			// TASK create a function to parse timeTag and extract day of week
+		        			Date time1 = getDate(timeCal, timeStart);
+		        			Date time2 = getDate(timeCal, timeEnd);
+		        			if (dayFlag) {
+			        			if (timeTag.after(time1) && timeTag.before(time2)) {
+			        				
+			        				timeFlag = true;
+			        			}
+		        			}
 		        			
-		        			// TASK create a function to parse location and compare
+
+		        			
+		        			if (timeFlag) {
+		        				
+		        				// Location check!
+		        				if (userGeoLocation.distanceInKilometersTo(locGeoTag) < 0.5) {
+		        					locFlag = true;
+		        				}
+		        			}
+		        			
+		        			if (locFlag) {
+		        				Restrictionflag = true;
+		        			}
+		        			
+		        			
+		        			if (Restrictionflag) {
+		        				
+		        				setPrivacyPrefs(user, userId);
+		        			}
+
 		        			
 		        			// TASK if both time and location return true, RestrictionTag is true and privacy prefs get checked!
 		        		}
@@ -261,6 +281,55 @@ public class HomeFragment extends Fragment {
 		        
 			}
 		});
+	}
+	
+	private void setPrivacyPrefs(ParseObject user, String userId) {
+		
+		if (user.getInt("identityLvl") == 1) {
+			privacyIdsGeneralized.add(userId);
+		}
+		else if (user.getInt("identityLvl") == 2) {
+			privacyIdsHidden.add(userId);
+		}
+		
+		int timeLvlParse = user.getInt("timeLvl");
+		int locationLvlParse = user.getInt("locationLvl");
+		int timeLvlJSON = 0;
+		int locationLvlJSON = 0;
+		try {
+			timeLvlJSON = privacyPrefsObj.getInt("timeLvl");
+			locationLvlJSON = privacyPrefsObj.getInt("locationLvl");
+		} catch (JSONException e2) {
+			e2.printStackTrace();
+		}
+		
+		if (timeLvlParse > timeLvlJSON) {
+			
+			try {
+				privacyPrefsObj.put("timeLvl", timeLvlParse);
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+		}
+		
+		if (locationLvlParse > locationLvlJSON) {
+			
+			try {
+				privacyPrefsObj.put("locationLvl", locationLvlParse);
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+	
+	private Date getDate(Calendar cal, String timeStr) {
+		 
+		List<String> timeHM = Arrays.asList(timeStr.split(":"));
+		int timeH = Integer.parseInt(timeHM.get(0));
+		int timeM = Integer.parseInt(timeHM.get(1));
+	    cal.set(Calendar.HOUR_OF_DAY, timeH);  
+	    cal.set(Calendar.MINUTE, timeM);  
+	    return cal.getTime(); 
 	}
 	
 	private String fetchUserInfo(String type) {

@@ -55,7 +55,8 @@ public class SettingAdvTime extends Fragment {
 	public SettingAdvTime() {
 		// Required empty public constructor
 	}
-
+	// TASK Add option to insert an exact date! 
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -90,6 +91,7 @@ public class SettingAdvTime extends Fragment {
 				Log.d("MyDebug", "Spinner selected item is: " + selectedItem);
 				if (pos != 0) {
 					saveAdvSettingPref("timePeriod", selectedItem);
+					saveAdvSettingIntegerPref("dayOfWeek", pos);
 //					Toast.makeText(parent.getContext(), "MyDebug:" + selectedItem, Toast.LENGTH_SHORT).show();
 				}
 				
@@ -207,7 +209,9 @@ public class SettingAdvTime extends Fragment {
                     public void onTimeSet(TimePicker view, int hourOfDay,
                             int minute) {
                         // Display Selected time in textbox
-                    	String timeStr = Integer.toString(hourOfDay) + ":" + Integer.toString(minute);
+                    	String timeStr = pad(hourOfDay) + ":" + pad(minute);
+//                    	String timeStr = Integer.toString(hourOfDay) + ":" + Integer.toString(minute);
+//                    	String timeStr = new StringBuilder().append(pad(hourOfDay)).append(":").append(pad(minute));
                         Log.d("MyDebug", timeStr);
                         if (startValue) {
                         	btnAdvStartTime = (Button) v.findViewById(R.id.btn_advTimePicker1);
@@ -225,7 +229,12 @@ public class SettingAdvTime extends Fragment {
         tpd.show();
 	}
 	
-
+	private String pad(int c) {
+		if (c >= 10)
+		   return String.valueOf(c);
+		else
+		   return "0" + String.valueOf(c);
+	}
 	
 	private void enableTimePickers (View v, Boolean enable) {
 		
@@ -245,6 +254,15 @@ public class SettingAdvTime extends Fragment {
 		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
 	    SharedPreferences.Editor editor = advSettingPref.edit();
 	    editor.putString(type , value);
+		editor.commit();
+		
+	}
+	
+	private void saveAdvSettingIntegerPref(String type, int value) {
+		
+		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
+	    SharedPreferences.Editor editor = advSettingPref.edit();
+	    editor.putInt(type ,value);
 		editor.commit();
 		
 	}
@@ -303,6 +321,9 @@ public class SettingAdvTime extends Fragment {
 		
         for(int i = 0; i < radioGroup.getChildCount(); i++){
             ((RadioButton)radioGroup.getChildAt(i)).setEnabled(enable);
+        }
+        if (!enable) {
+        	radioGroup.clearCheck();
         }
 	}
 	

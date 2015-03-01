@@ -66,7 +66,7 @@ public class SettingFragment extends Fragment {
 		// Required empty public constructor
 		
 	}
-	// FIXME Create subtabs for simple and advanced privacy settings
+	// FIXMED Create subtabs for simple and advanced privacy settings // replaced by an option bar in bottom
 	// TASK when a profile is selected (except setting), the custom values change accordingly
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
