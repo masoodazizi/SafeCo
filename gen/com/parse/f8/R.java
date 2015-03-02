@@ -1776,7 +1776,7 @@ containing a value of this type.
         public static final int x=0x7f0200d4;
     }
     public static final class id {
-        public static final int action_alerts=0x7f0500ff;
+        public static final int action_alerts=0x7f050100;
         public static final int action_bar=0x7f05002a;
         public static final int action_bar_activity_content=0x7f050023;
         public static final int action_bar_container=0x7f050029;
@@ -1785,15 +1785,15 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f050031;
         public static final int action_bar_title=0x7f050030;
         public static final int action_context_bar=0x7f05002b;
-        public static final int action_logout=0x7f050102;
-        public static final int action_maps=0x7f050100;
+        public static final int action_logout=0x7f050103;
+        public static final int action_maps=0x7f050101;
         public static final int action_menu_divider=0x7f050024;
         public static final int action_menu_presenter=0x7f050025;
         public static final int action_mode_close_button=0x7f050032;
-        public static final int action_my_schedule=0x7f0500fe;
-        public static final int action_schedule=0x7f0500fd;
-        public static final int action_settings=0x7f0500fc;
-        public static final int action_terms_link=0x7f050101;
+        public static final int action_my_schedule=0x7f0500ff;
+        public static final int action_schedule=0x7f0500fe;
+        public static final int action_settings=0x7f0500fd;
+        public static final int action_terms_link=0x7f050102;
         public static final int activity_chooser_view_content=0x7f050033;
         public static final int alerts_view=0x7f05004a;
         public static final int always=0x7f05001a;
@@ -1802,8 +1802,8 @@ containing a value of this type.
         public static final int box_count=0x7f050005;
         public static final int btn_addEntry=0x7f0500dd;
         public static final int btn_add_couser=0x7f0500d8;
-        public static final int btn_advTimePicker1=0x7f0500ef;
-        public static final int btn_advTimePicker2=0x7f0500f1;
+        public static final int btn_advTimePicker1=0x7f0500f0;
+        public static final int btn_advTimePicker2=0x7f0500f2;
         public static final int btn_post=0x7f050099;
         public static final int button=0x7f050004;
         public static final int center=0x7f050009;
@@ -1811,7 +1811,7 @@ containing a value of this type.
         public static final int checkmark=0x7f0500bc;
         public static final int close_button=0x7f050052;
         public static final int collapseActionView=0x7f05001c;
-        public static final int color_block=0x7f0500f3;
+        public static final int color_block=0x7f0500f4;
         public static final int color_change=0x7f050051;
         public static final int com_facebook_body_frame=0x7f05006e;
         public static final int com_facebook_button_xout=0x7f050070;
@@ -1856,7 +1856,7 @@ containing a value of this type.
         public static final int googlemap=0x7f05007f;
         public static final int goto_first=0x7f050082;
         public static final int goto_last=0x7f050083;
-        public static final int greeting=0x7f0500f9;
+        public static final int greeting=0x7f0500fa;
         public static final int home=0x7f050022;
         public static final int homeAsUp=0x7f050014;
         public static final int hybrid=0x7f05000f;
@@ -1876,7 +1876,7 @@ containing a value of this type.
         public static final int lbl_addNewEntry=0x7f0500db;
         public static final int lbl_advCoUserSelect=0x7f0500d3;
         public static final int lbl_advLocAddr=0x7f0500df;
-        public static final int lbl_advTime_until=0x7f0500f0;
+        public static final int lbl_advTime_until=0x7f0500f1;
         public static final int lbl_advuser=0x7f05009e;
         public static final int lbl_customprivacy_blank=0x7f0500a6;
         public static final int lbl_customprivacy_high=0x7f0500a9;
@@ -1910,7 +1910,7 @@ containing a value of this type.
         public static final int middle=0x7f050020;
         public static final int my_talks_list=0x7f05004f;
         public static final int name=0x7f0500bf;
-        public static final int nav_text=0x7f0500f2;
+        public static final int nav_text=0x7f0500f3;
         public static final int never=0x7f050018;
         public static final int no_alerts_view=0x7f05004b;
         public static final int none=0x7f05000c;
@@ -1927,11 +1927,11 @@ containing a value of this type.
         public static final int progress_horizontal=0x7f050027;
         public static final int radio=0x7f05003d;
         public static final int radioGroup_advUser=0x7f0500d4;
-        public static final int rbtn_advTime_afternoons=0x7f0500eb;
-        public static final int rbtn_advTime_between=0x7f0500ee;
-        public static final int rbtn_advTime_evenings=0x7f0500ec;
-        public static final int rbtn_advTime_mornings=0x7f0500ea;
-        public static final int rbtn_advTime_nights=0x7f0500ed;
+        public static final int rbtn_advTime_afternoons=0x7f0500ec;
+        public static final int rbtn_advTime_between=0x7f0500ef;
+        public static final int rbtn_advTime_evenings=0x7f0500ed;
+        public static final int rbtn_advTime_mornings=0x7f0500eb;
+        public static final int rbtn_advTime_nights=0x7f0500ee;
         public static final int rbtn_customprivacy_identity_high=0x7f0500ae;
         public static final int rbtn_customprivacy_identity_low=0x7f0500ac;
         public static final int rbtn_customprivacy_identity_medium=0x7f0500ad;
@@ -1948,7 +1948,7 @@ containing a value of this type.
         public static final int rbtn_simpleprivacy_strict=0x7f0500a3;
         public static final int rbutton_everyone=0x7f0500d5;
         public static final int rbutton_selective=0x7f0500d6;
-        public static final int rgroup_advTime=0x7f0500e9;
+        public static final int rgroup_advTime=0x7f0500ea;
         public static final int rgroup_customprivacy_identity=0x7f0500ab;
         public static final int rgroup_customprivacy_location=0x7f0500b5;
         public static final int rgroup_customprivacy_time=0x7f0500b0;
@@ -1988,7 +1988,7 @@ containing a value of this type.
         public static final int tabMode=0x7f050011;
         public static final int talk_abstract=0x7f050054;
         public static final int talk_item=0x7f0500c1;
-        public static final int talk_list_view=0x7f0500f7;
+        public static final int talk_list_view=0x7f0500f8;
         public static final int terrain=0x7f05000e;
         public static final int text=0x7f050084;
         public static final int text_map_address=0x7f05007c;
@@ -2000,10 +2000,10 @@ containing a value of this type.
         public static final int top=0x7f050008;
         public static final int top_action_bar=0x7f05002e;
         public static final int tos=0x7f05004e;
-        public static final int track_description=0x7f0500f6;
+        public static final int track_description=0x7f0500f7;
         public static final int track_description_header=0x7f0500ba;
-        public static final int track_time=0x7f0500f5;
-        public static final int track_title=0x7f0500f4;
+        public static final int track_time=0x7f0500f6;
+        public static final int track_title=0x7f0500f5;
         public static final int txtEmail=0x7f05008a;
         public static final int txtGender=0x7f05008b;
         public static final int txtName=0x7f050088;
@@ -2013,6 +2013,7 @@ containing a value of this type.
         public static final int txt_fbFriend2=0x7f050079;
         public static final int txt_loc_home=0x7f0500d0;
         public static final int txt_location=0x7f050097;
+        public static final int txt_specificDate=0x7f0500e9;
         public static final int txt_status_home=0x7f0500ca;
         public static final int txt_status_text=0x7f05008d;
         public static final int txt_time=0x7f050092;
@@ -2027,10 +2028,10 @@ containing a value of this type.
         public static final int video_play=0x7f050056;
         public static final int view1=0x7f05007d;
         public static final int view_date_picker=0x7f050095;
-        public static final int welcome_color_block=0x7f0500f8;
+        public static final int welcome_color_block=0x7f0500f9;
         public static final int welcome_content=0x7f0500c7;
-        public static final int welcome_description=0x7f0500fa;
-        public static final int welcome_details_list=0x7f0500fb;
+        public static final int welcome_description=0x7f0500fb;
+        public static final int welcome_details_list=0x7f0500fc;
         public static final int welcome_title=0x7f0500c6;
         public static final int white_overlay_favorite=0x7f050058;
         public static final int white_overlay_video=0x7f050055;

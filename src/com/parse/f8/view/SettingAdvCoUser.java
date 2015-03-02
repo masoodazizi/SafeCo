@@ -41,6 +41,7 @@ public class SettingAdvCoUser extends Fragment {
 	TextView advUserTitle;
 	TextView advCoUserSelect;
 	RadioGroup rGroupAdvUser;
+	RadioButton rbtnEveryone;
 	ArrayList<String> friendsList = new ArrayList<String>();
 	String key;
 	String advUserTitleText;
@@ -75,6 +76,7 @@ public class SettingAdvCoUser extends Fragment {
 	    	advUserTitleText = "View-User";
 	    }
 	    
+	    rbtnEveryone = (RadioButton) advCoUserView.findViewById(R.id.rbutton_everyone);
 	    advUserTitle = (TextView) advCoUserView.findViewById(R.id.lbl_advuser);
 	    advUserTitle.setText(advUserTitleText);
 	    listViewFriends = (ListView) advCoUserView.findViewById(R.id.list_cousers_added);
@@ -101,7 +103,7 @@ public class SettingAdvCoUser extends Fragment {
 				    else if (key == "viUser") {
 				    	friendsType = "viUserIds";
 				    }
-					saveAdvSettingPref(friendsType, "$everyone");
+//					saveAdvSettingPref(friendsType, "$everyone");
 					
 					txtCoUserAdd.setEnabled(false);
 					btnFriendPicker.setEnabled(false);
@@ -166,16 +168,34 @@ public class SettingAdvCoUser extends Fragment {
 		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
 	    SharedPreferences.Editor editor = advSettingPref.edit();
 	    
-	    JSONArray a = new JSONArray();
-	    for (int i = 0; i < values.size(); i++) {
-	        a.put(values.get(i));
+//	    JSONArray a = new JSONArray();
+//	    for (int i = 0; i < values.size(); i++) {
+//	        a.put(values.get(i));
+//	    }
+//	    if (!values.isEmpty()) {
+//	        editor.putString(type, a.toString());
+//	    } else {
+//	    	 editor.putString(type, null);
+//	    }
+	    
+	    String userString = null;
+	    
+	    for (String item : values) {
+	    	if (userString == null) {
+	    		userString = item;
+	    	} else {
+	    		userString = userString + " , " + item;
+	    	}
 	    }
-	    if (!values.isEmpty()) {
-	        editor.putString(type, a.toString());
-	    } else {
-	    	 editor.putString(type, null);
+	    editor.putString(type , userString);
+	    
+	    if (type == "coUserIds") {
+	    	editor.putBoolean("coUserFlag", true);
 	    }
-	       
+	    else if(type == "viUserIds") {
+	    	editor.putBoolean("viUserFlag", true);
+	    }
+	    
 		editor.commit();
 		
 	}
@@ -233,28 +253,37 @@ public class SettingAdvCoUser extends Fragment {
 		for(int i = 0; i < rGroupAdvUser.getChildCount(); i++){
             ((RadioButton)rGroupAdvUser.getChildAt(i)).setEnabled(enable);
         }
-        if (!enable) {
-        	rGroupAdvUser.clearCheck();
-        }
+		rbtnEveryone.setChecked(true);
+//        if (!enable) {
+//        	rGroupAdvUser.clearCheck();
+//        }
 	}
 	
 	private void removePrefsKeys() {
 		
 		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
 	    SharedPreferences.Editor editor = advSettingPref.edit();
-	    editor.remove("coUserIds");
-	    editor.remove("viUserIds");
+	    if (key == "coUser") {
+	    	editor.remove("coUserIds");
+	    	editor.putBoolean("coUserFlag", false);
+	    }
+	    
+	    else if (key == "viUser") {
+	    	editor.remove("viUserIds");
+	    	editor.putBoolean("viUserFlag", false);
+	    }
+	    
 		editor.commit();
 	}
 	
-	private void saveAdvSettingPref(String type, String value) {
-		
-		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
-	    SharedPreferences.Editor editor = advSettingPref.edit();
-	    editor.putString(type , value);
-		editor.commit();
-		
-	}
+//	private void saveAdvSettingPref(String type, String value) {
+//		
+//		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
+//	    SharedPreferences.Editor editor = advSettingPref.edit();
+//	    editor.putString(type , value);
+//		editor.commit();
+//		
+//	}
 }
 
 

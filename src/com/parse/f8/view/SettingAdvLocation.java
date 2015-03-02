@@ -135,6 +135,7 @@ public class SettingAdvLocation extends Fragment {
 		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
 	    SharedPreferences.Editor editor = advSettingPref.edit();
 	    editor.putString(type , value);
+	    editor.putBoolean("locationFlag", true);
 		editor.commit();
 		
 	}
@@ -168,13 +169,10 @@ public class SettingAdvLocation extends Fragment {
 	    SharedPreferences.Editor editor = advSettingPref.edit();
 	    editor.remove("locationAddr");
 	    editor.remove("locationGeo");
+	    editor.putBoolean("locationFlag", false);
 		editor.commit();
 	}
 	
-	private void generalizeLoctionAddress(String address) {
-		
-		
-	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////

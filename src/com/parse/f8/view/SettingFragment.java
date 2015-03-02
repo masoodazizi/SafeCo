@@ -480,7 +480,7 @@ public class SettingFragment extends Fragment {
 		View line = (View) v.findViewById(R.id.line_privacyProfile);
 		line.setVisibility(View.VISIBLE);
 		Switch switchPrivacyProfile = (Switch) v.findViewById(R.id.switch_privacyProfile);
-		switchPrivacyProfile.setVisibility(View.VISIBLE);
+//		switchPrivacyProfile.setVisibility(View.VISIBLE);
 	}
 	
 	private void savePrivacyProfileToParse(final String value) {

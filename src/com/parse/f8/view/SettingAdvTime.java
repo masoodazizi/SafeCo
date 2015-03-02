@@ -10,10 +10,13 @@ import com.facebook.model.GraphUser;
 import com.parse.f8.R;
 import com.parse.f8.R.layout;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -31,6 +34,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -51,6 +55,8 @@ public class SettingAdvTime extends Fragment {
 	private RadioGroup radioGroupAdvTime;
 	private Button btnAdvStartTime;
 	private Button btnAdvEndTime;
+	private TextView txtSpecificDate;
+	private Calendar calendar;
 	
 	public SettingAdvTime() {
 		// Required empty public constructor
@@ -62,12 +68,16 @@ public class SettingAdvTime extends Fragment {
 			Bundle savedInstanceState) {
 		
 		View advTimeView = inflater.inflate(R.layout.setting_advtime, container, false);
+		txtSpecificDate = (TextView) advTimeView.findViewById(R.id.txt_specificDate);
+		calendar = Calendar.getInstance();
 
 		advTimePeriodListener(advTimeView);
 		
 		advTimeDayPartListener(advTimeView);
 		
 		onSwitchClicked(advTimeView);
+		
+		onSpecificDateClicked();
 		
 		return advTimeView;
 	}
@@ -87,11 +97,16 @@ public class SettingAdvTime extends Fragment {
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int pos, long id) {
 				
+				txtSpecificDate.setVisibility(View.GONE);
 				String selectedItem = parent.getItemAtPosition(pos).toString();
 				Log.d("MyDebug", "Spinner selected item is: " + selectedItem);
 				if (pos != 0) {
 					saveAdvSettingPref("timePeriod", selectedItem);
 					saveAdvSettingIntegerPref("dayOfWeek", pos);
+					if (pos == 10) {
+						
+						setSpecificDate();
+					}
 //					Toast.makeText(parent.getContext(), "MyDebug:" + selectedItem, Toast.LENGTH_SHORT).show();
 				}
 				
@@ -254,6 +269,7 @@ public class SettingAdvTime extends Fragment {
 		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
 	    SharedPreferences.Editor editor = advSettingPref.edit();
 	    editor.putString(type , value);
+	    editor.putBoolean("timeFlag", true);
 		editor.commit();
 		
 	}
@@ -310,11 +326,51 @@ public class SettingAdvTime extends Fragment {
 					enableTimePickers(v, false);
 					btnAdvStartTime.setText(getString(R.string.start_time));
 					btnAdvEndTime.setText(getString(R.string.end_time));
+					txtSpecificDate.setText("");
+					txtSpecificDate.setVisibility(View.GONE);
 					removePrefsKeys();
 				}
 			}
 		});
 
+	}
+	
+	private void onSpecificDateClicked() {
+		
+		txtSpecificDate.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				setSpecificDate();
+			}
+		});
+	}
+	
+	private void setSpecificDate() {
+
+        int mYear = calendar.get(Calendar.YEAR);
+        int mMonth = calendar.get(Calendar.MONTH);
+        int mDay = calendar.get(Calendar.DAY_OF_MONTH);
+		DatePickerDialog dpd = new DatePickerDialog(getActivity(), 
+				new OnDateSetListener() {
+					
+					@Override
+					public void onDateSet(DatePicker view, int year, int monthOfYear,
+							int dayOfMonth) {
+
+						String specificDate = "" + dayOfMonth + " " + (monthOfYear+1) + " " + year;
+						saveAdvSettingPref("timePeriod", specificDate);
+						specificDate = "" + pad(dayOfMonth) + " / " + pad(monthOfYear+1) + " / " + pad(year);
+						txtSpecificDate.setVisibility(View.VISIBLE);
+						txtSpecificDate.setText(specificDate);
+						
+						calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+						calendar.set(Calendar.MONTH, monthOfYear);
+						calendar.set(Calendar.YEAR, year);
+					}
+				}, mYear, mMonth, mDay);
+		dpd.show();
 	}
 	
 	private void enableRadioGroup(RadioGroup radioGroup, Boolean enable) {
@@ -343,6 +399,7 @@ public class SettingAdvTime extends Fragment {
 	    editor.remove("timeEnd");
 	    editor.remove("timeDayPart");
 	    editor.remove("timePeriod");
+	    editor.putBoolean("timeFlag", false);
 		editor.commit();
 	}
 }

@@ -22,6 +22,7 @@ import com.parse.f8.R.menu;
 
 
 import android.support.v4.app.Fragment;
+import android.animation.TimeAnimator.TimeListener;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -54,6 +55,8 @@ public class HomeFragment extends Fragment {
 	JSONObject privacyPrefsObj = new JSONObject();
 	ArrayList<String> privacyIdsHidden = new ArrayList<String>();
 	ArrayList<String> privacyIdsGeneralized = new ArrayList<String>();
+	ArrayList<String> finalFriends = new ArrayList<String>();
+	Boolean anonymity = false;
 	String ownerId;
 	
 	
@@ -68,7 +71,9 @@ public class HomeFragment extends Fragment {
 			Bundle savedInstanceState){
 		// Inflate the layout for this fragment
 		View homeView = inflator.inflate(R.layout.fragment_home, container, false);
-		ownerId = fetchUserInfo("fbId");
+		
+//		ownerId = fetchUserInfo("fbId");
+		ownerId = fetchUserInfo("name"); // FIXME fbId should be replaced!
 		
 		fetchNewsFeedList();
 		
@@ -100,27 +105,30 @@ public class HomeFragment extends Fragment {
 						} catch (JSONException e1) {
 							e1.printStackTrace();
 						}
+						finalFriends.clear();
+						anonymity = false;
 						
 						String username = post.getString("owner");
 						String status = post.getString("text");
-						String friendTag = post.getString("friend");
+						String friendTag = "";
 						Date timeTag = post.getDate("time0");
-						String locTag = post.getString("loc0");
-						String userId = post.getString("userId");
+						String timeStr0Tag = post.getString("timeL0");
+						String locTag = post.getString("locL0");
+//						String userId = post.getString("userId");
+						String userId = post.getString("owner"); // FIXME userId should be replaced!
 						List<String> friendIdList = post.getList("friends");
 						ParseGeoPoint locGeoTag = (ParseGeoPoint) post.get("locGeo");
 						
 						if (friendIdList != null) {
 							for (String friendId : friendIdList) {
 								Log.d("MXfriends", friendId);
-//								checkPrivacyPreferences(friendId);
-//								checkRestrictedList(friendId, userId, friendIdList, timeTag, locGeoTag);
+								checkPrivacyPreferences(friendId);
+								checkRestrictedList(friendId, userId, friendIdList, timeTag, locGeoTag);
 							}
-
+							applyPrivacyPrefs(post);
+						} else {	
+							newsFeedList.add(new SingleItem(0, username, status, friendTag, timeStr0Tag, locTag));
 						}
-
-
-						newsFeedList.add(new SingleItem(0, username, status, friendTag, timeTag.toString(), locTag));
 					}
 					newsFeedListView.setAdapter(new NewsFeedListAdapter(HomeFragment.this.getActivity(),newsFeedList));
 				}
@@ -138,7 +146,7 @@ public class HomeFragment extends Fragment {
 	private void checkPrivacyPreferences(final String userId) {
 		
 		ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_SIMPLE_PRIVACY_CLASS);
-		query.whereEqualTo("user", userId); // TASK After test "user" shoud be replaced by "userId"!
+		query.whereEqualTo("user", userId); // FIXME "user" shoud be replaced by "userId"!
 		query.findInBackground(new FindCallback<ParseObject>() {
 		// CHECK It might be faster, if parse data is loaded in MainActivity and stored in a shared preferences, then loaded to widgets here	
 			@Override
@@ -165,11 +173,11 @@ public class HomeFragment extends Fragment {
 		});
 	}
 	
-	private void checkRestrictedList(final String userId, String postUserId, final List<String> friendIdList,
+	private void checkRestrictedList(final String userId, final String postUserId, final List<String> friendIdList,
 											final Date timeTag, final ParseGeoPoint locGeoTag) {
 		
 		ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_ADV_PRIVACY_CLASS);
-		query.whereEqualTo("user", userId); // TASK After test "user" shoud be replaced by "userId"!
+		query.whereEqualTo("user", userId); // FIXME "user" shoud be replaced by "userId"!
 		query.findInBackground(new FindCallback<ParseObject>() {
 		// CHECK It might be faster, if parse data is loaded in MainActivity and stored in a shared preferences, then loaded to widgets here	
 			@Override
@@ -183,96 +191,124 @@ public class HomeFragment extends Fragment {
 
 		        	} else {
 		        		
-		        		Boolean couserFlag = false;
-		        		Boolean viuserFlag = false;
-		        		Boolean timeFlag = false;
-		        		Boolean locFlag = false;
-		        		Boolean Restrictionflag = false;
-		        		ParseObject user = userObj.get(0);
-		        		List<String> coUserIdList = user.getList("coUserIds");
-		        		List<String> viUserIdList = user.getList("viUserIds");
-		        		String timeStart = user.getString("timeStart2");
-		        		String timeEnd = user.getString("timeEnd2");
-		        		int dayOfWeek = user.getInt("dayOfWeek");
-		        		String locAddr = user.getString("locationAddr"); 
-		        		ParseGeoPoint userGeoLocation = (ParseGeoPoint) user.get("locationGeo");
-		        		
-		        		// CHECK consider if the person himself is in his restricted coUserId list!
-		        		if (coUserIdList != null) {
-			        		for (String coUserId : coUserIdList) {
-			        			for (String friendId : friendIdList) {
-			        				if (coUserId == friendId) {
-			        					couserFlag = true;
-			        				}
-			        			}
-			        		}
-		        		}
-		        		if (couserFlag) {
+		        		for (int i=0 ; i<userObj.size() ; i++) {
 		        			
-			        		if (viUserIdList != null) {
-				        		for (String viUserId : viUserIdList) {
-				        			if (viUserId == ownerId) {
-				        				viuserFlag = true;
-				        			}
+		        			ParseObject user = userObj.get(i);
+		        			
+			        		Boolean coUserFlag = false;
+			        		Boolean viUserFlag = false;
+			        		Boolean timeFlag = false;
+			        		Boolean locationFlag = false;
+			        		Boolean Restrictionflag = false;
+			        		
+			        		List<String> coUserIdList = user.getList("coUserIds");
+			        		List<String> viUserIdList = user.getList("viUserIds");
+			        		String timeStart = user.getString("timeStart2");
+			        		String timeEnd = user.getString("timeEnd2");
+			        		int dayOfWeek = user.getInt("dayOfWeek");
+//			        		String locAddr = user.getString("locationAddr"); 
+			        		ParseGeoPoint userGeoLocation = (ParseGeoPoint) user.get("locationGeo");
+			        		
+			        		Boolean parseTimeFlag = user.getBoolean("timeFlag");
+			        		Boolean parseLocationFlag = user.getBoolean("locationFlag");
+			        		Boolean parseCoUserFlag = user.getBoolean("coUserFlag");
+			        		Boolean parseViUserFlag = user.getBoolean("viUserFlag");
+			        		
+			        		// CHECK consider if the person himself is in his restricted coUserId list!
+			        		
+			        		// check CO-USER hit
+			        		if (parseCoUserFlag) {
+				        		if (coUserIdList != null) {
+					        		for (String coUserId : coUserIdList) {
+					        			for (String friendId : friendIdList) {
+					        				if (coUserId == friendId) {
+					        					coUserFlag = true;
+					        				}
+					        			}
+					        			if (coUserId == postUserId) {
+					        				coUserFlag = true;
+					        			}
+					        		}
+				        		}
+			        		} else {
+			        			coUserFlag = true;
+			        		}
+			        		
+			        		// check VI-USER hit
+			        		if (coUserFlag) {
+			        			if (parseViUserFlag) {
+					        		if (viUserIdList != null) {
+						        		for (String viUserId : viUserIdList) {
+						        			if (viUserId == ownerId) {
+						        				viUserFlag = true;
+						        			}
+						        		}
+					        		}
+				        		} else {
+				        			viUserFlag = true;
 				        		}
 			        		}
-		        		}
-
-		        		
-		        		if (viuserFlag) {
-		        			
-		        			// TIME check!
-		        			Calendar timeCal = Calendar.getInstance();
-		        			timeCal.setTime(timeTag);
-
-		        			Boolean dayFlag = false;
-		        			int dayTag = timeCal.get(Calendar.DAY_OF_WEEK);
-		        			if(dayOfWeek == 9) {
-		        				dayFlag = true;
-		        			}
-		        			else if (dayOfWeek == 8) {
-		        				if (dayTag == 1 || dayTag == 7) {
-		        					dayFlag = true;
-		        				}
-		        			}
-		        			else {
-		        				if (dayOfWeek == dayTag) {
-		        					dayFlag = true;
-		        				}
-		        			}
-		        			
-		        			Date time1 = getDate(timeCal, timeStart);
-		        			Date time2 = getDate(timeCal, timeEnd);
-		        			if (dayFlag) {
-			        			if (timeTag.after(time1) && timeTag.before(time2)) {
-			        				
+	
+			        		// check TIME data hits
+			        		if (viUserFlag) {
+			        			if (parseTimeFlag) {
+				        			Calendar timeCal = Calendar.getInstance();
+				        			timeCal.setTime(timeTag);
+		
+				        			Boolean dayFlag = false;
+				        			int dayTag = timeCal.get(Calendar.DAY_OF_WEEK);
+				        			if(dayOfWeek == 9) {
+				        				dayFlag = true;
+				        			}
+				        			else if (dayOfWeek == 8) {
+				        				if (dayTag == 1 || dayTag == 7) {
+				        					dayFlag = true;
+				        				}
+				        			}
+				        			else {
+				        				if (dayOfWeek == dayTag) {
+				        					dayFlag = true;
+				        				}
+				        			}
+				        			
+				        			Date time1 = getDate(timeCal, timeStart);
+				        			Date time2 = getDate(timeCal, timeEnd);
+				        			if (dayFlag) {
+					        			if (timeTag.after(time1) && timeTag.before(time2)) {
+					        				
+					        				timeFlag = true;
+					        			}
+				        			}
+			        			} else {
 			        				timeFlag = true;
+			        		}
+	
+			        			// check LOCATION data hits
+			        			if (timeFlag) {
+			        				
+			        				if (parseLocationFlag) {
+				        				if (userGeoLocation.distanceInKilometersTo(locGeoTag) < 0.5) {
+				        					locationFlag = true;
+				        				}
+			        				} else {
+			        					locationFlag = true;
+			        				}
 			        			}
-		        			}
-		        			
-
-		        			
-		        			if (timeFlag) {
-		        				
-		        				// Location check!
-		        				if (userGeoLocation.distanceInKilometersTo(locGeoTag) < 0.5) {
-		        					locFlag = true;
-		        				}
-		        			}
-		        			
-		        			if (locFlag) {
-		        				Restrictionflag = true;
-		        			}
-		        			
-		        			
-		        			if (Restrictionflag) {
-		        				
-		        				setPrivacyPrefs(user, userId);
-		        			}
-
-		        			
-		        			// TASK if both time and location return true, RestrictionTag is true and privacy prefs get checked!
-		        		}
+			        			
+			        			if (locationFlag) {
+			        				Restrictionflag = true;
+			        			}
+			        			
+			        			
+			        			if (Restrictionflag) {
+			        				
+			        				setPrivacyPrefs(user, userId);
+			        			}
+	
+			        			
+			        			// TASK if both time and location return true, RestrictionTag is true and privacy prefs get checked!
+			        		}
+			        	}
 		        	}
 		        	
 		        } else {
@@ -285,12 +321,18 @@ public class HomeFragment extends Fragment {
 	
 	private void setPrivacyPrefs(ParseObject user, String userId) {
 		
-		if (user.getInt("identityLvl") == 1) {
+		int identityLvlParse = user.getInt("identityLvl");
+		if (identityLvlParse == 0) {
+			finalFriends.add(userId);
+		}
+		else if (identityLvlParse == 1) {
+			anonymity = true;
 			privacyIdsGeneralized.add(userId);
 		}
-		else if (user.getInt("identityLvl") == 2) {
+		else if (identityLvlParse == 2) {
 			privacyIdsHidden.add(userId);
 		}
+		
 		
 		int timeLvlParse = user.getInt("timeLvl");
 		int locationLvlParse = user.getInt("locationLvl");
@@ -320,6 +362,99 @@ public class HomeFragment extends Fragment {
 				e1.printStackTrace();
 			}
 		}
+	}
+	
+	private void applyPrivacyPrefs(ParseObject post) {
+		
+		String username = post.getString("owner");
+		String status = post.getString("text");
+		
+		String timeTag = null;
+		int timeLvl = 0;
+		int locLvl = 0;
+		try {
+			timeLvl = privacyPrefsObj.getInt("timeLvl");
+			locLvl = privacyPrefsObj.getInt("locationLvl");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		switch (timeLvl) {
+		case 0:
+			timeTag = post.getString("timeL0");
+			break;
+		case 1:
+			timeTag = post.getString("timeL1");
+			break;
+		case 2:
+			timeTag = post.getString("timeL2");
+			break;
+		default:
+			timeTag = post.getString("timeL0");
+			break;
+		}
+
+		String locTag = null;
+		switch (locLvl) {
+		case 0:
+			locTag = post.getString("locL0");
+			break;
+		case 1:
+			locTag = post.getString("locL1");
+			break;
+		case 2:
+			locTag = post.getString("locL2");
+			break;
+		default:
+			locTag = post.getString("locL0");
+			break;
+		}
+		
+		
+		String friendsTag = null;
+		if (finalFriends != null) {
+			for (int i=0 ; i<finalFriends.size() ; i++) {
+				if (friendsTag == null) {
+					friendsTag = finalFriends.get(i);
+				} else {
+					if (anonymity) {
+						friendsTag = friendsTag + ", " + finalFriends.get(i);
+					} else {
+						if (i == finalFriends.size()-1) {
+							friendsTag = friendsTag + "and " + finalFriends.get(i);
+						} else {
+							friendsTag = friendsTag + ", " + finalFriends.get(i);
+						}
+					}
+
+				}
+			}
+			if (anonymity) {
+				friendsTag = friendsTag + " and friends";
+			}
+		
+		} else {
+			friendsTag = "friends";
+		}
+		
+//		Boolean foundMatch = false;
+//		List<String> friendIdList = post.getList("friends");
+//		for (String friendId : friendIdList) {
+//			if (privacyIdsGeneralized != null) {
+//				for (String restrictedId : privacyIdsGeneralized) {
+//					if (friendId != restrictedId) {
+//						foundMatch = true;
+//					}
+//				}
+//			}
+//			if (foundMatch) {
+//				anonymousId = true;
+//			} else {
+//				
+//			}
+//		}
+		
+		newsFeedList.add(new SingleItem(0, username, status, friendsTag, timeTag, locTag));
+		
 	}
 	
 	private Date getDate(Calendar cal, String timeStr) {
@@ -422,12 +557,12 @@ class SingleItem {
 	String time;
 	String location;
 		
-	SingleItem(int image, String username, String title, String descrption, String time, String location) {
+	SingleItem(int image, String username, String status, String friends, String time, String location) {
 	
 		this.image=image;
 		this.username=username;
-		this.status=title;
-		this.friends=descrption;
+		this.status=status;
+		this.friends=friends;
 		this.time=time;
 		this.location=location;
 		

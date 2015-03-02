@@ -1,5 +1,6 @@
 package com.parse.f8.view;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.parse.FindCallback;
@@ -32,6 +33,7 @@ import android.widget.Toast;
  * 
  */
 // FIXME widgets from background fragment work on the foreground active fragment!
+// TASK load data in each item from prefs if it's already set
 
 public class SettingAdvEntry extends Fragment {
 
@@ -53,6 +55,7 @@ public class SettingAdvEntry extends Fragment {
 		
 		View advEntryView = inflater.inflate(R.layout.setting_adventry, container, false);
 		userId = fetchUserInfo("fbId");
+		initialiazeFlags();
 		
 		advEntryListItems = getResources().getStringArray(R.array.adventry_list_items);
 		ListView advEntryListView = (ListView) advEntryView.findViewById(R.id.listAdvEntry);
@@ -135,24 +138,54 @@ public class SettingAdvEntry extends Fragment {
 		        	if (userObj == null) {
 		        		Log.d("ParseQueryError", "There is no user object with user ID " + userId + 
 		        				"is defined in <" + PARSE_ADV_PRIVACY_CLASS + "> Parse Class");
-
-		        	} else {
+		        	}
+		        	else if (checkFalseFlags()) {
+		        		Toast.makeText(getActivity().getApplicationContext(), "Error: No data is selected!", 
+								Toast.LENGTH_SHORT).show();
+		        	}
+		        	else {
+		        		// Put PRIVACY PREFs data on Parse Object
 		        		ParseObject user = userObj.get(0);
 		        		user.put("identityLvl", advSettingPref.getInt("identityLvl", 0));
 		        		user.put("timeLvl", advSettingPref.getInt("timeLvl", 0));
 		        		user.put("locationLvl", advSettingPref.getInt("locationLvl", 0));
+		        		
+		        		// Put TIME data on Parse Object
 		        		user.put("dayOfWeek", advSettingPref.getInt("dayOfWeek", 0));
 		        		user.put("timePeriod", advSettingPref.getString("timePeriod", "null"));
 		        		user.put("timeStart2", advSettingPref.getString("timeStart", "null"));
 		        		user.put("timeEnd2", advSettingPref.getString("timeEnd", "null"));
 		        		user.put("timeDayPart", advSettingPref.getString("timeDayPart", "null"));
-		        		user.put("locationAddr", advSettingPref.getString("locationAddr", "null"));
 		        		
+		        		// Put LOCATION data on Parse Object
+		        		user.put("locationAddr", advSettingPref.getString("locationAddr", "null"));
 		        		double latitude = Double.parseDouble(advSettingPref.getString("latitude", "0"));
 		        		double longitude = Double.parseDouble(advSettingPref.getString("longitude", "0"));
 		        		ParseGeoPoint point = new ParseGeoPoint(latitude, longitude);
 		        		user.put("locationGeo", point);
+		        		
+		        		// Put USER data on Parse Object
+		    			List<String> coUserIdsList = Arrays.asList(advSettingPref.getString
+		    					("coUserIds", "null").split("\\s*,\\s*"));
+		    			user.put("coUserIds", coUserIdsList);
+		    			List<String> viUserIdsList = Arrays.asList(advSettingPref.getString
+		    					("viUserIds", "null").split("\\s*,\\s*"));
+		    			user.put("viUserIds", viUserIdsList);
+		        		
+		    			// Put FLAGs data on Parse Object
+		        		user.put("timeFlag", advSettingPref.getBoolean("timeFlag", false));
+		        		user.put("locationFlag", advSettingPref.getBoolean("locationFlag", false));
+		        		user.put("coUserFlag", advSettingPref.getBoolean("coUserFlag", false));
+		        		user.put("viUserFlag", advSettingPref.getBoolean("viUserFlag", false));
+		        		
 		        		user.saveEventually();
+		        		
+		        		SharedPreferences advSettingPref = getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
+		        		advSettingPref.edit().clear().commit();
+		        		initialiazeFlags();
+		        		
+		        		Toast.makeText(getActivity().getApplicationContext(), "Info: Your data has been successfully stored on the server", 
+        								Toast.LENGTH_SHORT).show();
 		        	}
 		        } else {
 		            Log.d("ParseError", "Error: " + e.getMessage());
@@ -167,5 +200,30 @@ public class SettingAdvEntry extends Fragment {
 		String userInfo = userInfoPref.getString(type, "None");
 		
 		return userInfo;
+	}
+	
+	private void initialiazeFlags() {
+		
+		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
+	    SharedPreferences.Editor editor = advSettingPref.edit();
+	    editor.putBoolean("timeFlag" , false);
+	    editor.putBoolean("locationFlag" , false);
+	    editor.putBoolean("coUserFlag" , false);
+	    editor.putBoolean("viUserFlag" , false);
+		editor.commit();
+	}
+	
+	private Boolean checkFalseFlags() {
+		
+		Boolean falseAllFlags = false;
+		SharedPreferences advSettingPref = getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
+		Boolean timeFlag = advSettingPref.getBoolean("timeFlag", true);
+		Boolean locationFlag = advSettingPref.getBoolean("locationFlag", true);
+		Boolean coUserFlag = advSettingPref.getBoolean("coUserFlag", true);
+		Boolean viUserFlag = advSettingPref.getBoolean("viUserFlag", true);
+		if (!timeFlag && !locationFlag && !coUserFlag && !viUserFlag) {
+			falseAllFlags = true;
+		}
+		return falseAllFlags;
 	}
 }

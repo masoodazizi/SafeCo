@@ -103,6 +103,7 @@
         <item>Every Saturday</item>
         <item>Every Weekend</item>
         <item>Every Day</item>
+        <item>Specific Date</item>
     </string-array>
     
     <string name="spinner_advTime_prompt">Select a time period:</string>
