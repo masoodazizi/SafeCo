@@ -32,7 +32,10 @@ import android.widget.Toast;
  * A simple {@link Fragment} subclass.
  * 
  */
-// FIXME widgets from background fragment work on the foreground active fragment!
+// FIXMED widgets from background fragment work on the foreground active fragment!
+// FIXME Add help dialog to all advanced pages
+// FIXME Add OK button to all items
+// FIXME Add EDIT entry activity and necessary modification to existing items
 // TASK load data in each item from prefs if it's already set
 
 public class SettingAdvEntry extends Fragment {

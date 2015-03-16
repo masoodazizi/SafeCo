@@ -3,6 +3,7 @@
 
     <color name="background_body">#E0E0E0</color>
     <color name="background_color">#E7E7F7</color>
+    <color name="background_item">#EFEFF5</color>
     <color name="yellow2">#ffe63c</color>
     <color name="nav_selected">#21201f</color> 
     <color name="light_gray">#d5d5d5</color>

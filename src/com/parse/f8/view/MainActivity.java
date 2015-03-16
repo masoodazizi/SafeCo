@@ -7,7 +7,9 @@ import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,6 +18,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 public class MainActivity extends FragmentActivity implements TabListener {
@@ -103,6 +106,46 @@ public class MainActivity extends FragmentActivity implements TabListener {
 		editor.commit();
 	}
 	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.safeco_menu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		
+	    switch (item.getItemId()) {
+        case R.id.menu_about:
+            showAboutDialog();
+            return true;
+        case R.id.menu_signout:
+
+            return true;
+        case R.id.menu_exit:
+        	finish();
+            System.exit(0);
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+	    }
+	}
+	
+	private void showAboutDialog() {
+		
+		AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+		alertDialog.setTitle("About");
+		alertDialog.setMessage(getResources().getString(R.string.about_text));
+		alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+		    new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int which) {
+		            dialog.dismiss();
+		        }
+		    });
+		alertDialog.show();
+	}
 }
 
 
@@ -143,6 +186,5 @@ class MyAdapter extends FragmentPagerAdapter
 		// TODO Auto-generated method stub
 		return 3;
 	}
-	
 	
 }

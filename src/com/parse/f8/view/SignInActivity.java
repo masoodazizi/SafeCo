@@ -23,8 +23,8 @@
 
 package com.parse.f8.view;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,15 +38,15 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-import android.R.string;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -54,7 +54,6 @@ import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,11 +61,12 @@ import com.facebook.FacebookRequestError;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
-import com.facebook.android.FbDialog;
 import com.facebook.model.GraphUser;
+import com.parse.FindCallback;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
@@ -79,6 +79,13 @@ public class SignInActivity extends ActionBarActivity {
 	public static final String PARSE_SIMPLE_PRIVACY_CLASS = "PrivacyProfile";
 	private String profilePicPath = "";
 	
+//	private Boolean finishFlag;
+	//	public SignInActivity() {
+//		this.finishFlag = false;
+//	}
+	
+
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +93,21 @@ public class SignInActivity extends ActionBarActivity {
 
 		setContentView(R.layout.activity_login);
 
+		//////////////////////////
+//		 try {
+//		        PackageInfo info = getPackageManager().getPackageInfo("com.parse.f8", PackageManager.GET_SIGNATURES);
+//		        for (android.content.pm.Signature signature : info.signatures) {
+//		            MessageDigest md = MessageDigest.getInstance("SHA");
+//		            md.update(signature.toByteArray());
+//		            String sign=Base64.encodeToString(md.digest(), Base64.DEFAULT);
+//		            Log.d("MY KEY HASH:", sign);
+//		          //  Toast.makeText(getApplicationContext(),sign,     Toast.LENGTH_LONG).show();
+//		        }
+//		} catch (NameNotFoundException e1) {
+//		} catch (NoSuchAlgorithmException e1) {
+//		}
+		 //////////////////////////
+		
 		TextView tos = (TextView) findViewById(R.id.tos);
 		tos.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -96,6 +118,7 @@ public class SignInActivity extends ActionBarActivity {
 				onLoginButtonClicked();
 			}
 		});
+		
 	}
 
 	@Override
@@ -137,6 +160,8 @@ public class SignInActivity extends ActionBarActivity {
 										user.getFirstName());
 								ParseUser.getCurrentUser().put("lastName",
 										user.getLastName());
+								ParseUser.getCurrentUser().put("name",
+										user.getName());
 								
 //								try {
 //		                            URL imgUrl = new URL("http://graph.facebook.com/"
@@ -168,6 +193,14 @@ public class SignInActivity extends ActionBarActivity {
 //										user.getUsername());
 								ParseUser.getCurrentUser().saveInBackground();
 								finishActivity();
+								
+//								FinishFlag finishFlag = new FinishFlag(getApplicationContext());
+//								if (finishFlag.getFinishFlag()) {
+//								finishActivity();
+//								} else {
+//									finishFlag.setFinishFlag(true);
+//								}
+								
 							} else if (response.getError() != null) {
 								if ((response.getError().getCategory() == FacebookRequestError.Category.AUTHENTICATION_RETRY)
 										|| (response.getError().getCategory() == FacebookRequestError.Category.AUTHENTICATION_REOPEN_SESSION)) {
@@ -188,7 +221,7 @@ public class SignInActivity extends ActionBarActivity {
 		}
 	}
 
-	private void finishActivity() {
+	public void finishActivity() {
 		// Start an intent for the dispatch activity
 		Intent intent = new Intent(SignInActivity.this, DispatchActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -210,7 +243,7 @@ public class SignInActivity extends ActionBarActivity {
 //        String fileName = "profile.jpg";
 //        File imageFilePath = generateImagePath(fileName);
         
-		new ImageDownloader(getApplicationContext()).execute(profilePicPath);		
+		new ImageDownloader(getApplicationContext()).execute(profilePicPath, userId);		
 	}
 
 	// FIXME Delay to load profile data in profile fragment, makes empty values.
@@ -230,64 +263,81 @@ public class SignInActivity extends ActionBarActivity {
 		
 		SharedPreferences userInfoPref = getSharedPreferences(USER_INFO_PREFS, 0);
 	    SharedPreferences.Editor editor = userInfoPref.edit();
-	    editor.putString("name" , user.getName().toString());
-	    editor.putString("fbId", user.getId().toString());
+//	    editor.putString("name" , user.getName().toString());
+//	    editor.putString("firstName" , user.getFirstName().toString());
+//	    editor.putString("lastName" , user.getLastName().toString());
+////	    editor.putString("userName" , user.().toString());
+//	    editor.putString("fbId", user.getId().toString());
 	    
+	    JSONObject json = new JSONObject();
+	    json = user.getInnerJSONObject();
+	    try {
+			editor.putString("fbId" , json.getString("id"));
+			editor.putString("name" , json.getString("name"));
+			editor.putString("firstName" , json.getString("first_name"));
+			editor.putString("gender" , json.getString("gender"));
+			editor.putString("lastName" , json.getString("last_name"));
+			editor.putString("link" , json.getString("link"));
+			editor.putString("locale" , json.getString("locale"));
+			editor.putString("timezone" , json.getString("timezone"));
+			editor.putString("email" , json.getString("email"));
+		} catch (JSONException e) {
+			e.printStackTrace();
+			Log.d("JSONError", "Data from JSON object could not be saved in shared preferences!");
+		}
 //		editor.putString(type , user.getInnerJSONObject().toString());
 		//editor.putString("email", user.get());
 		//editor.putString("name", user.toString());
+
 		editor.commit();
 		
 	}
 	
 	private void initializeRowInParseClass(String userId, String parseClass) {
 		
-		ParseObject parseObj = new ParseObject(parseClass);
-		parseObj.put("userId", userId);
-		if (parseClass == PARSE_SIMPLE_PRIVACY_CLASS) {
-			parseObj.put("profile", "normal");
+		Boolean userExist = false;
+		ParseQuery<ParseObject> query = ParseQuery.getQuery(parseClass);
+		query.whereEqualTo("userId", userId);
+		List<ParseObject> userObj=null;
+		try {
+			userObj = query.find();
+		} catch (ParseException e1) {
+			Log.d("ParseError", "Error: " + e1.getMessage());
+			e1.printStackTrace();
 		}
-		parseObj.saveInBackground();
+		if (userObj.size() != 0) {
+			userExist = true;
+		}
+		
+		if (!userExist) {
+			ParseObject parseObj = new ParseObject(parseClass);
+			parseObj.put("userId", userId);
+			if (parseClass == PARSE_SIMPLE_PRIVACY_CLASS) {
+				parseObj.put("profile", "normal");
+			}
+			parseObj.saveInBackground();
+		}
 	}
 	
-	
-//	private String saveToInternalSorage(Bitmap bitmapImage){
-//        ContextWrapper cw = new ContextWrapper(getApplicationContext());
-//         // path to /data/data/yourapp/app_data/imageDir
-//        File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-//        // Create imageDir
-//        File mypath=new File(directory,"profile.jpg");
-//
-//        FileOutputStream fos = null;
-//        try {           
-//
-//            fos = new FileOutputStream(mypath);
-//
-//       // Use the compress method on the BitMap object to write image to the OutputStream
-//            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
-//            fos.close();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return directory.getAbsolutePath();
-//    }
-	
 }
+
+
 
 class ImageDownloader extends AsyncTask<String , Void, Bitmap> {
 
 	Context ctx;
 	String imgPath;
-	public static final String PROFILE_PIC_PREF = "profilePicPrefs"; 
+	String userId;
+		public static final String PROFILE_PIC_PREF = "profilePicPrefs"; 
 	
-	public ImageDownloader(Context ctx) {
-		// TODO Auto-generated constructor stub
+	public ImageDownloader(Context ctx, String... param) {
 		this.ctx = ctx;
+		this.userId = param[1];
 	}
+
 	
 	@Override
 	protected Bitmap doInBackground(String... param) {
-		// TODO Auto-generated method stub
 		Log.i("Async", "doInBackground Called");
 		return downloadBitmap(param[0]);
 	}
@@ -304,6 +354,14 @@ class ImageDownloader extends AsyncTask<String , Void, Bitmap> {
 		//simpleWaitDialog.dismiss();
 		imgPath = saveToInternalSorage(result);
 		savePathPref(imgPath, PROFILE_PIC_PREF);
+		
+//		SignInActivity signInActivity = new SignInActivity();
+//		FinishFlag finishFlag = new FinishFlag(ctx);
+//		if (finishFlag.getFinishFlag()) {
+//			signInActivity.finishActivity();
+//		} else {
+//			finishFlag.setFinishFlag(true);
+//		}
 
 	}
 
@@ -336,6 +394,10 @@ class ImageDownloader extends AsyncTask<String , Void, Bitmap> {
 
 					// decoding stream data back into image Bitmap that android understands
 					final Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+					
+					// Save inputStream into a byte array to store on Parse
+//					byte[] imgBytes = inputStreamToBytes(inputStream);
+//					saveBytesInParse(imgBytes);					
 
 					return bitmap;
 				} finally {
@@ -353,6 +415,55 @@ class ImageDownloader extends AsyncTask<String , Void, Bitmap> {
 		} 
 
 		return null;
+	}
+	
+	private byte[] inputStreamToBytes(InputStream is) throws IOException {
+
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+		int nRead;
+		byte[] data = new byte[1048576];
+
+		while ((nRead = is.read(data, 0, data.length)) != -1) {
+		  buffer.write(data, 0, nRead);
+		}
+//		for (int len; (len = is.read(data)) != -1;) {
+//		buffer.write(data, 0, len);
+		buffer.flush();
+
+		return buffer.toByteArray();
+	}
+	
+	private void saveBytesInParse(byte[] imgBytes) {
+		
+		final ParseFile file = new ParseFile(userId+".jpg", imgBytes);
+		file.saveInBackground();
+		ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
+		query.whereEqualTo("fbID", userId);
+		query.findInBackground(new FindCallback<ParseObject>() {
+			
+			@Override
+			public void done(List<ParseObject> userObj, ParseException e) {
+				
+				if (e == null) {
+				
+					if (userObj == null || userObj.size()==0) {
+	
+						Log.d("ParseQueryError", "There is no user object with user ID " + userId + 
+		        				" defined in <User> Parse Class");
+	
+		        	} else {
+		        		
+		        		ParseObject user = userObj.get(0);
+		        		user.put("profileImage", file);
+		        		user.saveInBackground();
+		        	}
+					
+				} else {
+					Log.d("ParseError", "Error: " + e.getMessage());
+				}
+			}
+		});
 	}
 
 	private String saveToInternalSorage(Bitmap bitmapImage){
@@ -384,9 +495,39 @@ class ImageDownloader extends AsyncTask<String , Void, Bitmap> {
 		editor.commit();
 	}
 	
-
-	
+		
 }
+
+
+
+
+//class FinishFlag {
+//
+//	public static final String FINISH_FLAG_PREFS = "FinishFlagPrefs";
+//	private Boolean finishFlag;
+//	Context ctx;
+//	SharedPreferences finishFlagPrefs;
+//
+//	public FinishFlag (Context context) {
+//		
+//		this.ctx = context;
+//		this.finishFlagPrefs = ctx.getSharedPreferences(FINISH_FLAG_PREFS, 0);
+//	}
+//		
+//	public Boolean getFinishFlag () {
+//		
+//		this.finishFlag = finishFlagPrefs.getBoolean("finishFlag", false);
+//		return this.finishFlag;
+//	}
+//	
+//	public void setFinishFlag(Boolean finishTag) {
+//
+//		SharedPreferences.Editor editor = finishFlagPrefs.edit();
+//		editor.putBoolean("finishFlag", finishTag);
+//		editor.commit();
+//		this.finishFlag = finishTag;
+//	}
+//}
 
 
 
@@ -399,3 +540,26 @@ class ImageDownloader extends AsyncTask<String , Void, Bitmap> {
 //SettingFragment.getProfilePictureView().setProfileId(user.getId());
 //SettingFragment.getUserNameView().setText(user.getName());
 //SettingFragment.userNameView.setText("Jalal Khademi");
+
+
+
+//private String saveToInternalSorage(Bitmap bitmapImage){
+//    ContextWrapper cw = new ContextWrapper(getApplicationContext());
+//     // path to /data/data/yourapp/app_data/imageDir
+//    File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
+//    // Create imageDir
+//    File mypath=new File(directory,"profile.jpg");
+//
+//    FileOutputStream fos = null;
+//    try {           
+//
+//        fos = new FileOutputStream(mypath);
+//
+//   // Use the compress method on the BitMap object to write image to the OutputStream
+//        bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+//        fos.close();
+//    } catch (Exception e) {
+//        e.printStackTrace();
+//    }
+//    return directory.getAbsolutePath();
+//}

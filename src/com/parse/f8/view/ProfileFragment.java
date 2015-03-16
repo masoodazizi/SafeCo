@@ -76,13 +76,22 @@ public class ProfileFragment extends Fragment {
 	public ProfileFragment() {
 		
 	}
+	// FIXME Add news feed list of users post to his own profile with removing feature
+	// FIXME Add selecting users from facebook list
 	
 	@Override
-	public void onResume() {
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		// TODO Auto-generated method stub
+		super.setUserVisibleHint(isVisibleToUser);
+//		Log.d("DEBUG", "fragment hint setting..."+isVisibleToUser);
+		if (isVisibleToUser) {
+			if (fetchPathPref() == null) {
+				setProfilePhoto();
+			}
+		}
 		
-		Log.d("DEBUG", "onResume of Profile fragment");
-		super.onResume();
 	}
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -91,7 +100,7 @@ public class ProfileFragment extends Fragment {
 		final View profileView = inflater.inflate(R.layout.fragment_profile, container, false);
 		
 		// Fetch profile photo path and load it to ImageView
-		setProfilePhoto(profileView);
+		
 		setProfileInfo(profileView);
 		removeLocPrefsKeys();
 		
@@ -194,13 +203,21 @@ public class ProfileFragment extends Fragment {
 		String fbId = fetchUserInfo("fbId");
 		postObj.put("userId", fbId);
 		
+		String gender = fetchUserInfo("gender");
+//		postObj.put("gender", gender);
+		if (gender == "male") {
+			postObj.put("genderMale", true);
+		}
+		else if (gender == "female") {
+			postObj.put("genderMale", false);
+		}
 		
 		// STATUS update
 		text_status = (EditText) getActivity().findViewById(R.id.txt_status_text);
 		String status = text_status.getText().toString();
 		// TASK  This if condition does not work!
 		if (status == null || status == "") {
-			Toast.makeText(getActivity().getApplicationContext(), "Warning: Please enter the status! Empty text does not make sencse.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity().getApplicationContext(), "Warning: Please enter the status! Empty text does not make sense.", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		postObj.put("text", status);
@@ -283,9 +300,14 @@ public class ProfileFragment extends Fragment {
 
 	    try {
 	        File f=new File(path, "profile.jpg");
-	        Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
-	            
-	        profile_photo.setImageBitmap(b);
+	        if(f.exists()) {
+		        Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+		            
+		        profile_photo.setImageBitmap(b);
+	        } else {
+	        	// Load default avatar
+	        	profile_photo.setImageResource(R.drawable.male_avatar);
+	        }
 	    } 
 	    catch (FileNotFoundException e) 
 	    {
@@ -294,12 +316,17 @@ public class ProfileFragment extends Fragment {
 
 	}
 	
-	private void setProfilePhoto(View profileView){
+	private void setProfilePhoto(){
 		
-		ImageView profile_photo=(ImageView) profileView.findViewById(R.id.profile_photo);
+		ImageView profile_photo=(ImageView) getActivity().findViewById(R.id.profile_photo);
 		String imgPath = "";
 		imgPath = fetchPathPref();
-		loadImageFromStorage(imgPath, profile_photo);
+		if (imgPath != null) {
+			loadImageFromStorage(imgPath, profile_photo);
+		} else {
+			profile_photo.setImageResource(R.drawable.male_avatar);
+		}
+		
 	}
 	
 	private void setProfileInfo(View profileView) {

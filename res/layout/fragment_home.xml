@@ -4,11 +4,6 @@
     android:layout_height="match_parent"
     tools:context="com.parse.f8.view.HomeFragment" >
 
-<!--     <TextView -->
-<!--         android:layout_width="match_parent" -->
-<!--         android:layout_height="match_parent" -->
-<!--         android:text="Home Fragment" /> -->
-
     <ListView
         android:id="@+id/list_newsfeed"
         android:layout_width="wrap_content"
@@ -18,5 +13,12 @@
   		android:dividerHeight="10.0sp" >
     </ListView>
 
+    <ProgressBar
+        android:id="@+id/progressBar_home"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
 </FrameLayout>
-<!--     android:background="@color/background_color" -->

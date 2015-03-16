@@ -1,107 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
-    android:background="@drawable/border" >
-
-    <ImageView
-        android:src="@drawable/party"
-        android:id="@+id/img_userphoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/txt_username_home"
-        android:layout_margin="10dp" />
+    android:orientation="vertical">
     
     <TextView
-        android:id="@+id/txt_username_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_margin="5dp"
-        android:textColor="@color/black"
-        android:text="No Username"
-        android:textAppearance="?android:attr/textAppearanceSmall" />    
+    android:id="@+id/txt_username_home"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="2dp"
+    android:textColor="@color/black"
+    android:text="No Username"
+    android:textAppearance="?android:attr/textAppearanceSmall" />  
     
+	<RelativeLayout 
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:layout_marginLeft="10dp"
+	    android:layout_marginRight="10dp"
+	    android:layout_marginBottom="10dp"
+	    android:background="@drawable/border" >
+	
+	    <ImageView
+	        android:src="@drawable/party"
+	        android:id="@+id/img_userphoto"
+	        android:layout_width="60dp"
+	        android:layout_height="60dp"
+	        android:layout_alignParentLeft="true" />
+	    
+<!-- 	    <TextView -->
+<!-- 	        android:id="@+id/txt_username_home" -->
+<!-- 	        android:layout_width="wrap_content" -->
+<!-- 	        android:layout_height="wrap_content" -->
+<!-- 	        android:layout_alignParentTop="true" -->
+<!-- 	        android:layout_alignParentLeft="true" -->
+<!-- 	        android:layout_margin="5dp" -->
+<!-- 	        android:textColor="@color/black" -->
+<!-- 	        android:text="No Username" -->
+<!-- 	        android:textAppearance="?android:attr/textAppearanceSmall" />     -->
+	    
+	
+	    <TextView
+	        android:id="@+id/txt_status_home"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginBottom="5dp"
+    	    android:layout_alignParentTop="true"
+	        
+	        android:layout_toRightOf="@+id/img_userphoto"
+	        android:layout_alignParentRight="true"
+	        android:text="No Status..."
+	        android:textColor="@color/black"
+	        android:textAppearance="?android:attr/textAppearanceMedium" />
+	
+	    <TextView
+	        android:id="@+id/lbl_with_home"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignLeft="@+id/txt_status_home"
+	        android:layout_below="@+id/txt_status_home"
+	        android:layout_marginRight="5dp"
+	        android:text="With:"
+	        android:textColor="@color/DarkGray"
+	        android:textAppearance="?android:attr/textAppearanceSmall" />
+	    
+	    <TextView
+	        android:id="@+id/txt_with_home"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_toRightOf="@+id/lbl_with_home"
+	        android:layout_alignParentRight="true"
+	        android:layout_below="@id/txt_status_home"
+	        android:text="No Friends Tag"
+	        android:textColor="@color/Blue"
+	        android:textAppearance="?android:attr/textAppearanceSmall" />
+	
+	    <View
+	        android:id="@+id/line_with_home"
+   	        android:layout_width="match_parent"
+   	        android:layout_height="1dp"
+   	        android:layout_below="@+id/txt_with_home"
+   	        android:layout_margin="2dp"
+	        android:layout_alignLeft="@+id/txt_status_home"
+   	        android:background="@color/White"/>
+	    
+	    <TextView
+	        android:id="@+id/lbl_time_home"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignLeft="@+id/txt_status_home"
+	        android:layout_below="@+id/line_with_home"
+	        android:layout_marginRight="5dp"
+	        android:text="Time:"
+	        android:textColor="@color/DarkGray"
+	        android:textAppearance="?android:attr/textAppearanceSmall" />
+	    
+	    <TextView
+	        android:id="@+id/txt_time_home"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_toRightOf="@+id/lbl_time_home"
+	        android:layout_alignParentRight="true"
+	        android:layout_below="@id/line_with_home"
+	        android:text="No Time Tag"
+	        android:textColor="@color/Blue"
+	        android:textAppearance="?android:attr/textAppearanceSmall" />
+	
+   	    <View
+	        android:id="@+id/line_time_home"
+   	        android:layout_width="match_parent"
+   	        android:layout_height="1dp"
+   	        android:layout_below="@+id/txt_time_home"
+   	        android:layout_margin="2dp"
+	        android:layout_alignLeft="@+id/txt_status_home"
+   	        android:background="@color/White"/>
+	    
+	    <TextView
+	        android:id="@+id/lbl_loc_home"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignLeft="@+id/txt_status_home"
+	        android:layout_below="@+id/line_time_home"
+	        android:layout_marginRight="5dp"
+	        android:text="Place:"
+	        android:textColor="@color/DarkGray"
+	        android:textAppearance="?android:attr/textAppearanceSmall" />
+	    
+	    <TextView
+	        android:id="@+id/txt_loc_home"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_toRightOf="@+id/lbl_loc_home"
+	        android:layout_alignParentRight="true"
+	        android:layout_below="@id/line_time_home"
+	        android:text="No Location Tag"
+	        android:textColor="@color/Blue"
+	        android:textAppearance="?android:attr/textAppearanceSmall" />
+	</RelativeLayout>
 
-    <TextView
-        android:id="@+id/txt_status_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginBottom="5dp"
-        android:layout_alignTop="@+id/txt_username_home"
-        android:layout_toRightOf="@+id/img_userphoto"
-        android:layout_alignParentRight="true"
-        android:text="No Status..."
-        android:textColor="@color/black"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+</LinearLayout>
 
-    <TextView
-        android:id="@+id/lbl_with_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/txt_status_home"
-        android:layout_below="@+id/txt_status_home"
-        android:layout_marginRight="5dp"
-        android:text="With:"
-        android:textColor="@color/DarkGray"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-    
-    <TextView
-        android:id="@+id/txt_with_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/lbl_with_home"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/txt_status_home"
-        android:text="No Friends Tag"
-        android:textColor="@color/DarkGray"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <TextView
-        android:id="@+id/lbl_time_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/txt_status_home"
-        android:layout_below="@+id/lbl_with_home"
-        android:layout_marginRight="5dp"
-        android:text="Time:"
-        android:textColor="@color/DarkGray"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-    
-    <TextView
-        android:id="@+id/txt_time_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/lbl_time_home"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/txt_with_home"
-        android:text="No Time Tag"
-        android:textColor="@color/DarkGray"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-    <TextView
-        android:id="@+id/lbl_loc_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/txt_status_home"
-        android:layout_below="@+id/lbl_time_home"
-        android:layout_marginRight="5dp"
-        android:text="Place:"
-        android:textColor="@color/DarkGray"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-    
-    <TextView
-        android:id="@+id/txt_loc_home"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/lbl_loc_home"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/txt_time_home"
-        android:text="No Location Tag"
-        android:textColor="@color/DarkGray"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
-</RelativeLayout>
+<!-- android:layout_alignTop="@+id/txt_username_home" -->
+<!-- 	        android:layout_below="@+id/txt_username_home" -->

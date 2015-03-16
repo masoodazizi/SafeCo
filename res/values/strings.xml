@@ -77,13 +77,11 @@
     <string name="title_activity_profile_fragment">Profile Fragment</string>
     <string name="title_activity_setting_adv_main">Advanced Setting Fragment</string>
     <string name="title_activity_setting_adv_entry">Advanced Setting Fragment_Entry</string>
-    
 
     <string-array name="advsetting_list_items">
         <item>Add new entry</item>
         <item>View/edit list</item>
     </string-array>
-    
     <string-array name="adventry_list_items">
         <item>Time</item>
         <item>Location</item>
@@ -91,7 +89,6 @@
         <item>Viewer-User</item>
         <item>Privacy Level</item>
     </string-array>
-    
     <string-array name="spinner_time_list">
         <item>Select a time period...</item>
         <item>Every Sunday</item>
@@ -105,16 +102,22 @@
         <item>Every Day</item>
         <item>Specific Date</item>
     </string-array>
-    
+
     <string name="spinner_advTime_prompt">Select a time period:</string>
     <string name="select_location">Select the location on the map:</string>
     <string name="no_address">No address selected...</string>
     <string name="select_couser">Select the users who have co-location:</string>
     <string name="restricted_list">"Restricted List"</string>
     <string name="advanced_settings"><u>Advanced Settings...</u></string>
-    <string name="Add_new_entry" ><u>Add new entry:</u></string>
+    <string name="Add_new_entry"><u>Add new entry:</u></string>
     <string name="start_time">Start Time</string>
     <string name="end_time">End Time</string>
     <string name="default_address">RWTH Aachen Informatik-Zentrum, Ahornstraße 55 , 52074 Aachen</string>
+    <string name="title_activity_picker">PickerActivity</string>
     
+    <string name="about">About</string>
+    <string name="signout">Signout</string>
+    <string name="exit">Exit</string>
+    <string name="about_text">This app aims to protect users privacy against co-location disclosures in Online Social Networks. \nMoreover, this app has been designed to fulfill the master thesis project. \nIf you have any question, contact me via my email address at: \nmasood.azizi@rwth-aachen.de</string>
+
 </resources>

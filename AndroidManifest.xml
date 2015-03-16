@@ -11,16 +11,16 @@
     <permission
         android:name="com.parse.f8.permission.MAPS_RECEIVE"
         android:protectionLevel="signature" />
-    
+
     <uses-permission android:name="com.parse.f8.permission.MAPS_RECEIVE" />
-    
-     <uses-feature
-     android:glEsVersion="0x00020000"
-     android:required="true" />
-    
-    <!-- Parse -->    
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
+    <!-- Parse -->
     <uses-permission android:name="android.permission.INTERNET" />
-<!--     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/> -->
+    <!-- <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/> -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -30,50 +30,50 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    
-<!--     <permission -->
-<!--         android:name="com.parse.f8.permission.C2D_MESSAGE" -->
-<!--         android:protectionLevel="signature" /> -->
+
+    <!-- <permission -->
+    <!-- android:name="com.parse.f8.permission.C2D_MESSAGE" -->
+    <!-- android:protectionLevel="signature" /> -->
 
     <uses-permission android:name="com.parse.f8.permission.C2D_MESSAGE" />
 
     <application
-        android:name="com.parse.f8.F8App"
+        android:name=".F8App"
         android:allowBackup="true"
         android:icon="@drawable/appicon"
         android:label="@string/app_name"
         android:logo="@drawable/f8_ab_logo"
         android:theme="@style/Theme.f8" >
         <activity
-            android:name="com.parse.f8.view.DispatchActivity"
+            android:name=".view.DispatchActivity"
             android:noHistory="true"
             android:screenOrientation="portrait" >
-		    <intent-filter>
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.parse.f8.other.HomeActivity"
+            android:name=".other.HomeActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.parse.f8.other.ScheduleActivity"
+            android:name=".other.ScheduleActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.parse.f8.other.MapsActivity"
+            android:name=".other.MapsActivity"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/MapsTheme" >
         </activity>
         <activity
-            android:name="com.parse.f8.other.MyScheduleActivity"
+            android:name=".other.MyScheduleActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" >
         </activity>
@@ -83,11 +83,11 @@
             android:theme="@style/Theme.f8.login" >
         </activity>
         <activity
-            android:name="com.parse.f8.other.TalkActivity"
+            android:name=".other.TalkActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.f8.talk" />
         <activity
-            android:name="com.parse.f8.other.AlertsActivity"
+            android:name=".other.AlertsActivity"
             android:noHistory="true"
             android:screenOrientation="portrait" >
         </activity>
@@ -101,15 +101,13 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
-
-        <meta-data 
-            android:name="com.google.android.gms.version" 
+        <meta-data
+            android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBrfPoWcvY3TFCNQ8h4y_VJ51FBxwF8G54" />        
-        
+            android:value="AIzaSyBrfPoWcvY3TFCNQ8h4y_VJ51FBxwF8G54" />
+
         <!-- Parse Push -->
         <service android:name="com.parse.PushService" />
 
@@ -131,44 +129,46 @@
         </receiver>
 
         <activity
-            android:name="com.parse.f8.view.MainActivity"
-            android:windowSoftInputMode="stateHidden"
-            android:label="@string/app_name" >
-
+            android:name=".view.MainActivity"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="stateHidden" >
         </activity>
         <activity
-            android:name="com.parse.f8.view.HomeFragment"
+            android:name=".view.HomeFragment"
             android:label="@string/title_activity_home_fragment" >
         </activity>
         <activity
-            android:name="com.parse.f8.view.ProfileFragment"
+            android:name=".view.ProfileFragment"
             android:label="@string/title_activity_profile_fragment" >
         </activity>
         <activity
-            android:name="com.parse.f8.view.SettingFragment"
+            android:name=".view.SettingFragment"
             android:label="@string/title_activity_setting_fragment" >
         </activity>
         <activity
-            android:name="com.parse.f8.view.SettingAdvMain"
+            android:name=".view.SettingAdvMain"
             android:label="@string/title_activity_setting_adv_main"
             android:theme="@style/ListFont" >
         </activity>
         <activity
-            android:name="com.parse.f8.view.SettingAdvEntry"
+            android:name=".view.SettingAdvEntry"
             android:label="@string/title_activity_setting_adv_entry"
             android:theme="@style/ListFont" >
         </activity>
         <activity
-            android:name="com.parse.f8.view.SettingAdvCoUser"
+            android:name=".view.SettingAdvCoUser"
             android:label="title_activity_setting_adv_couser"
             android:theme="@style/ListFont" >
         </activity>
         <activity
-            android:name="com.parse.f8.view.FBPickerFragment"
+            android:name=".view.FBPickerFragment"
             android:label="title_activity_fbpicker_fragment"
             android:theme="@style/ListFont" >
         </activity>
-                
+        <activity
+            android:name=".PickerActivity"
+            android:label="@string/title_activity_picker" >
+        </activity>
     </application>
 
 </manifest>

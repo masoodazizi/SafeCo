@@ -6,7 +6,7 @@
      >
 
     <FrameLayout
-            android:id="@+id/picker_fragment"
+            android:id="@+id/picker_fragment_old"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             />   

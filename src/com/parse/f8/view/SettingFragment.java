@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
@@ -376,11 +377,10 @@ public class SettingFragment extends Fragment {
 	    btnAdvSetting = (TextView) v.findViewById(R.id.txtbtn_advsetting);
 	    btnAdvSetting.setEnabled(true);
 	    btnAdvSetting.setVisibility(View.VISIBLE);
-	    btnAdvSetting.setOnTouchListener(new OnTouchListener() {
+	    btnAdvSetting.setOnClickListener(new OnClickListener() {
 			
-			@SuppressLint("ClickableViewAccessibility")
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
+			public void onClick(View v) {
 				
 				Fragment newFragment = new SettingAdvMain();
 				FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -388,9 +388,25 @@ public class SettingFragment extends Fragment {
 			    transaction.addToBackStack(null);
 			    transaction.setTransition(4099);
 			    transaction.commit(); 
-				return false;
+				
 			}
 		});
+//	    btnAdvSetting.setOnTouchListener(new OnTouchListener() {
+//			
+//			@SuppressLint("ClickableViewAccessibility")
+//			@Override
+//			public boolean onTouch(View v, MotionEvent event) {
+//				
+//				Log.d("DEBUG",)
+//				Fragment newFragment = new SettingAdvMain();
+//				FragmentTransaction transaction = getFragmentManager().beginTransaction();
+//			    transaction.replace(R.id.fragment_setting_layout, newFragment);
+//			    transaction.addToBackStack(null);
+//			    transaction.setTransition(4099);
+//			    transaction.commit(); 
+//				return false;
+//			}
+//		});
 	}
 	
 	private void initializePrivacyProfile() {

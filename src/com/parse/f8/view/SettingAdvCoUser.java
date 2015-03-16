@@ -5,10 +5,15 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.facebook.UiLifecycleHelper;
+import com.parse.f8.PickerActivity;
 import com.parse.f8.R;
 import com.parse.f8.R.layout;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -34,6 +39,8 @@ import android.widget.TextView;
  */
 public class SettingAdvCoUser extends Fragment {
 
+	private UiLifecycleHelper uiHelper;
+	static final int PICK_FRIENDS_REQUEST = 1;
 	public static final String ADV_SETTING_PREFS = "AdvSettingPrefs";
 	Button btnFriendPicker;
 	EditText txtCoUserAdd;
@@ -125,7 +132,7 @@ public class SettingAdvCoUser extends Fragment {
 			@Override
 			public void onClick(View v) {
 				
-				// FIXME FriendPickFragment is empty! fix or try another solution. Try to use the activity class instead of fragment
+				// FIXMED FriendPickFragment is empty! fix or try another solution. Try to use the activity class instead of fragment
 				// TASK After friend list worked, get the userFbIds and replace it in Shared Prefs Value.
 				
 //				Fragment fragment = new FBPickerFragment();
@@ -135,31 +142,54 @@ public class SettingAdvCoUser extends Fragment {
 //			    transaction.setTransition(4099);	
 //			    transaction.commit(); 
 				
-				String friendName = txtCoUserAdd.getText().toString();
-				if (friendName != null) {
-					friendsList.add(friendName);
-				}
+				startPickerActivity(PickerActivity.FRIEND_PICKER, PICK_FRIENDS_REQUEST);
 				
-				listViewFriends.setVisibility(View.VISIBLE);
-				adapter = new ArrayAdapter<String>(getActivity(), 
-						android.R.layout.simple_list_item_1, friendsList);
-				listViewFriends.setAdapter(adapter);
+//				String friendName = txtCoUserAdd.getText().toString();
+//				if (friendName != null) {
+//					friendsList.add(friendName);
+//				}
+//				
+//				listViewFriends.setVisibility(View.VISIBLE);
+//				adapter = new ArrayAdapter<String>(getActivity(), 
+//						android.R.layout.simple_list_item_1, friendsList);
+//				listViewFriends.setAdapter(adapter);
+//				
+//				String friendsType = "noUser";
+//			    if (key == "coUser") {
+//			    	friendsType = "coUserIds";
+//			    }
+//			    
+//			    else if (key == "viUser") {
+//			    	friendsType = "viUserIds";
+//			    }
+//				saveAdvSettingArrayPref(friendsType, friendsList);
+//				
+//				txtCoUserAdd.setText("");
 				
-				String friendsType = "noUser";
-			    if (key == "coUser") {
-			    	friendsType = "coUserIds";
-			    }
-			    
-			    else if (key == "viUser") {
-			    	friendsType = "viUserIds";
-			    }
-				saveAdvSettingArrayPref(friendsType, friendsList);
 				
-				txtCoUserAdd.setText("");
 			}
 		});
 		
 		return advCoUserView;
+	}
+	
+	private void startPickerActivity(Uri data, int requestCode) {
+		
+//		Toast.makeText(this.getActivity(), "Clicked on Button", Toast.LENGTH_LONG).show();
+	     Intent intent = new Intent();
+	     intent.setData(data);
+	     intent.setClass(getActivity(), PickerActivity.class);
+	     startActivityForResult(intent, requestCode);
+	 }
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    super.onActivityResult(requestCode, resultCode, data);
+	    if (requestCode == PICK_FRIENDS_REQUEST) {
+	      uiHelper.onActivityResult(requestCode, resultCode, data);
+	    } else if (resultCode == Activity.RESULT_OK) {
+	        // Do nothing for now
+	    }
 	}
 	
 	
