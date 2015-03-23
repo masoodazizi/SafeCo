@@ -10,16 +10,19 @@ import com.facebook.model.GraphUser;
 import com.parse.f8.R;
 import com.parse.f8.R.layout;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +33,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
@@ -61,7 +65,7 @@ public class SettingAdvTime extends Fragment {
 	public SettingAdvTime() {
 		// Required empty public constructor
 	}
-	// TASK Add option to insert an exact date! 
+	// FIXME Check input data validation!
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,6 +82,10 @@ public class SettingAdvTime extends Fragment {
 		onSwitchClicked(advTimeView);
 		
 		onSpecificDateClicked();
+		
+		onOKClicked(advTimeView);
+		
+		onHelpClicked(advTimeView);
 		
 		return advTimeView;
 	}
@@ -359,9 +367,9 @@ public class SettingAdvTime extends Fragment {
 					public void onDateSet(DatePicker view, int year, int monthOfYear,
 							int dayOfMonth) {
 
-						String specificDate = "" + dayOfMonth + " " + (monthOfYear+1) + " " + year;
-						saveAdvSettingPref("timePeriod", specificDate);
-						specificDate = "" + pad(dayOfMonth) + " / " + pad(monthOfYear+1) + " / " + pad(year);
+//						String specificDate = "" + dayOfMonth + " " + (monthOfYear+1) + " " + year;
+						String specificDate = "" + pad(dayOfMonth) + " / " + pad(monthOfYear+1) + " / " + pad(year);
+						saveAdvSettingPref("exactDate", specificDate);
 						txtSpecificDate.setVisibility(View.VISIBLE);
 						txtSpecificDate.setText(specificDate);
 						
@@ -371,6 +379,41 @@ public class SettingAdvTime extends Fragment {
 					}
 				}, mYear, mMonth, mDay);
 		dpd.show();
+	}
+	
+	private void onOKClicked(View v) {
+		
+		ImageView imageOK = (ImageView) v.findViewById(R.id.image_time_OK);
+		imageOK.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				FragmentManager fm = getFragmentManager();
+				fm.popBackStack();
+			}
+		});
+	}
+	
+	private void onHelpClicked(View v) {
+		
+		ImageView imageHelp = (ImageView) v.findViewById(R.id.image_time_help);
+		imageHelp.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+				alertDialog.setTitle("Help");
+				alertDialog.setMessage(getResources().getString(R.string.help_time));
+				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+				    new DialogInterface.OnClickListener() {
+				        public void onClick(DialogInterface dialog, int which) {
+				            dialog.dismiss();
+				        }
+				    });
+				alertDialog.show();
+			}
+		});
 	}
 	
 	private void enableRadioGroup(RadioGroup radioGroup, Boolean enable) {
@@ -398,6 +441,7 @@ public class SettingAdvTime extends Fragment {
 	    editor.remove("timeStart");
 	    editor.remove("timeEnd");
 	    editor.remove("timeDayPart");
+	    editor.remove("exactDate");
 	    editor.remove("timePeriod");
 	    editor.putBoolean("timeFlag", false);
 		editor.commit();

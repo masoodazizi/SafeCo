@@ -11,11 +11,14 @@ import com.parse.f8.R;
 import com.parse.f8.R.layout;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +29,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -43,6 +47,7 @@ public class SettingAdvCoUser extends Fragment {
 	static final int PICK_FRIENDS_REQUEST = 1;
 	public static final String ADV_SETTING_PREFS = "AdvSettingPrefs";
 	Button btnFriendPicker;
+	Button btnFBPicker;
 	EditText txtCoUserAdd;
 	ListView listViewFriends;
 	TextView advUserTitle;
@@ -71,11 +76,12 @@ public class SettingAdvCoUser extends Fragment {
 	        key = args.getString("key");
 	        Log.d("Bundle", key);
 	    }
-	    
+	    onHelpClicked(advCoUserView, key);
 	    	    
 	    if (key == "coUser") {
 	    	advUserTitleText = "Co-User";
 	    	advCoUserSelectText = "Select the users must not have co-location with you:";
+	    	
 	    }
 	    
 	    else if (key == "viUser") {
@@ -91,8 +97,10 @@ public class SettingAdvCoUser extends Fragment {
 	    advCoUserSelect.setText(advCoUserSelectText);
 	    txtCoUserAdd = (EditText) advCoUserView.findViewById(R.id.txt_couser_enter);
 		btnFriendPicker = (Button) advCoUserView.findViewById(R.id.btn_add_couser);
+		btnFBPicker = (Button) advCoUserView.findViewById(R.id.btn_fb_picker);
 		
 		onSwitchClicked(advCoUserView);
+		onOKClicked(advCoUserView);
 		
 		rGroupAdvUser = (RadioGroup) advCoUserView.findViewById(R.id.radioGroup_advUser);
 		rGroupAdvUser.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -114,6 +122,7 @@ public class SettingAdvCoUser extends Fragment {
 					
 					txtCoUserAdd.setEnabled(false);
 					btnFriendPicker.setEnabled(false);
+					btnFBPicker.setEnabled(false);
 					if (adapter != null) {
 						adapter.clear();
 						listViewFriends.setVisibility(View.INVISIBLE);
@@ -123,11 +132,43 @@ public class SettingAdvCoUser extends Fragment {
 					
 					txtCoUserAdd.setEnabled(true);
 					btnFriendPicker.setEnabled(true);
+					btnFBPicker.setEnabled(true);
 				}
 			}
 		});
 		
 		btnFriendPicker.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+								
+				String friendName = txtCoUserAdd.getText().toString();
+				if (friendName != null) {
+					friendsList.add(friendName);
+				}
+				
+				listViewFriends.setVisibility(View.VISIBLE);
+				adapter = new ArrayAdapter<String>(getActivity(), 
+						android.R.layout.simple_list_item_1, friendsList);
+				listViewFriends.setAdapter(adapter);
+				
+				String friendsType = "noUser";
+			    if (key == "coUser") {
+			    	friendsType = "coUserIds";
+			    }
+			    
+			    else if (key == "viUser") {
+			    	friendsType = "viUserIds";
+			    }
+				saveAdvSettingArrayPref(friendsType, friendsList);
+				
+				txtCoUserAdd.setText("");
+				
+				
+			}
+		});
+		
+		btnFBPicker.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
@@ -143,30 +184,6 @@ public class SettingAdvCoUser extends Fragment {
 //			    transaction.commit(); 
 				
 				startPickerActivity(PickerActivity.FRIEND_PICKER, PICK_FRIENDS_REQUEST);
-				
-//				String friendName = txtCoUserAdd.getText().toString();
-//				if (friendName != null) {
-//					friendsList.add(friendName);
-//				}
-//				
-//				listViewFriends.setVisibility(View.VISIBLE);
-//				adapter = new ArrayAdapter<String>(getActivity(), 
-//						android.R.layout.simple_list_item_1, friendsList);
-//				listViewFriends.setAdapter(adapter);
-//				
-//				String friendsType = "noUser";
-//			    if (key == "coUser") {
-//			    	friendsType = "coUserIds";
-//			    }
-//			    
-//			    else if (key == "viUser") {
-//			    	friendsType = "viUserIds";
-//			    }
-//				saveAdvSettingArrayPref(friendsType, friendsList);
-//				
-//				txtCoUserAdd.setText("");
-				
-				
 			}
 		});
 		
@@ -274,8 +291,11 @@ public class SettingAdvCoUser extends Fragment {
 	private void enableWidgets(Boolean enable) {
 		
 		txtCoUserAdd.setText("");
-		txtCoUserAdd.setEnabled(enable);
-		btnFriendPicker.setEnabled(enable);
+		if (!enable) {
+			txtCoUserAdd.setEnabled(enable);
+			btnFriendPicker.setEnabled(enable);
+			btnFBPicker.setEnabled(enable);
+		}
 		if (!enable && (adapter != null)) {
 			adapter.clear();
 			listViewFriends.setVisibility(View.INVISIBLE);
@@ -304,6 +324,46 @@ public class SettingAdvCoUser extends Fragment {
 	    }
 	    
 		editor.commit();
+	}
+	
+	private void onOKClicked(View v) {
+		
+		ImageView imageOK = (ImageView) v.findViewById(R.id.image_user_OK);
+		imageOK.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				FragmentManager fm = getFragmentManager();
+				fm.popBackStack();
+			}
+		});
+	}
+	
+	private void onHelpClicked(View v, final String userType) {
+		
+		ImageView imageHelp = (ImageView) v.findViewById(R.id.image_user_help);
+		imageHelp.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+				alertDialog.setTitle("Help");
+				if (userType == "coUser") {
+					alertDialog.setMessage(getResources().getString(R.string.help_couser));
+				}
+				else {
+					alertDialog.setMessage(getResources().getString(R.string.help_viuser));
+				}
+				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+				    new DialogInterface.OnClickListener() {
+				        public void onClick(DialogInterface dialog, int which) {
+				            dialog.dismiss();
+				        }
+				    });
+				alertDialog.show();
+			}
+		});
 	}
 	
 //	private void saveAdvSettingPref(String type, String value) {

@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment {
 		newsFeedLoading = (ProgressBar) homeView.findViewById(R.id.progressBar_home);
 		
 //		ownerId = fetchUserInfo("fbId");
-		ownerId = fetchUserInfo("name"); // FIXME fbId should be replaced!
+		ownerId = fetchUserInfo("firstName"); // FIXME fbId should be replaced!
 		
 		fetchNewsFeedList();
 		
@@ -114,6 +114,8 @@ public class HomeFragment extends Fragment {
 							e1.printStackTrace();
 						}
 						finalFriends.clear();
+						privacyIdsGeneralized.clear();
+						privacyIdsHidden.clear();
 						anonymity = false;
 						privacyApply = false;
 						noPrefsFriendsId = false;
@@ -268,7 +270,7 @@ public class HomeFragment extends Fragment {
 				        		if (coUserIdList != null) {
 					        		for (String coUserId : coUserIdList) {
 					        			for (String friendId : friendIdList) {
-					        				if (coUserId == friendId) {
+					        				if (coUserId.equalsIgnoreCase(friendId)) {
 					        					coUserFlag = true;
 					        				}
 					        			}
@@ -286,7 +288,7 @@ public class HomeFragment extends Fragment {
 			        			if (parseViUserFlag) {
 					        		if (viUserIdList != null) {
 						        		for (String viUserId : viUserIdList) {
-						        			if (viUserId == ownerId) {
+						        			if (viUserId.equalsIgnoreCase(ownerId)) {
 						        				viUserFlag = true;
 						        			}
 						        		}
@@ -304,6 +306,7 @@ public class HomeFragment extends Fragment {
 		
 				        			Boolean dayFlag = false;
 				        			int dayTag = timeCal.get(Calendar.DAY_OF_WEEK);
+				        			// FIXME Specific time is not considered!!!
 				        			if(dayOfWeek == 9) {
 				        				dayFlag = true;
 				        			}
@@ -376,14 +379,29 @@ public class HomeFragment extends Fragment {
 		
 		int identityLvlParse = user.getInt("identityLvl");
 		if (identityLvlParse == 0) {
-			finalFriends.add(userId);
+			if (!privacyIdsGeneralized.contains(userId)) {
+				if (!privacyIdsHidden.contains(userId)) {
+					finalFriends.add(userId);
+				}
+			}
+			
 		}
 		else if (identityLvlParse == 1) {
 			anonymity = true;
 			privacyIdsGeneralized.add(userId);
+			if (finalFriends.contains(userId)) {
+				finalFriends.remove(userId);
+			}
 		}
 		else if (identityLvlParse == 2) {
 			privacyIdsHidden.add(userId);
+			if (finalFriends.contains(userId)) {
+				finalFriends.remove(userId);
+			}
+			if (privacyIdsGeneralized.contains(userId)) {
+				anonymity = false;
+				privacyIdsGeneralized.remove(userId);
+			}
 		}
 		
 		
@@ -416,6 +434,14 @@ public class HomeFragment extends Fragment {
 			}
 		}
 		
+	}
+	
+	private boolean userInBlackList(String userId) {
+		
+		boolean inBlackList = false;
+		
+		
+		return inBlackList;
 	}
 	
 	private void applyPrivacyPrefs(ParseObject post) {
@@ -482,16 +508,20 @@ public class HomeFragment extends Fragment {
 
 				}
 			}
-			if (anonymity) {
-//				if (finalFriends.size() == 0) {
-//					friendsTag = "friends";
-//				}
+		}
+		
+		if (anonymity) {
+			if (finalFriends.size() == 0) {
+				friendsTag = "friends";
+			} else {
 				friendsTag = friendsTag + " and friends";
 			}
-		
-		} else {
-			friendsTag = "friends";
 		}
+		
+		
+//		else {
+//			friendsTag = "friends";
+//		}
 		
 //		Boolean foundMatch = false;
 //		List<String> friendIdList = post.getList("friends");

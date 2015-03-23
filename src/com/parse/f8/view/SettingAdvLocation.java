@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.sql.Savepoint;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Criteria;
@@ -13,11 +15,14 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,6 +63,8 @@ public class SettingAdvLocation extends Fragment {
 		setUpMap();
 		textAdvLocAddr = (TextView) advLocView.findViewById(R.id.txt_advLocAddr);
 		onSwitchClicked(advLocView);
+		onOKClicked(advLocView);
+		onHelpClicked(advLocView);
 		
 		map.setOnMapClickListener(new OnMapClickListener() {
 			
@@ -161,6 +168,41 @@ public class SettingAdvLocation extends Fragment {
 			}
 		});
 
+	}
+	
+	private void onOKClicked(View v) {
+		
+		ImageView imageOK = (ImageView) v.findViewById(R.id.image_loc_OK);
+		imageOK.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				FragmentManager fm = getFragmentManager();
+				fm.popBackStack();
+			}
+		});
+	}
+	
+	private void onHelpClicked(View v) {
+		
+		ImageView imageHelp = (ImageView) v.findViewById(R.id.image_loc_help);
+		imageHelp.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+				alertDialog.setTitle("Help");
+				alertDialog.setMessage(getResources().getString(R.string.help_location));
+				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+				    new DialogInterface.OnClickListener() {
+				        public void onClick(DialogInterface dialog, int which) {
+				            dialog.dismiss();
+				        }
+				    });
+				alertDialog.show();
+			}
+		});
 	}
 	
 	private void removePrefsKeys() {

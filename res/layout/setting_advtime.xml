@@ -20,7 +20,7 @@
     	    android:layout_height="wrap_content" >
     	    
     	    <ImageView
-    	        android:id="@+id/image_help"
+    	        android:id="@+id/image_time_help"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
                 android:layout_weight="0.05"
@@ -33,7 +33,7 @@
     	        android:layout_height="35dp"
     	        android:layout_centerVertical="true"
     	        android:layout_marginLeft="5dp"
-    	        android:layout_toRightOf="@+id/image_help"
+    	        android:layout_toRightOf="@+id/image_time_help"
     	        android:background="@color/White"
     	        android:padding="2dp" />
 
@@ -42,7 +42,7 @@
     	        android:layout_height="35dp"
     	        android:layout_centerVertical="true"
     	        android:layout_marginRight="10dp"
-    	        android:layout_toLeftOf="@+id/image_check"
+    	        android:layout_toLeftOf="@+id/image_time_OK"
     	        android:background="@color/White"
     	        android:padding="2dp" />
 
@@ -55,7 +55,7 @@
                 android:background="@drawable/button_border"/>
     	    
     	    <ImageView
-    	        android:id="@+id/image_check"
+    	        android:id="@+id/image_time_OK"
     	        android:layout_width="35dp"
     	        android:layout_height="35dp"
     	        android:layout_alignParentRight="true"

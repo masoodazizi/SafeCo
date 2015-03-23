@@ -178,12 +178,13 @@ public class SignInActivity extends ActionBarActivity {
 //		                        }
 								
 								String userId = user.getId();
+								String userName = user.getFirstName();
 								saveProfilePhoto(userId);
 								
 								saveUserInfoPref(user);
 								
-								initializeRowInParseClass(userId, PARSE_ADV_PRIVACY_CLASS);
-								initializeRowInParseClass(userId, PARSE_SIMPLE_PRIVACY_CLASS);
+//								initializeRowInParseClass(userId, PARSE_ADV_PRIVACY_CLASS);
+								initPrivacyProfileClass(userId, userName, PARSE_SIMPLE_PRIVACY_CLASS);
 							    
 //								ParseUser.getCurrentUser().put("birthday",
 //										user.getBirthday());
@@ -243,7 +244,8 @@ public class SignInActivity extends ActionBarActivity {
 //        String fileName = "profile.jpg";
 //        File imageFilePath = generateImagePath(fileName);
         
-		new ImageDownloader(getApplicationContext()).execute(profilePicPath, userId);		
+		new ImageDownloader(getApplicationContext()).execute(profilePicPath);		
+//		new ImageDownloader(getApplicationContext()).execute(profilePicPath, userId);
 	}
 
 	// FIXME Delay to load profile data in profile fragment, makes empty values.
@@ -293,8 +295,9 @@ public class SignInActivity extends ActionBarActivity {
 		
 	}
 	
-	private void initializeRowInParseClass(String userId, String parseClass) {
+	private void initPrivacyProfileClass(String userId, String name, String parseClass) {
 		
+		// TASK change it to findInBackground!
 		Boolean userExist = false;
 		ParseQuery<ParseObject> query = ParseQuery.getQuery(parseClass);
 		query.whereEqualTo("userId", userId);
@@ -312,9 +315,12 @@ public class SignInActivity extends ActionBarActivity {
 		if (!userExist) {
 			ParseObject parseObj = new ParseObject(parseClass);
 			parseObj.put("userId", userId);
-			if (parseClass == PARSE_SIMPLE_PRIVACY_CLASS) {
-				parseObj.put("profile", "normal");
-			}
+			parseObj.put("user", name);
+			parseObj.put("profile", "normal");
+			parseObj.put("identityLvl", 0);
+			parseObj.put("timeLvl", 0);
+			parseObj.put("locationLvl", 0);
+			
 			parseObj.saveInBackground();
 		}
 	}
@@ -330,9 +336,9 @@ class ImageDownloader extends AsyncTask<String , Void, Bitmap> {
 	String userId;
 		public static final String PROFILE_PIC_PREF = "profilePicPrefs"; 
 	
-	public ImageDownloader(Context ctx, String... param) {
+	public ImageDownloader(Context ctx) {
 		this.ctx = ctx;
-		this.userId = param[1];
+//		this.userId = param[1];
 	}
 
 	

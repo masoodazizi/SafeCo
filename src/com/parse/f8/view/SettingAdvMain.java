@@ -60,7 +60,7 @@ public class SettingAdvMain extends Fragment {
 					newFragment = new SettingAdvEntry();
 					break;
 				case 1:
-					newFragment = new SettingAdvEntry();
+					newFragment = new SettingAdvEdit();
 					break;
 				}
 				

@@ -46,6 +46,7 @@ public class SettingAdvEntry extends Fragment {
 	String[] advEntryListItems;
 	Button buttonAddEntry;
 	private String userId;
+	private String userName;
 	
 	
 	public SettingAdvEntry() {
@@ -127,74 +128,80 @@ public class SettingAdvEntry extends Fragment {
 	
 	private void saveAdvPrefsInfoToParse() {
 		
-		final SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
+		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
 		
-		ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_ADV_PRIVACY_CLASS);
-		query.whereEqualTo("userId", userId);
-		query.findInBackground(new FindCallback<ParseObject>() {
-			
-			@Override
-			public void done(List<ParseObject> userObj, ParseException e) {
-				
-		        if (e == null) {
-		        	
-		        	if (userObj == null) {
-		        		Log.d("ParseQueryError", "There is no user object with user ID " + userId + 
-		        				"is defined in <" + PARSE_ADV_PRIVACY_CLASS + "> Parse Class");
-		        	}
-		        	else if (checkFalseFlags()) {
-		        		Toast.makeText(getActivity().getApplicationContext(), "Error: No data is selected!", 
-								Toast.LENGTH_SHORT).show();
-		        	}
-		        	else {
-		        		// Put PRIVACY PREFs data on Parse Object
-		        		ParseObject user = userObj.get(0);
-		        		user.put("identityLvl", advSettingPref.getInt("identityLvl", 0));
-		        		user.put("timeLvl", advSettingPref.getInt("timeLvl", 0));
-		        		user.put("locationLvl", advSettingPref.getInt("locationLvl", 0));
-		        		
-		        		// Put TIME data on Parse Object
-		        		user.put("dayOfWeek", advSettingPref.getInt("dayOfWeek", 0));
-		        		user.put("timePeriod", advSettingPref.getString("timePeriod", "null"));
-		        		user.put("timeStart2", advSettingPref.getString("timeStart", "null"));
-		        		user.put("timeEnd2", advSettingPref.getString("timeEnd", "null"));
-		        		user.put("timeDayPart", advSettingPref.getString("timeDayPart", "null"));
-		        		
-		        		// Put LOCATION data on Parse Object
-		        		user.put("locationAddr", advSettingPref.getString("locationAddr", "null"));
-		        		double latitude = Double.parseDouble(advSettingPref.getString("latitude", "0"));
-		        		double longitude = Double.parseDouble(advSettingPref.getString("longitude", "0"));
-		        		ParseGeoPoint point = new ParseGeoPoint(latitude, longitude);
-		        		user.put("locationGeo", point);
-		        		
-		        		// Put USER data on Parse Object
-		    			List<String> coUserIdsList = Arrays.asList(advSettingPref.getString
-		    					("coUserIds", "null").split("\\s*,\\s*"));
-		    			user.put("coUserIds", coUserIdsList);
-		    			List<String> viUserIdsList = Arrays.asList(advSettingPref.getString
-		    					("viUserIds", "null").split("\\s*,\\s*"));
-		    			user.put("viUserIds", viUserIdsList);
-		        		
-		    			// Put FLAGs data on Parse Object
-		        		user.put("timeFlag", advSettingPref.getBoolean("timeFlag", false));
-		        		user.put("locationFlag", advSettingPref.getBoolean("locationFlag", false));
-		        		user.put("coUserFlag", advSettingPref.getBoolean("coUserFlag", false));
-		        		user.put("viUserFlag", advSettingPref.getBoolean("viUserFlag", false));
-		        		
-		        		user.saveEventually();
-		        		
-		        		SharedPreferences advSettingPref = getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
-		        		advSettingPref.edit().clear().commit();
-		        		initialiazeFlags();
-		        		
-		        		Toast.makeText(getActivity().getApplicationContext(), "Info: Your data has been successfully stored on the server", 
+//		ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_ADV_PRIVACY_CLASS);
+//		query.whereEqualTo("userId", userId);
+//		query.findInBackground(new FindCallback<ParseObject>() {
+//			
+//			@Override
+//			public void done(List<ParseObject> userObj, ParseException e) {
+//				
+//		        if (e == null) {
+//		        	
+//		        	if (userObj == null) {
+//		        		Log.d("ParseQueryError", "There is no user object with user ID " + userId + 
+//		        				"is defined in <" + PARSE_ADV_PRIVACY_CLASS + "> Parse Class");
+//		        	}
+//		        	else if (checkFalseFlags()) {
+//		        		Toast.makeText(getActivity().getApplicationContext(), "Error: No data is selected!", 
+//								Toast.LENGTH_SHORT).show();
+//		        	}
+//		        	else {
+//		        		// Put PRIVACY PREFs data on Parse Object
+//		        		ParseObject user = userObj.get(0);
+		ParseObject advParseObj = new ParseObject(PARSE_ADV_PRIVACY_CLASS);
+		userName = fetchUserInfo("firstName");
+		
+		advParseObj.put("userId", userId);
+		advParseObj.put("user", userName);
+		
+		advParseObj.put("identityLvl", advSettingPref.getInt("identityLvl", 0));
+		advParseObj.put("timeLvl", advSettingPref.getInt("timeLvl", 0));
+		advParseObj.put("locationLvl", advSettingPref.getInt("locationLvl", 0));
+		
+		// Put TIME data on Parse Object
+		advParseObj.put("dayOfWeek", advSettingPref.getInt("dayOfWeek", 0));
+		advParseObj.put("exactDate", advSettingPref.getString("exactDate", "null"));
+		advParseObj.put("timePeriod", advSettingPref.getString("timePeriod", "null"));
+		advParseObj.put("timeStart2", advSettingPref.getString("timeStart", "null"));
+		advParseObj.put("timeEnd2", advSettingPref.getString("timeEnd", "null"));
+		advParseObj.put("timeDayPart", advSettingPref.getString("timeDayPart", "null"));
+		
+		// Put LOCATION data on Parse Object
+		advParseObj.put("locationAddr", advSettingPref.getString("locationAddr", "null"));
+		double latitude = Double.parseDouble(advSettingPref.getString("latitude", "0"));
+		double longitude = Double.parseDouble(advSettingPref.getString("longitude", "0"));
+		ParseGeoPoint point = new ParseGeoPoint(latitude, longitude);
+		advParseObj.put("locationGeo", point);
+		
+		// Put USER data on Parse Object
+		List<String> coUserIdsList = Arrays.asList(advSettingPref.getString
+				("coUserIds", "null").split("\\s*,\\s*"));
+		advParseObj.put("coUserIds", coUserIdsList);
+		List<String> viUserIdsList = Arrays.asList(advSettingPref.getString
+				("viUserIds", "null").split("\\s*,\\s*"));
+		advParseObj.put("viUserIds", viUserIdsList);
+		
+		// Put FLAGs data on Parse Object
+		advParseObj.put("timeFlag", advSettingPref.getBoolean("timeFlag", false));
+		advParseObj.put("locationFlag", advSettingPref.getBoolean("locationFlag", false));
+		advParseObj.put("coUserFlag", advSettingPref.getBoolean("coUserFlag", false));
+		advParseObj.put("viUserFlag", advSettingPref.getBoolean("viUserFlag", false));
+		
+		advParseObj.saveEventually();
+		
+		advSettingPref.edit().clear().commit();
+		initialiazeFlags();
+		
+		Toast.makeText(getActivity().getApplicationContext(), "Info: Your data has been successfully stored on the server", 
         								Toast.LENGTH_SHORT).show();
-		        	}
-		        } else {
-		            Log.d("ParseError", "Error: " + e.getMessage());
-		        }
-			}
-		});
+//		        	}
+//		        } else {
+//		            Log.d("ParseError", "Error: " + e.getMessage());
+//		        }
+//			}
+//		});
 	}
 
 	private String fetchUserInfo(String type) {

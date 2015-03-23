@@ -3,9 +3,12 @@ package com.parse.f8.view;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +21,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -138,56 +143,59 @@ public class SettingFragment extends Fragment {
 		          enableCustomRadioGroups(false);
 		          break;
 		        case R.id.rbtn_simpleprivacy_normal:
-		          Log.d("MyDebug", "Chose rbtn_simpleprivacy_normal");
+//		          Log.d("MyDebug", "Chose rbtn_simpleprivacy_normal");
 		          rbtnIdLow.setChecked(true);
 		          rbtnTimeLow.setChecked(true);
 		          rbtnLocLow.setChecked(true);
 		          enableCustomRadioGroups(false);
-		          savePrivacyProfileData("identityLvl", 0);
-		          savePrivacyProfileData("timeLvl", 0);
-		          savePrivacyProfileData("locationLvl", 0);
-		          savePrivacyProfileToParse("normal");
+		          savePrivacyProfile("normal", 0, 0, 0);
+//		          savePrivacyProfileData("identityLvl", 0);
+//		          savePrivacyProfileData("timeLvl", 0);
+//		          savePrivacyProfileData("locationLvl", 0);
+//		          savePrivacyProfileToParse("normal");
 		          break;
 		        case R.id.rbtn_simpleprivacy_fair:
-		          Log.d("MyDebug", "Chose rbtn_simpleprivacy_fair");
+//		          Log.d("MyDebug", "Chose rbtn_simpleprivacy_fair");
 		          rbtnIdLow.setChecked(true);
 		          rbtnTimeMed.setChecked(true);
 		          rbtnLocMed.setChecked(true);
 		          enableCustomRadioGroups(false);
-		          savePrivacyProfileData("identityLvl", 0);
-		          savePrivacyProfileData("timeLvl", 1);
-		          savePrivacyProfileData("locationLvl", 1);
-		          savePrivacyProfileToParse("fair");
+		          savePrivacyProfile("fair", 0, 1, 1);
+//		          savePrivacyProfileData("identityLvl", 0);
+//		          savePrivacyProfileData("timeLvl", 1);
+//		          savePrivacyProfileData("locationLvl", 1);
+//		          savePrivacyProfileToParse("fair");
 		          break;
 		        case R.id.rbtn_simpleprivacy_strict:
-		          Log.d("MyDebug", "Chose rbtn_simpleprivacy_strict");
+//		          Log.d("MyDebug", "Chose rbtn_simpleprivacy_strict");
 		          rbtnIdMed.setChecked(true);
 		          rbtnTimeHigh.setChecked(true);
 		          rbtnLocHigh.setChecked(true);
 		          enableCustomRadioGroups(false);
-		          savePrivacyProfileData("identityLvl", 1);
-		          savePrivacyProfileData("timeLvl", 2);
-		          savePrivacyProfileData("locationLvl", 2);
-		          savePrivacyProfileToParse("strict");
+		          savePrivacyProfile("strict", 1, 2, 2);
+//		          savePrivacyProfileData("identityLvl", 1);
+//		          savePrivacyProfileData("timeLvl", 2);
+//		          savePrivacyProfileData("locationLvl", 2);
+//		          savePrivacyProfileToParse("strict");
 		          break;
 		        case R.id.rbtn_simpleprivacy_full:
-		          Log.d("MyDebug", "Chose rbtn_simpleprivacy_full");
+//		          Log.d("MyDebug", "Chose rbtn_simpleprivacy_full");
 		          rbtnIdHigh.setChecked(true);
 		          rbtnTimeMed.setChecked(true);
 		          rbtnLocMed.setChecked(true);
 		          enableCustomRadioGroups(false);
-		          savePrivacyProfileData("identityLvl", 2);
-		          savePrivacyProfileData("timeLvl", 1);
-		          savePrivacyProfileData("locationLvl", 1);
-		          savePrivacyProfileToParse("full");
+		          savePrivacyProfile("full", 2, 1, 1);
+//		          savePrivacyProfileData("identityLvl", 2);
+//		          savePrivacyProfileData("timeLvl", 1);
+//		          savePrivacyProfileData("locationLvl", 1);
+//		          savePrivacyProfileToParse("full");
 		          break;
 		        case R.id.rbtn_simpleprivacy_custom:
-		          Log.d("MyDebug", "Chose rbtn_simpleprivacy_custom");
+//		          Log.d("MyDebug", "Chose rbtn_simpleprivacy_custom");
 		          rbtnIdLow.setChecked(true);
 		          rbtnTimeLow.setChecked(true);
 		          rbtnLocLow.setChecked(true);
 		          enableCustomRadioGroups(true);
-		          savePrivacyProfileToParse("custom");
 		          customPrivacyListener();
 		          break;
 		        default:
@@ -216,6 +224,14 @@ public class SettingFragment extends Fragment {
 		
 //		final View settingView = view;
 		
+		if (key == "add") {
+	    	savePrivacyProfileToPrefs("custom");
+	    }
+	    
+	    else {
+	    	savePrivacyProfileToParse("custom");
+	    }
+		
 		radioGroupCustomIdentity.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
 			@Override
@@ -223,22 +239,22 @@ public class SettingFragment extends Fragment {
 				
 				switch (checkedId) {
 		        case -1:
-		          Log.d("MyDebug", "Choices cleared!");
+//		          Log.d("MyDebug", "Choices cleared!");
 		          break;
 		        case R.id.rbtn_customprivacy_identity_low:
-		          Log.d("MyDebug", "Chose rbtn_customprivacy_identity_low");
+//		          Log.d("MyDebug", "Chose rbtn_customprivacy_identity_low");
 		          savePrivacyProfileData("identityLvl", 0);
 		          break;
 		        case R.id.rbtn_customprivacy_identity_medium:
-		          Log.d("MyDebug", "Chose rbtn_customprivacy_identity_medium");
+//		          Log.d("MyDebug", "Chose rbtn_customprivacy_identity_medium");
 		          savePrivacyProfileData("identityLvl", 1);
 		          break;
 		        case R.id.rbtn_customprivacy_identity_high:
-		          Log.d("MyDebug", "Chose rbtn_customprivacy_identity_high");
+//		          Log.d("MyDebug", "Chose rbtn_customprivacy_identity_high");
 		          savePrivacyProfileData("identityLvl", 2);
 		          break;
 		        default:
-		          Log.d("MyDebug", "Nothing!");
+//		          Log.d("MyDebug", "Nothing!");
 		          break;
 		        }
 			}
@@ -251,22 +267,22 @@ public class SettingFragment extends Fragment {
 				
 				switch (checkedId) {
 		        case -1:
-		          Log.d("MyDebug", "Choices cleared!");
+//		          Log.d("MyDebug", "Choices cleared!");
 		          break;
 		        case R.id.rbtn_customprivacy_time_low:
-		          Log.d("MyDebug", "Chose rbtn_customprivacy_time_low");
+//		          Log.d("MyDebug", "Chose rbtn_customprivacy_time_low");
 		          savePrivacyProfileData("timeLvl", 0);
 		          break;
 		        case R.id.rbtn_customprivacy_time_medium:
-		          Log.d("MyDebug", "Chose rbtn_customprivacy_time_medium");
+//		          Log.d("MyDebug", "Chose rbtn_customprivacy_time_medium");
 		          savePrivacyProfileData("timeLvl", 1);
 		          break;
 		        case R.id.rbtn_customprivacy_time_high:
-		          Log.d("MyDebug", "Chose rbtn_customprivacy_time_high");
+//		          Log.d("MyDebug", "Chose rbtn_customprivacy_time_high");
 		          savePrivacyProfileData("timeLvl", 2);
 		          break;
 		        default:
-		          Log.d("MyDebug", "Nothing!");
+//		          Log.d("MyDebug", "Nothing!");
 		          break;
 		        }
 			}
@@ -279,22 +295,22 @@ public class SettingFragment extends Fragment {
 				
 				switch (checkedId) {
 		        case -1:
-		          Log.d("MyDebug", "Choices cleared!");
+//		          Log.d("MyDebug", "Choices cleared!");
 		          break;
 		        case R.id.rbtn_customprivacy_location_low:
-		          Log.d("MyDebug", "Chose rbtn_customprivacy_location_low");
+//		          Log.d("MyDebug", "Chose rbtn_customprivacy_location_low");
 		          savePrivacyProfileData("locationLvl", 0);
 		          break;
 		        case R.id.rbtn_customprivacy_location_medium:
-		          Log.d("MyDebug", "Chose rbtn_customprivacy_location_medium");
+//		          Log.d("MyDebug", "Chose rbtn_customprivacy_location_medium");
 		          savePrivacyProfileData("locationLvl", 1);
 		          break;
 		        case R.id.rbtn_customprivacy_location_high:
-		          Log.d("MyDebug", "Chose rbtn_customprivacy_location_high");
+//		          Log.d("MyDebug", "Chose rbtn_customprivacy_location_high");
 		          savePrivacyProfileData("locationLvl", 2);
 		          break;
 		        default:
-		          Log.d("MyDebug", "Nothing!");
+//		          Log.d("MyDebug", "Nothing!");
 		          break;
 		        }
 			}
@@ -317,6 +333,14 @@ public class SettingFragment extends Fragment {
 		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(prefs, 0);
 	    SharedPreferences.Editor editor = advSettingPref.edit();
 	    editor.putInt(type, value);
+		editor.commit();
+	}
+	
+	private void savePrivacyProfileToPrefs(final String value) {
+		
+		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(prefs, 0);
+	    SharedPreferences.Editor editor = advSettingPref.edit();
+	    editor.putString("profile", value);
 		editor.commit();
 	}
 	
@@ -362,7 +386,59 @@ public class SettingFragment extends Fragment {
 
 	}
 	
+	private void savePrivacyProfile(final String profile, final int idLvl, final int timeLvl, final int locLvl) {
+		
+		if (key == "add") {
+			
+			
+		} else {
+			
+			ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_SIMPLE_PRIVACY_CLASS);
+			query.whereEqualTo("userId", userId);
+			query.findInBackground(new FindCallback<ParseObject>() {
+				
+				@Override
+				public void done(List<ParseObject> userObj, ParseException e) {
 
+			        if (e == null) {
+			        		ParseObject user = userObj.get(0);
+			        		user.put("profile", profile);
+			        		user.put("identityLvl", idLvl);
+			        		user.put("timeLvl", timeLvl);
+			        		user.put("locationLvl", locLvl);
+			        		user.saveInBackground();
+
+			        } else {
+			            Log.d("ParseError", "Error: " + e.getMessage());
+			        }
+				}
+			});
+			
+		}
+		
+	}	
+	
+	private void savePrivacyProfileToParse(final String value) {
+		
+		ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_SIMPLE_PRIVACY_CLASS);
+		query.whereEqualTo("userId", userId);
+		query.findInBackground(new FindCallback<ParseObject>() {
+			
+			@Override
+			public void done(List<ParseObject> userObj, ParseException e) {
+
+		        if (e == null) {
+		        		ParseObject user = userObj.get(0);
+		        		user.put("profile", value);
+		        		user.saveInBackground();
+
+		        } else {
+		            Log.d("ParseError", "Error: " + e.getMessage());
+		        }
+			}
+		});
+
+	}
 	
 	private String fetchUserInfo(String type) {
 		
@@ -493,33 +569,16 @@ public class SettingFragment extends Fragment {
 		
 		TextView txtRestrictedList = (TextView) v.findViewById(R.id.lbl_profileRestrictedList);
 		txtRestrictedList.setVisibility(View.VISIBLE);
+		RelativeLayout layoutHeader = (RelativeLayout) v.findViewById(R.id.layout_header_privacysetting);
+		layoutHeader.setVisibility(View.VISIBLE);
 		View line = (View) v.findViewById(R.id.line_privacyProfile);
 		line.setVisibility(View.VISIBLE);
-		Switch switchPrivacyProfile = (Switch) v.findViewById(R.id.switch_privacyProfile);
+		onOKClicked(v);
+		onHelpClicked(v);
+//		Switch switchPrivacyProfile = (Switch) v.findViewById(R.id.switch_privacyProfile);
 //		switchPrivacyProfile.setVisibility(View.VISIBLE);
 	}
-	
-	private void savePrivacyProfileToParse(final String value) {
-		
-		ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_SIMPLE_PRIVACY_CLASS);
-		query.whereEqualTo("userId", userId);
-		query.findInBackground(new FindCallback<ParseObject>() {
-			
-			@Override
-			public void done(List<ParseObject> userObj, ParseException e) {
 
-		        if (e == null) {
-		        		ParseObject user = userObj.get(0);
-		        		user.put("profile", value);
-		        		user.saveInBackground();
-
-		        } else {
-		            Log.d("ParseError", "Error: " + e.getMessage());
-		        }
-			}
-		});
-
-	}
 	
 	public void onSwitchClicked(final View v) {
 		
@@ -545,6 +604,41 @@ public class SettingFragment extends Fragment {
 			}
 		});
 
+	}
+	
+private void onOKClicked(View v) {
+		
+		ImageView imageOK = (ImageView) v.findViewById(R.id.image_privacy_OK);
+		imageOK.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				FragmentManager fm = getFragmentManager();
+				fm.popBackStack();
+			}
+		});
+	}
+	
+	private void onHelpClicked(View v) {
+		
+		ImageView imageHelp = (ImageView) v.findViewById(R.id.image_privacy_help);
+		imageHelp.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				
+				AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+				alertDialog.setTitle("Help");
+				alertDialog.setMessage(getResources().getString(R.string.help_privacy));
+				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+				    new DialogInterface.OnClickListener() {
+				        public void onClick(DialogInterface dialog, int which) {
+				            dialog.dismiss();
+				        }
+				    });
+				alertDialog.show();
+			}
+		});
 	}
 	
 	private void removePrefsKeys() {
