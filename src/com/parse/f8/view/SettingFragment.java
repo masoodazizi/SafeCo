@@ -115,13 +115,14 @@ public class SettingFragment extends Fragment {
 	    	prefs = "AdvSettingPrefs";
 	    	parseClass = "RestrictedList";
 	    	initializeAdvHeader(settingView);
+	    	initPrivacyProfileFromPrefs();
 	    	onSwitchClicked(settingView);
 	    }
 	    else {
 	    	prefs = "SimplePrivacyPrefs";
 	    	parseClass = "PrivacyProfile";
 	    	setAdvSettingButton(settingView);
-	    	initializePrivacyProfile();
+	    	initPrivacyProfileFromParse();
 	    }
 	    		
 	    simplePrivacyListener();
@@ -196,6 +197,7 @@ public class SettingFragment extends Fragment {
 		          rbtnTimeLow.setChecked(true);
 		          rbtnLocLow.setChecked(true);
 		          enableCustomRadioGroups(true);
+		          savePrivacyProfile("custom", 0, 0, 0);
 		          customPrivacyListener();
 		          break;
 		        default:
@@ -224,13 +226,13 @@ public class SettingFragment extends Fragment {
 		
 //		final View settingView = view;
 		
-		if (key == "add") {
-	    	savePrivacyProfileToPrefs("custom");
-	    }
-	    
-	    else {
-	    	savePrivacyProfileToParse("custom");
-	    }
+//		if (key == "add") {
+//	    	savePrivacyProfileToPrefs("custom");
+//	    }
+//	    
+//	    else {
+//	    	savePrivacyProfileToParse("custom");
+//	    }
 		
 		radioGroupCustomIdentity.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
@@ -335,14 +337,7 @@ public class SettingFragment extends Fragment {
 	    editor.putInt(type, value);
 		editor.commit();
 	}
-	
-	private void savePrivacyProfileToPrefs(final String value) {
-		
-		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(prefs, 0);
-	    SharedPreferences.Editor editor = advSettingPref.edit();
-	    editor.putString("profile", value);
-		editor.commit();
-	}
+
 	
 	private void savePrivacyProfileDataToParse(final String type, final int value) {
 		
@@ -389,7 +384,13 @@ public class SettingFragment extends Fragment {
 	private void savePrivacyProfile(final String profile, final int idLvl, final int timeLvl, final int locLvl) {
 		
 		if (key == "add") {
-			
+			SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(prefs, 0);
+			SharedPreferences.Editor editor = advSettingPref.edit();
+		    editor.putString("profile", profile);
+		    editor.putInt("identityLvl", idLvl);
+		    editor.putInt("timeLvl", timeLvl);
+		    editor.putInt("locationLvl", locLvl);
+			editor.commit();
 			
 		} else {
 			
@@ -417,28 +418,7 @@ public class SettingFragment extends Fragment {
 		}
 		
 	}	
-	
-	private void savePrivacyProfileToParse(final String value) {
-		
-		ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_SIMPLE_PRIVACY_CLASS);
-		query.whereEqualTo("userId", userId);
-		query.findInBackground(new FindCallback<ParseObject>() {
-			
-			@Override
-			public void done(List<ParseObject> userObj, ParseException e) {
 
-		        if (e == null) {
-		        		ParseObject user = userObj.get(0);
-		        		user.put("profile", value);
-		        		user.saveInBackground();
-
-		        } else {
-		            Log.d("ParseError", "Error: " + e.getMessage());
-		        }
-			}
-		});
-
-	}
 	
 	private String fetchUserInfo(String type) {
 		
@@ -485,7 +465,7 @@ public class SettingFragment extends Fragment {
 //		});
 	}
 	
-	private void initializePrivacyProfile() {
+	private void initPrivacyProfileFromParse() {
 		
 		ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_SIMPLE_PRIVACY_CLASS);
 		query.whereEqualTo("userId", userId);
@@ -512,6 +492,7 @@ public class SettingFragment extends Fragment {
 							break;
 						case "custom":
 							rbtnCustom.setChecked(true);
+							enableCustomRadioGroups(true);
 							switch (user.getInt("identityLvl")) {
 							case 0:
 								rbtnIdLow.setChecked(true);
@@ -565,6 +546,71 @@ public class SettingFragment extends Fragment {
 		});
 	}
 	
+	private void initPrivacyProfileFromPrefs() {
+		
+		SharedPreferences pref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
+		switch (pref.getString("profile", "normal")) {
+		case "normal":
+			rbtnNormal.setChecked(true);
+			break;
+		case "fair":
+			rbtnFair.setChecked(true);
+			break;
+		case "strict":
+			rbtnStrict.setChecked(true);
+			break;
+		case "full":
+			rbtnFull.setChecked(true);
+			break;
+		case "custom":
+			rbtnCustom.setChecked(true);
+			enableCustomRadioGroups(true);
+			switch (pref.getInt("identityLvl", 0)) {
+			case 0:
+				rbtnIdLow.setChecked(true);
+				break;
+			case 1:
+				rbtnIdMed.setChecked(true);
+				break;
+			case 2:
+				rbtnIdHigh.setChecked(true);
+				break;
+			default:
+				break;
+			}
+			switch (pref.getInt("timeLvl", 0)) {
+			case 0:
+				rbtnTimeLow.setChecked(true);
+				break;
+			case 1:
+				rbtnTimeMed.setChecked(true);
+				break;
+			case 2:
+				rbtnTimeHigh.setChecked(true);
+				break;
+			default:
+				break;
+			}
+			switch (pref.getInt("locationLvl", 0)) {
+			case 0:
+				rbtnLocLow.setChecked(true);
+				break;
+			case 1:
+				rbtnLocMed.setChecked(true);
+				break;
+			case 2:
+				rbtnLocHigh.setChecked(true);
+				break;
+			default:
+				break;
+			}
+			break;
+
+		default:
+			break;
+		}
+	}
+	
 	private void initializeAdvHeader(View v) {
 		
 		TextView txtRestrictedList = (TextView) v.findViewById(R.id.lbl_profileRestrictedList);
@@ -606,7 +652,7 @@ public class SettingFragment extends Fragment {
 
 	}
 	
-private void onOKClicked(View v) {
+	private void onOKClicked(View v) {
 		
 		ImageView imageOK = (ImageView) v.findViewById(R.id.image_privacy_OK);
 		imageOK.setOnClickListener(new OnClickListener() {
@@ -652,7 +698,41 @@ private void onOKClicked(View v) {
 	}
 
 }
+
+
+
+//private void savePrivacyProfileToPrefs(final String value) {
+//	
+//	SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(prefs, 0);
+//    SharedPreferences.Editor editor = advSettingPref.edit();
+//    editor.putString("profile", value);
+//	editor.commit();
+//}
 	
+
+//private void savePrivacyProfileToParse(final String value) {
+//	
+//	ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_SIMPLE_PRIVACY_CLASS);
+//	query.whereEqualTo("userId", userId);
+//	query.findInBackground(new FindCallback<ParseObject>() {
+//		
+//		@Override
+//		public void done(List<ParseObject> userObj, ParseException e) {
+//
+//	        if (e == null) {
+//	        		ParseObject user = userObj.get(0);
+//	        		user.put("profile", value);
+//	        		user.saveInBackground();
+//
+//	        } else {
+//	            Log.d("ParseError", "Error: " + e.getMessage());
+//	        }
+//		}
+//	});
+//
+//}
+
+
 
 //public static ProfilePictureView profilePictureView;
 //public static TextView userNameView;

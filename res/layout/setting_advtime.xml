@@ -138,7 +138,8 @@
     <Spinner
         android:id="@+id/spinner_time"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@color/Gray" />
 
     <TextView
         android:id="@+id/txt_specificDate"

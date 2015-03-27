@@ -1,6 +1,8 @@
 package com.parse.f8.view;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,14 +24,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -54,11 +61,14 @@ public class SettingAdvCoUser extends Fragment {
 	TextView advCoUserSelect;
 	RadioGroup rGroupAdvUser;
 	RadioButton rbtnEveryone;
+	RadioButton rbtnSelective;
 	ArrayList<String> friendsList = new ArrayList<String>();
 	String key;
 	String advUserTitleText;
 	String advCoUserSelectText;
 	ArrayAdapter<String> adapter;
+	String userFlag;
+	String friendsType;
 	
 	public SettingAdvCoUser() {
 		// Required empty public constructor
@@ -79,26 +89,43 @@ public class SettingAdvCoUser extends Fragment {
 	    onHelpClicked(advCoUserView, key);
 	    	    
 	    if (key == "coUser") {
+	    	userFlag = "coUserFlag";
+	    	friendsType = "coUserIds";
 	    	advUserTitleText = "Co-User";
 	    	advCoUserSelectText = "Select the users must not have co-location with you:";
 	    	
 	    }
 	    
 	    else if (key == "viUser") {
+	    	userFlag = "viUserFlag";
+	    	friendsType = "viUserIds";
 	    	advCoUserSelectText = "Select the users must not view co-location posts you are tagged in:";
 	    	advUserTitleText = "View-User";
 	    }
 	    
 	    rbtnEveryone = (RadioButton) advCoUserView.findViewById(R.id.rbutton_everyone);
+	    rbtnSelective = (RadioButton) advCoUserView.findViewById(R.id.rbutton_selective);
 	    advUserTitle = (TextView) advCoUserView.findViewById(R.id.lbl_advuser);
 	    advUserTitle.setText(advUserTitleText);
-	    listViewFriends = (ListView) advCoUserView.findViewById(R.id.list_cousers_added);
 	    advCoUserSelect = (TextView) advCoUserView.findViewById(R.id.lbl_advCoUserSelect);
 	    advCoUserSelect.setText(advCoUserSelectText);
 	    txtCoUserAdd = (EditText) advCoUserView.findViewById(R.id.txt_couser_enter);
 		btnFriendPicker = (Button) advCoUserView.findViewById(R.id.btn_add_couser);
 		btnFBPicker = (Button) advCoUserView.findViewById(R.id.btn_fb_picker);
 		
+	    listViewFriends = (ListView) advCoUserView.findViewById(R.id.list_cousers_added);
+	    listViewFriends.setOnTouchListener(new OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				
+				v.getParent().requestDisallowInterceptTouchEvent(true);
+				return false;
+			}
+		});
+		setListViewHeightBasedOnChildren(listViewFriends);
+		
+		initWidgets();
 		onSwitchClicked(advCoUserView);
 		onOKClicked(advCoUserView);
 		
@@ -109,15 +136,7 @@ public class SettingAdvCoUser extends Fragment {
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
 				
 				if (checkedId == R.id.rbutton_everyone) {
-					
-					String friendsType = "noUser";
-				    if (key == "coUser") {
-				    	friendsType = "coUserIds";
-				    }
-				    
-				    else if (key == "viUser") {
-				    	friendsType = "viUserIds";
-				    }
+
 //					saveAdvSettingPref(friendsType, "$everyone");
 					
 					txtCoUserAdd.setEnabled(false);
@@ -151,15 +170,7 @@ public class SettingAdvCoUser extends Fragment {
 				adapter = new ArrayAdapter<String>(getActivity(), 
 						android.R.layout.simple_list_item_1, friendsList);
 				listViewFriends.setAdapter(adapter);
-				
-				String friendsType = "noUser";
-			    if (key == "coUser") {
-			    	friendsType = "coUserIds";
-			    }
-			    
-			    else if (key == "viUser") {
-			    	friendsType = "viUserIds";
-			    }
+
 				saveAdvSettingArrayPref(friendsType, friendsList);
 				
 				txtCoUserAdd.setText("");
@@ -214,19 +225,8 @@ public class SettingAdvCoUser extends Fragment {
 		
 		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
 	    SharedPreferences.Editor editor = advSettingPref.edit();
-	    
-//	    JSONArray a = new JSONArray();
-//	    for (int i = 0; i < values.size(); i++) {
-//	        a.put(values.get(i));
-//	    }
-//	    if (!values.isEmpty()) {
-//	        editor.putString(type, a.toString());
-//	    } else {
-//	    	 editor.putString(type, null);
-//	    }
-	    
+
 	    String userString = null;
-	    
 	    for (String item : values) {
 	    	if (userString == null) {
 	    		userString = item;
@@ -235,14 +235,8 @@ public class SettingAdvCoUser extends Fragment {
 	    	}
 	    }
 	    editor.putString(type , userString);
-	    
-	    if (type == "coUserIds") {
-	    	editor.putBoolean("coUserFlag", true);
-	    }
-	    else if(type == "viUserIds") {
-	    	editor.putBoolean("viUserFlag", true);
-	    }
-	    
+	    editor.putBoolean(userFlag, true);
+   
 		editor.commit();
 		
 	}
@@ -313,15 +307,9 @@ public class SettingAdvCoUser extends Fragment {
 		
 		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
 	    SharedPreferences.Editor editor = advSettingPref.edit();
-	    if (key == "coUser") {
-	    	editor.remove("coUserIds");
-	    	editor.putBoolean("coUserFlag", false);
-	    }
 	    
-	    else if (key == "viUser") {
-	    	editor.remove("viUserIds");
-	    	editor.putBoolean("viUserFlag", false);
-	    }
+    	editor.remove(friendsType);
+    	editor.putBoolean(userFlag, false);
 	    
 		editor.commit();
 	}
@@ -364,6 +352,43 @@ public class SettingAdvCoUser extends Fragment {
 				alertDialog.show();
 			}
 		});
+	}
+	
+	private void initWidgets() {
+		
+		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
+		if (advSettingPref.getBoolean(userFlag, false)) {
+		
+			rbtnSelective.setChecked(true);
+	    	friendsList.addAll(Arrays.asList(advSettingPref.getString(friendsType, "null").split("\\s*,\\s*")));
+	    	listViewFriends.setVisibility(View.VISIBLE);
+			adapter = new ArrayAdapter<String>(getActivity(), 
+					android.R.layout.simple_list_item_1, friendsList);
+			listViewFriends.setAdapter(adapter);
+		}
+
+	}
+	
+	public static void setListViewHeightBasedOnChildren(ListView listView) {
+	    ListAdapter listAdapter = listView.getAdapter();
+	    if (listAdapter == null)
+	        return;
+
+	    int desiredWidth = MeasureSpec.makeMeasureSpec(listView.getWidth(), MeasureSpec.UNSPECIFIED);
+	    int totalHeight = 0;
+	    View view = null;
+	    for (int i = 0; i < listAdapter.getCount(); i++) {
+	        view = listAdapter.getView(i, view, listView);
+	        if (i == 0)
+	            view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, LayoutParams.WRAP_CONTENT));
+
+	        view.measure(desiredWidth, MeasureSpec.UNSPECIFIED);
+	        totalHeight += view.getMeasuredHeight();
+	    }
+	    ViewGroup.LayoutParams params = listView.getLayoutParams();
+	    params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+	    listView.setLayoutParams(params);
+	    listView.requestLayout();
 	}
 	
 //	private void saveAdvSettingPref(String type, String value) {

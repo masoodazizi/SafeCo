@@ -156,6 +156,7 @@ public class SettingAdvEntry extends Fragment {
 		advParseObj.put("userId", userId);
 		advParseObj.put("user", userName);
 		
+		advParseObj.put("profile", advSettingPref.getString("profile", "null"));
 		advParseObj.put("identityLvl", advSettingPref.getInt("identityLvl", 0));
 		advParseObj.put("timeLvl", advSettingPref.getInt("timeLvl", 0));
 		advParseObj.put("locationLvl", advSettingPref.getInt("locationLvl", 0));

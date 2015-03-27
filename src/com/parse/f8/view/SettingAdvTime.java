@@ -61,6 +61,7 @@ public class SettingAdvTime extends Fragment {
 	private Button btnAdvEndTime;
 	private TextView txtSpecificDate;
 	private Calendar calendar;
+	Boolean initSpecDate = false;
 	
 	public SettingAdvTime() {
 		// Required empty public constructor
@@ -75,6 +76,8 @@ public class SettingAdvTime extends Fragment {
 		txtSpecificDate = (TextView) advTimeView.findViewById(R.id.txt_specificDate);
 		calendar = Calendar.getInstance();
 
+		
+		
 		advTimePeriodListener(advTimeView);
 		
 		advTimeDayPartListener(advTimeView);
@@ -86,6 +89,8 @@ public class SettingAdvTime extends Fragment {
 		onOKClicked(advTimeView);
 		
 		onHelpClicked(advTimeView);
+		
+		initWidgets(advTimeView);
 		
 		return advTimeView;
 	}
@@ -112,12 +117,15 @@ public class SettingAdvTime extends Fragment {
 					saveAdvSettingPref("timePeriod", selectedItem);
 					saveAdvSettingIntegerPref("dayOfWeek", pos);
 					if (pos == 10) {
-						
-						setSpecificDate();
+						if (!initSpecDate) {
+							setSpecificDate();
+						} else {
+							txtSpecificDate.setVisibility(View.VISIBLE);
+						}
 					}
 //					Toast.makeText(parent.getContext(), "MyDebug:" + selectedItem, Toast.LENGTH_SHORT).show();
 				}
-				
+				initSpecDate = false;
 			}
 
 			@Override
@@ -443,8 +451,54 @@ public class SettingAdvTime extends Fragment {
 	    editor.remove("timeDayPart");
 	    editor.remove("exactDate");
 	    editor.remove("timePeriod");
+	    editor.remove("dayOfWeek");
 	    editor.putBoolean("timeFlag", false);
 		editor.commit();
+	}
+	
+	private void initWidgets(View v) {
+		
+		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
+		if (advSettingPref.getBoolean("timeFlag", false)) {
+			
+			int dayOfWeek = advSettingPref.getInt("dayOfWeek", 0);
+			initSpecDate = true;
+			spinnerAdvTime.setSelection(dayOfWeek);
+			if (dayOfWeek == 10) {
+				txtSpecificDate.setVisibility(View.VISIBLE);
+				txtSpecificDate.setText(advSettingPref.getString("exactDate", "N/A"));
+			}
+			
+			String timeDayPart = advSettingPref.getString("timeDayPart", null);
+			switch (timeDayPart) {
+			case "mornings":
+				RadioButton rbtnMornings = (RadioButton) v.findViewById(R.id.rbtn_advTime_mornings);
+				rbtnMornings.setChecked(true);
+				break;
+			case "afternoons":
+				RadioButton rbtnAfternoons = (RadioButton) v.findViewById(R.id.rbtn_advTime_afternoons);
+				rbtnAfternoons.setChecked(true);
+				break;
+			case "evenings":
+				RadioButton rbtnEvenings = (RadioButton) v.findViewById(R.id.rbtn_advTime_evenings);
+				rbtnEvenings.setChecked(true);
+				break;
+			case "nights":
+				RadioButton rbtnNights = (RadioButton) v.findViewById(R.id.rbtn_advTime_nights);
+				rbtnNights.setChecked(true);
+				break;
+			case "slot":
+				RadioButton rbtnSlot = (RadioButton) v.findViewById(R.id.rbtn_advTime_between);
+				rbtnSlot.setChecked(true);
+				btnAdvStartTime = (Button) v.findViewById(R.id.btn_advTimePicker1);
+				btnAdvEndTime = (Button) v.findViewById(R.id.btn_advTimePicker2);
+				btnAdvStartTime.setText(advSettingPref.getString("timeStart", "N/A"));
+				btnAdvEndTime.setText(advSettingPref.getString("timeEnd", "N/A"));
+				break;
+			default:
+				break;
+			}
+		}
 	}
 }
 

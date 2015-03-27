@@ -158,6 +158,7 @@
         <activity
             android:name=".view.SettingAdvCoUser"
             android:label="title_activity_setting_adv_couser"
+            android:windowSoftInputMode="adjustResize|stateHidden"
             android:theme="@style/ListFont" >
         </activity>
         <activity

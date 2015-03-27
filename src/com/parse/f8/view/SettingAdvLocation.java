@@ -17,10 +17,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewParent;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -31,6 +33,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -48,6 +51,7 @@ public class SettingAdvLocation extends Fragment {
 	private TextView textAdvLocAddr;
 	private Marker currentLocMarker = null;
 	private Boolean enableKey = true;
+	private static View advLocView;
 
 	public SettingAdvLocation() {
 		// Required empty public constructor
@@ -58,10 +62,21 @@ public class SettingAdvLocation extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		final View advLocView = inflater.inflate(R.layout.setting_advlocation, container, false);
+		if (advLocView != null) {
+			ViewGroup parent = (ViewGroup) advLocView.getParent();
+			if (parent != null) {
+				parent.removeView(advLocView);
+			}
+		}
+		try {
+			advLocView = inflater.inflate(R.layout.setting_advlocation, container, false);
+		} catch (InflateException e) {
+	        /* map is already there, just return view as it is */
+	    }
+				
+		textAdvLocAddr = (TextView) advLocView.findViewById(R.id.txt_advLocAddr);
 		
 		setUpMap();
-		textAdvLocAddr = (TextView) advLocView.findViewById(R.id.txt_advLocAddr);
 		onSwitchClicked(advLocView);
 		onOKClicked(advLocView);
 		onHelpClicked(advLocView);
@@ -99,7 +114,8 @@ public class SettingAdvLocation extends Fragment {
 		
 		LatLng latLng = INFORMATIC_LOC;
 		String locTitle = "Default Location";
-		map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.map)).getMap();
+//		map = ((MapFragment) getActivity().getFragmentManager().findFragmentById(R.id.map)).getMap();
+		map = ((SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
 		map.setMyLocationEnabled(true);
 		map.getUiSettings().setRotateGesturesEnabled(true);
         map.getUiSettings().setTiltGesturesEnabled(true);
@@ -115,6 +131,17 @@ public class SettingAdvLocation extends Fragment {
 			latLng = new LatLng(latitude, longitude);
 			locTitle = "Your Current Location";
 		} 
+		// Check if location flag is true, load values from shared preferences
+		SharedPreferences advSettingPref = this.getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
+		if (advSettingPref.getBoolean("locationFlag", false)) {
+			
+			textAdvLocAddr.setText(advSettingPref.getString("locationAddr", "null"));
+			double latPrefs = Double.parseDouble(advSettingPref.getString("latitude", "0"));
+			double lngPrefs = Double.parseDouble(advSettingPref.getString("longitude", "0"));
+			latLng = new LatLng(latPrefs, lngPrefs);
+			locTitle = "Your saved location";
+		}
+		
 		showMarkerOnMap(latLng, locTitle);
 	}
 
@@ -211,6 +238,8 @@ public class SettingAdvLocation extends Fragment {
 	    SharedPreferences.Editor editor = advSettingPref.edit();
 	    editor.remove("locationAddr");
 	    editor.remove("locationGeo");
+	    editor.remove("latitude");
+	    editor.remove("longitude");
 	    editor.putBoolean("locationFlag", false);
 		editor.commit();
 	}

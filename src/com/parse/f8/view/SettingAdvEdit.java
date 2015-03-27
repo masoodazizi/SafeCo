@@ -3,6 +3,7 @@ package com.parse.f8.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.android.gms.internal.ct;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -10,10 +11,12 @@ import com.parse.ParseQuery;
 import com.parse.f8.R;
 import com.parse.f8.R.layout;
 
+import android.animation.TimeInterpolator;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -66,7 +69,7 @@ public class SettingAdvEdit extends Fragment {
 
 	private void fetchRestrictedList() {
 		
-//		advItemsLoading.setVisibility(View.VISIBLE);
+		advItemsLoading.setVisibility(View.VISIBLE);
 		ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_ADV_PRIVACY_CLASS);
 		query.whereEqualTo("userId", userId);
 		query.orderByDescending("createdAt");
@@ -101,7 +104,7 @@ public class SettingAdvEdit extends Fragment {
 							String coUser    = "N/A";
 							String viUser    = "N/A";
 							
-							String objId = advItemObj.getString("objectId");
+							String objId = advItemObj.getObjectId();
 							
 							if (advItemObj.getBoolean("timeFlag")) {
 								
@@ -128,7 +131,7 @@ public class SettingAdvEdit extends Fragment {
 									for (String user : coUserIdList) {
 										coUser = coUser + user + ", ";
 									}
-									coUser.substring(0, coUser.length()-2);
+									coUser = coUser.substring(0, coUser.length()-2);
 								}
 							}
 							
@@ -140,7 +143,7 @@ public class SettingAdvEdit extends Fragment {
 									for (String user : viUserIdList) {
 										viUser = viUser + user + ", ";
 									}
-									viUser.substring(0, viUser.length()-2);
+									viUser = viUser.substring(0, viUser.length()-2);
 								}
 							}
 							
@@ -153,7 +156,7 @@ public class SettingAdvEdit extends Fragment {
 						}
 						
 						advItemsListView.setAdapter(new AdvItemsListAdapter(getActivity(), advItemsList));
-//						advItemsLoading.setVisibility(View.GONE);
+						advItemsLoading.setVisibility(View.GONE);
 					}
 				} else {
 					Log.d("Parse_Error", "Error: Data not fetched " + e.getMessage());
@@ -192,7 +195,7 @@ public class SettingAdvEdit extends Fragment {
 			dayStr = "Weekends";
 			break;
 		case 9:
-			dayStr = "Everydays";
+			dayStr = "Everyday";
 			break;
 		case 10:
 			dayStr = "date";
@@ -270,18 +273,64 @@ class AdvItemsListAdapter extends BaseAdapter {
 		
 		RestrictedItem itemObj = advItemsList.get(position);
 		
-		timeText.setText(itemObj.timeInfo1 + "\n" + itemObj.timeInfo2);
+		if (itemObj.timeInfo2.equals("N/A")) {
+			timeText.setText(itemObj.timeInfo1);
+			timeText.setTextColor(customTextColor(itemObj.timeInfo1));
+		} else {
+			timeText.setText(itemObj.timeInfo1 + "\n" + itemObj.timeInfo2);
+		}
+		
+		
 		locText.setText(itemObj.locInfo);
+		locText.setTextColor(customTextColor(itemObj.locInfo));
+		
 		coUserText.setText(itemObj.coUserInfo);
+		coUserText.setTextColor(customTextColor(itemObj.coUserInfo));
+		
 		viUserText.setText(itemObj.viUserInfo);
-		profileText.setText(itemObj.privacyProfile);
+		viUserText.setTextColor(customTextColor(itemObj.viUserInfo));
+		
+		profileText.setText("<" + itemObj.privacyProfile + ">");
+		profileText.setTextColor(customTextColor(itemObj.privacyProfile));
+		
 		timeLvlText.setText(itemObj.privacyTime);
+		timeLvlText.setTextColor(customTextColor(itemObj.privacyTime));
+		
 		locLvlText.setText(itemObj.privacyLoc);
+		locLvlText.setTextColor(customTextColor(itemObj.privacyLoc));
+		
 		idLvlText.setText(itemObj.privacyId);
+		idLvlText.setTextColor(customTextColor(itemObj.privacyId));
 		
 		return itemView;
 	}
 	
+	private int customTextColor(String text) {
+		
+		int textColor = 0;
+		if (text.equals("normal")) {
+			textColor = Color.GREEN;
+		}
+		else if (text.equals("fair") || text.equals("low")) {
+			textColor = Color.YELLOW;
+		}
+		else if (text.equals("strict") || text.equals("med")) {
+			textColor = context.getResources().getColor(R.color.Orange);
+		}
+		else if (text.equals("full") || text.equals("high")) {
+			textColor = Color.RED;
+		}
+		else if (text.equals("custom")) {
+			textColor = Color.BLUE;
+		}
+		else if (text.equals("N/A")) {
+			textColor = Color.GRAY;
+		}
+		else {
+			textColor = Color.BLACK;
+		}
+		return textColor;
+	}
 	
 }
 
