@@ -1,6 +1,8 @@
 package com.parse.f8.view;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -64,6 +66,7 @@ public class SettingFragment extends Fragment {
 	private RadioButton rbtnLocMed;
 	private RadioButton rbtnLocHigh;
 	private TextView btnAdvSetting;
+	private TextView txtAutoSave;
 	private String userId;
 	private String key;
 	private String parseClass;
@@ -99,6 +102,7 @@ public class SettingFragment extends Fragment {
 		rbtnLocLow = (RadioButton) settingView.findViewById(R.id.rbtn_customprivacy_location_low);
 		rbtnLocMed= (RadioButton) settingView.findViewById(R.id.rbtn_customprivacy_location_medium);
 		rbtnLocHigh = (RadioButton) settingView.findViewById(R.id.rbtn_customprivacy_location_high);
+		txtAutoSave = (TextView) settingView.findViewById(R.id.text_savedchanges);
 		
 //		rbtnCustom = (RadioButton) settingView.findViewById(R.id.rbtn_simpleprivacy_custom);
 		if (!rbtnCustom.isChecked()) {
@@ -233,6 +237,7 @@ public class SettingFragment extends Fragment {
 //	    else {
 //	    	savePrivacyProfileToParse("custom");
 //	    }
+		autoSaveNotification();
 		
 		radioGroupCustomIdentity.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			
@@ -419,6 +424,22 @@ public class SettingFragment extends Fragment {
 		
 	}	
 
+	private void autoSaveNotification() {
+		
+		Toast.makeText(getActivity().getApplicationContext(), "Changes will be automatically saved.", 
+				Toast.LENGTH_SHORT).show();
+//		 txtAutoSave.setVisibility(View.VISIBLE);
+//		 TimerTask timerTask = new TimerTask() {
+//			
+//			@Override
+//			public void run() {
+//				
+//				txtAutoSave.setVisibility(View.INVISIBLE);
+//			}
+//		};
+//		Timer timer = new Timer();
+//		timer.schedule(timerTask, 5000);
+	}
 	
 	private String fetchUserInfo(String type) {
 		
@@ -483,16 +504,26 @@ public class SettingFragment extends Fragment {
 							break;
 						case "fair":
 							rbtnFair.setChecked(true);
+					        rbtnIdLow.setChecked(true);
+					        rbtnTimeMed.setChecked(true);
+					        rbtnLocMed.setChecked(true);
 							break;
 						case "strict":
 							rbtnStrict.setChecked(true);
+					        rbtnIdMed.setChecked(true);
+					        rbtnTimeHigh.setChecked(true);
+					        rbtnLocHigh.setChecked(true);
 							break;
 						case "full":
 							rbtnFull.setChecked(true);
+					        rbtnIdHigh.setChecked(true);
+					        rbtnTimeMed.setChecked(true);
+					        rbtnLocMed.setChecked(true);
 							break;
 						case "custom":
 							rbtnCustom.setChecked(true);
 							enableCustomRadioGroups(true);
+							customPrivacyListener();
 							switch (user.getInt("identityLvl")) {
 							case 0:
 								rbtnIdLow.setChecked(true);
@@ -555,16 +586,26 @@ public class SettingFragment extends Fragment {
 			break;
 		case "fair":
 			rbtnFair.setChecked(true);
+	        rbtnIdLow.setChecked(true);
+	        rbtnTimeMed.setChecked(true);
+	        rbtnLocMed.setChecked(true);
 			break;
 		case "strict":
 			rbtnStrict.setChecked(true);
+	        rbtnIdMed.setChecked(true);
+	        rbtnTimeHigh.setChecked(true);
+	        rbtnLocHigh.setChecked(true);
 			break;
 		case "full":
 			rbtnFull.setChecked(true);
+	        rbtnIdHigh.setChecked(true);
+	        rbtnTimeMed.setChecked(true);
+	        rbtnLocMed.setChecked(true);
 			break;
 		case "custom":
 			rbtnCustom.setChecked(true);
 			enableCustomRadioGroups(true);
+			customPrivacyListener();
 			switch (pref.getInt("identityLvl", 0)) {
 			case 0:
 				rbtnIdLow.setChecked(true);

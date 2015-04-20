@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
+    android:id="@+id/fragment_advedit"
     android:background="@color/background_color"
     tools:context="com.parse.f8.view.SettingAdvEdit" >
 

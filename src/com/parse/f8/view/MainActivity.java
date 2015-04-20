@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -36,6 +37,8 @@ public class MainActivity extends FragmentActivity implements TabListener {
 		clearAdvSettingPref ();
 		// Clear Advanced setting shared preferences values;
 		
+		// Listener to fragment backstack
+//		getSupportFragmentManager().addOnBackStackChangedListener(getListener());
 		
 		viewPager=(ViewPager) findViewById(R.id.pager);
 		FragmentManager fragmentManager = getSupportFragmentManager();
@@ -146,6 +149,35 @@ public class MainActivity extends FragmentActivity implements TabListener {
 		    });
 		alertDialog.show();
 	}
+	
+	private OnBackStackChangedListener getListener()
+    {
+        OnBackStackChangedListener result = new OnBackStackChangedListener()
+        {
+            public void onBackStackChanged() 
+            {                   
+                FragmentManager manager = getSupportFragmentManager();
+
+                if (manager != null)
+                {
+					SharedPreferences advSettingPref = getSharedPreferences(ADV_SETTING_PREFS, 0);
+					if (advSettingPref.getBoolean("editMode", false)) {
+						SharedPreferences.Editor editor = advSettingPref.edit();
+						editor.putBoolean("editMode", false);
+						editor.commit();	
+						
+	                    SettingAdvEdit currFrag = (SettingAdvEdit)manager.
+	                    findFragmentById(R.id.fragment_advedit);
+	                    currFrag.onResume();
+					}
+
+                }                   
+            }
+        };
+
+        return result;
+    }
+
 }
 
 

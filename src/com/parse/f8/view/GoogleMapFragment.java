@@ -7,6 +7,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -151,12 +152,10 @@ public class GoogleMapFragment extends Fragment {
 		
 		// TASK load program icon but in smaller size. Normal size is pretty large.
 		// add => .icon(BitmapDescriptorFactory.fromResource(R.drawable.appicon))
-		if (currentLocMarker != null) {
-			currentLocMarker.remove();
-		}
+		removeMapItems();
 		
 		currentLocMarker = map.addMarker(new MarkerOptions().position(latLng)
-							.title(locTitle));
+							.title(locTitle).icon(BitmapDescriptorFactory.fromResource(R.drawable.appicon_marker)));
 	    // Move the camera instantly to hamburg with a zoom of 15.
 	    map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
 	
@@ -189,5 +188,20 @@ public class GoogleMapFragment extends Fragment {
         super.onResume();
         setUpMap();
     }
+	
+	private void removeMapItems() {
+		
+		if (currentLocMarker != null) {
+			currentLocMarker.remove();
+		}
+		textMapAddress.setText("No address selected...");
+	}
+	
+	@Override
+	public void onDestroyView() {
+		
+		removeMapItems();
+		super.onDestroyView();
+	}
 
 }

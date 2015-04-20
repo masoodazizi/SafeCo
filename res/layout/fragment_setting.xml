@@ -373,6 +373,15 @@
              android:layout_width="fill_parent"
              android:layout_height="1dp"
              android:background="@color/Gray"/>
+
+		<TextView
+		    android:id="@+id/text_savedchanges"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textColor="@color/Black"
+		    android:visibility="gone"
+		    android:text="Your modification saved..."
+		    android:textAppearance="?android:attr/textAppearanceSmall" />
 		
 		<TextView
 		    android:id="@+id/txtbtn_advsetting"

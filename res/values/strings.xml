@@ -90,7 +90,7 @@
         <item>Privacy Level</item>
     </string-array>
     <string-array name="spinner_time_list">
-        <item>Select a time period...</item>
+        <item>Select a time period...v</item>
         <item>Every Sunday</item>
         <item>Every Monday</item>
         <item>Every Tuesday</item>
@@ -109,7 +109,7 @@
     <string name="select_couser">Select the users who have co-location:</string>
     <string name="restricted_list">"Restricted List"</string>
     <string name="advanced_settings"><u>Advanced Settings...</u></string>
-    <string name="Add_new_entry">Add new entry:</string>
+    <string name="Add_new_entry">Add a new entry:</string>
     <string name="start_time">Start Time</string>
     <string name="end_time">End Time</string>
     <string name="default_address">RWTH Aachen Informatik-Zentrum, Ahornstraße 55 , 52074 Aachen</string>
@@ -125,5 +125,6 @@
     <string name="help_viuser">Select friends who are restricted to view posts you are tagged in</string>
     <string name="help_privacy">Specify the privacy level you want to apply on restricted items</string>
     <string name="noAdvItemInfo">There is no restricted list defined in your profile. If you need to make a restricted Item in your privacy preferences, please go back and add a new item.</string>
+    <string name="not_set">&lt;Not Set&gt;</string>
 
 </resources>

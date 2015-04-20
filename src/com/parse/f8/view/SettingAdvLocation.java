@@ -34,6 +34,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -56,7 +57,8 @@ public class SettingAdvLocation extends Fragment {
 	public SettingAdvLocation() {
 		// Required empty public constructor
 	}
-	// TASK Add radiobutton to have an option to show first level generalization
+	// TASK_NOT_NEEDED Add radiobutton to have an option to show first level generalization
+	// FIXME location markers and text remains despite changing the fragment!
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -154,7 +156,7 @@ public class SettingAdvLocation extends Fragment {
 		}
 		
 		currentLocMarker = map.addMarker(new MarkerOptions().position(latLng)
-							.title(locTitle));
+							.title(locTitle).icon(BitmapDescriptorFactory.fromResource(R.drawable.appicon)));
 	    // Move the camera instantly to hamburg with a zoom of 15.
 	    map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
 
@@ -188,7 +190,7 @@ public class SettingAdvLocation extends Fragment {
 				}
 				else {
 					
-					textAdvLocAddr.setText("");
+					textAdvLocAddr.setText("No address selected...");
 					enableKey = false;
 					removePrefsKeys();
 				}
@@ -204,6 +206,8 @@ public class SettingAdvLocation extends Fragment {
 			
 			@Override
 			public void onClick(View v) {
+				
+				removeMapItems();
 				FragmentManager fm = getFragmentManager();
 				fm.popBackStack();
 			}
@@ -242,6 +246,21 @@ public class SettingAdvLocation extends Fragment {
 	    editor.remove("longitude");
 	    editor.putBoolean("locationFlag", false);
 		editor.commit();
+	}
+	
+	private void removeMapItems() {
+		
+		if (currentLocMarker != null) {
+			currentLocMarker.remove();
+		}
+		textAdvLocAddr.setText("No address selected...");
+	}
+	
+	@Override
+	public void onDestroyView() {
+		
+		removeMapItems();
+		super.onDestroyView();
 	}
 	
 }

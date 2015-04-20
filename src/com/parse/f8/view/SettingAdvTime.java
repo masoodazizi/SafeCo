@@ -67,6 +67,7 @@ public class SettingAdvTime extends Fragment {
 		// Required empty public constructor
 	}
 	// FIXME Check input data validation!
+	// FIXME Add Whole day and put it as default, also put everyday as default
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

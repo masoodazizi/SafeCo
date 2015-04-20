@@ -315,6 +315,10 @@ public class HomeFragment extends Fragment {
 				        					dayFlag = true;
 				        				}
 				        			}
+				        			else if (dayOfWeek == 10) {
+				        				String exactDate = user.getString("exactDate");
+				        				// FIXME Specify the exact day!
+				        			}
 				        			else {
 				        				if (dayOfWeek == dayTag) {
 				        					dayFlag = true;
@@ -381,20 +385,29 @@ public class HomeFragment extends Fragment {
 		if (identityLvlParse == 0) {
 			if (!privacyIdsGeneralized.contains(userId)) {
 				if (!privacyIdsHidden.contains(userId)) {
-					finalFriends.add(userId);
+					if (!finalFriends.contains(userId)) {
+						finalFriends.add(userId);
+					}
+					
 				}
 			}
 			
 		}
 		else if (identityLvlParse == 1) {
 			anonymity = true;
-			privacyIdsGeneralized.add(userId);
+			if (!privacyIdsGeneralized.contains(userId)) {
+				privacyIdsGeneralized.add(userId);
+			}
+			
 			if (finalFriends.contains(userId)) {
 				finalFriends.remove(userId);
 			}
 		}
 		else if (identityLvlParse == 2) {
-			privacyIdsHidden.add(userId);
+			if (!privacyIdsHidden.contains(userId)) {
+				privacyIdsHidden.add(userId);
+			}
+			
 			if (finalFriends.contains(userId)) {
 				finalFriends.remove(userId);
 			}

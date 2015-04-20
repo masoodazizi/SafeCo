@@ -27,33 +27,260 @@
              android:layout_margin="5dp"
              android:background="@color/Brown"/>
 		            
-        
-	    <TextView
-	        android:id="@+id/lbl_addNewEntry"
-	        android:layout_width="match_parent"
-	        android:layout_height="fill_parent"
-	        android:layout_weight="1"
-	        android:text="@string/Add_new_entry"
-	        android:textAppearance="?android:attr/textAppearanceMedium"
-	        android:textColor="@color/Black" />
+        <FrameLayout 
+            android:layout_width="match_parent"
+	        android:layout_height="match_parent">
+            
+	 	    <TextView
+		        android:id="@+id/lbl_addNewEntry"
+		        android:layout_width="match_parent"
+		        android:layout_height="fill_parent"
+		        android:layout_marginLeft="5dp"
+		        android:layout_marginBottom="10dp"
+		        android:layout_weight="1"
+		        android:text="@string/Add_new_entry"
+		        android:textAppearance="?android:attr/textAppearanceMedium"
+		        android:textColor="@color/Black" />           
+	            
+	        
+		    <TextView
+		        android:id="@+id/lbl_editEntry"
+		        android:layout_width="match_parent"
+		        android:layout_height="fill_parent"
+		        android:layout_marginLeft="5dp"
+		        android:layout_marginBottom="10dp"
+		        android:layout_weight="1"
+		        android:text="Edit Existing Entry:"
+		        android:visibility="gone"
+		        android:textAppearance="?android:attr/textAppearanceMedium"
+		        android:textColor="@color/Black" />
 	    
-	    <ListView
-	        android:id="@+id/listAdvEntry"
+	    </FrameLayout>
+	    
+        <LinearLayout 
+            android:id="@+id/lbl_adventry_time"
+            android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:clickable="true"
+	        android:orientation="horizontal">
+                    
+            <TextView
+		        
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:layout_marginTop="5dp"
+		        android:layout_marginBottom="5dp"
+		        android:layout_marginLeft="20dp"
+		        android:layout_weight="2"
+		        android:gravity="left"
+		        android:text="Time"
+		        android:textColor="@color/DarkBlue"
+		        android:textSize="20sp" />
+            
+         <TextView
+		        android:id="@+id/lbl_adventry_timevalue"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:layout_marginTop="5dp"
+		        android:layout_marginBottom="5dp"
+		        android:layout_marginRight="10dp"
+		        android:layout_weight="3"
+		        android:gravity="right|center"
+		        android:text="@string/not_set"
+		        android:textColor="@color/Gray"
+		        android:textSize="12sp" />
+         </LinearLayout>
+        
+		<View
+             android:layout_width="fill_parent"
+             android:layout_height="1dp"
+             android:layout_margin="5dp"
+             android:background="@color/Gray"/>
+		
+		<LinearLayout 
+	        android:id="@+id/lbl_adventry_location"
+            android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:clickable="true"
+	        android:orientation="horizontal">
+                    
+        <TextView
 	        android:layout_width="match_parent"
-	        android:layout_height="fill_parent"
-	        android:padding="10dp"
-	        android:dividerHeight="1.0sp"
-	        android:divider="@color/Gray"
-	        android:layout_weight="4" >
+	        android:layout_height="match_parent"
+	        android:layout_marginTop="5dp"
+	        android:layout_marginBottom="5dp"
+	        android:layout_marginLeft="20dp"
+	        android:layout_weight="2"
+	        android:gravity="left"
+	        android:text="Location"
+	        android:textColor="@color/DarkBlue"
+	        android:textSize="20sp" />
+            
+         <TextView
+		        android:id="@+id/lbl_adventry_locvalue"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:layout_marginTop="5dp"
+		        android:layout_marginBottom="5dp"
+		        android:layout_marginRight="10dp"
+		        android:layout_weight="3"
+		        android:gravity="right|center"
+		        android:text="@string/not_set"
+		        android:textColor="@color/Gray"
+		        android:textSize="12sp" />
+         </LinearLayout>
+                       
+		<View
+             android:layout_width="fill_parent"
+             android:layout_height="1dp"
+             android:layout_margin="5dp"
+             android:background="@color/Gray"/>
+		
+		<LinearLayout 
+	        android:id="@+id/lbl_adventry_couser"
+            android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:clickable="true"
+	        android:orientation="horizontal">
+                    
+        <TextView
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_marginTop="5dp"
+	        android:layout_marginBottom="5dp"
+	        android:layout_marginLeft="20dp"
+	        android:layout_weight="2"
+	        android:gravity="left"
+	        android:text="Co-User"
+	        android:textColor="@color/DarkBlue"
+	        android:textSize="20sp" />
+            
+         <TextView
+		        android:id="@+id/lbl_adventry_couservalue"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:layout_marginTop="5dp"
+		        android:layout_marginBottom="5dp"
+		        android:layout_marginRight="10dp"
+		        android:layout_weight="3"
+		        android:gravity="right|center"
+		        android:text="@string/not_set"
+		        android:textColor="@color/Gray"
+		        android:textSize="12sp" />
+         </LinearLayout>
+                
+               
+		<View
+             android:layout_width="fill_parent"
+             android:layout_height="1dp"
+             android:layout_margin="5dp"
+             android:background="@color/Gray"/>
+		
+        <LinearLayout 
+	        android:id="@+id/lbl_adventry_viuser"
+            android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:clickable="true"
+	        android:orientation="horizontal">
+                    		
+        <TextView
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_marginTop="5dp"
+	        android:layout_marginBottom="5dp"
+	        android:layout_marginLeft="20dp"
+	        android:layout_weight="2"
+	        android:gravity="left"
+	        android:text="View-User"
+	        android:textColor="@color/DarkBlue"
+	        android:textSize="20sp" />
+            
+         <TextView
+		        android:id="@+id/lbl_adventry_viuservalue"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:layout_marginTop="5dp"
+		        android:layout_marginBottom="5dp"
+		        android:layout_marginRight="10dp"
+		        android:layout_weight="3"
+		        android:gravity="right|center"
+		        android:text="@string/not_set"
+		        android:textColor="@color/Gray"
+		        android:textSize="12sp" />
+         </LinearLayout>
+                
+               
+		<View
+             android:layout_width="fill_parent"
+             android:layout_height="1dp"
+             android:layout_margin="5dp"
+             android:background="@color/Gray"/>
+
+        <LinearLayout 
+	        android:id="@+id/lbl_adventry_privacy"
+            android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:clickable="true"
+	        android:orientation="horizontal">
+                    				
+        <TextView
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_marginTop="5dp"
+	        android:layout_marginBottom="5dp"
+	        android:layout_marginLeft="20dp"
+	        android:layout_weight="2"
+	        android:gravity="left"
+	        android:text="Privacy Profile"
+	        android:textColor="@color/DarkBlue"
+	        android:textSize="20sp" />
+            
+         <TextView
+		        android:id="@+id/lbl_adventry_privacyvalue"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:layout_marginTop="5dp"
+		        android:layout_marginBottom="5dp"
+		        android:layout_marginRight="10dp"
+		        android:layout_weight="3"
+		        android:gravity="right|center"
+		        android:text="@string/not_set"
+		        android:textColor="@color/Gray"
+		        android:textSize="12sp" />
+         </LinearLayout>
+                
+        	    
+<!-- 	    <ListView -->
+<!-- 	        android:id="@+id/listAdvEntry" -->
+<!-- 	        android:layout_width="match_parent" -->
+<!-- 	        android:layout_height="fill_parent" -->
+<!-- 	        android:padding="10dp" -->
+<!-- 	        android:dividerHeight="1.0sp" -->
+<!-- 	        android:divider="@color/Gray" -->
+<!-- 	        android:layout_weight="4" > -->
 	
-	    </ListView>
+<!-- 	    </ListView> -->
 
 	    <Button
 	        android:id="@+id/btn_addEntry"
 	        android:layout_width="match_parent"
-	        android:layout_height="fill_parent"
+	        android:layout_height="35dp"
+	        android:layout_marginLeft="5dp"
+	        android:layout_marginRight="5dp"
+	        android:layout_marginTop="15dp"
 	        android:background="@color/thegarage"
 	        android:text="Add Entry" />
+	    
+	    <Button
+	        android:id="@+id/btn_delEntry"
+	        android:layout_width="match_parent"
+	        android:layout_height="35dp"
+	        android:layout_marginLeft="5dp"
+	        android:layout_marginRight="5dp"
+	        android:layout_marginTop="10dp"
+	        android:background="@color/thegarage"
+	        android:visibility="gone"
+	        android:text="Remove Entry" />
 
 
     </LinearLayout>
