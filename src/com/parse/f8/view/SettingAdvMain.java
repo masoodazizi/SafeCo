@@ -3,6 +3,8 @@ package com.parse.f8.view;
 import com.parse.f8.R;
 import com.parse.f8.R.layout;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,9 +14,11 @@ import android.util.Log;
 //import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -74,6 +78,24 @@ public class SettingAdvMain extends Fragment {
 			
 		});
 		
+		ImageView imgHelp = (ImageView) mainAdvView.findViewById(R.id.image_advmain_help);
+		imgHelp.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+				alertDialog.setTitle("Help");
+				alertDialog.setMessage(getResources().getString(R.string.help_advmain));
+				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+				    new DialogInterface.OnClickListener() {
+				        public void onClick(DialogInterface dialog, int which) {
+				            dialog.dismiss();
+				        }
+				    });
+				alertDialog.show();
+				
+			}
+		});
 				
 		return mainAdvView;
 	}

@@ -73,7 +73,6 @@ public class SettingAdvCoUser extends Fragment {
 	public SettingAdvCoUser() {
 		// Required empty public constructor
 	}
-	// TASK Add radiobutton to choose everyone!
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -123,7 +122,7 @@ public class SettingAdvCoUser extends Fragment {
 				return false;
 			}
 		});
-		setListViewHeightBasedOnChildren(listViewFriends);
+//		setListViewHeightBasedOnChildren(listViewFriends);
 		
 		initWidgets();
 		onSwitchClicked(advCoUserView);
@@ -360,6 +359,8 @@ public class SettingAdvCoUser extends Fragment {
 		if (advSettingPref.getBoolean(userFlag, false)) {
 		
 			rbtnSelective.setChecked(true);
+			txtCoUserAdd.setEnabled(true);
+			btnFriendPicker.setEnabled(true);
 	    	friendsList.addAll(Arrays.asList(advSettingPref.getString(friendsType, "null").split("\\s*,\\s*")));
 	    	listViewFriends.setVisibility(View.VISIBLE);
 			adapter = new ArrayAdapter<String>(getActivity(), 

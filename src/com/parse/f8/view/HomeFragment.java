@@ -69,7 +69,7 @@ public class HomeFragment extends Fragment {
 	}
 	
 	// FIXMED homeView gets inflated earlier than loading data from Parse and does not show them!
-	// FIXME Implement Scenarios and test functionality!
+	// FIXMED Implement Scenarios and test functionality!
 	
 	@Override
 	public View onCreateView(LayoutInflater inflator, ViewGroup container,
@@ -79,7 +79,7 @@ public class HomeFragment extends Fragment {
 		newsFeedLoading = (ProgressBar) homeView.findViewById(R.id.progressBar_home);
 		
 //		ownerId = fetchUserInfo("fbId");
-		ownerId = fetchUserInfo("firstName"); // FIXME fbId should be replaced!
+		ownerId = fetchUserInfo("firstName"); // TASK fbId should be replaced!
 		
 		fetchNewsFeedList();
 		
@@ -127,7 +127,7 @@ public class HomeFragment extends Fragment {
 						String timeStr0Tag = post.getString("timeL0");
 						String locTag = post.getString("locL0");
 //						String userId = post.getString("userId");
-						String userId = post.getString("owner"); // FIXME userId should be replaced!
+						String userId = post.getString("owner"); // TASK userId should be replaced!
 						List<String> friendIdList = post.getList("friends");
 						ParseGeoPoint locGeoTag = (ParseGeoPoint) post.get("locGeo");
 						
@@ -167,7 +167,7 @@ public class HomeFragment extends Fragment {
 	private void checkPrivacyPreferences(final String userId, final ParseObject post) {
 		
 		ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_SIMPLE_PRIVACY_CLASS);
-		query.whereEqualTo("user", userId); // FIXME "user" shoud be replaced by "userId"!
+		query.whereEqualTo("user", userId); // TASK "user" shoud be replaced by "userId"!
 		List<ParseObject> userObj=null;
 		try {
 			userObj = query.find();
@@ -214,7 +214,7 @@ public class HomeFragment extends Fragment {
 											final Date timeTag, final ParseGeoPoint locGeoTag, final ParseObject post) {
 		
 		ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_ADV_PRIVACY_CLASS);
-		query.whereEqualTo("user", userId); // FIXME "user" shoud be replaced by "userId"!
+		query.whereEqualTo("user", userId); // TASK "user" shoud be replaced by "userId"!
 		List<ParseObject> userObj=null;
 		try {
 			userObj = query.find();
@@ -252,6 +252,7 @@ public class HomeFragment extends Fragment {
 			        		
 			        		List<String> coUserIdList = user.getList("coUserIds");
 			        		List<String> viUserIdList = user.getList("viUserIds");
+			        		String timeDayPart = user.getString("timeDayPart");
 			        		String timeStart = user.getString("timeStart2");
 			        		String timeEnd = user.getString("timeEnd2");
 			        		int dayOfWeek = user.getInt("dayOfWeek");
@@ -306,7 +307,6 @@ public class HomeFragment extends Fragment {
 		
 				        			Boolean dayFlag = false;
 				        			int dayTag = timeCal.get(Calendar.DAY_OF_WEEK);
-				        			// FIXME Specific time is not considered!!!
 				        			if(dayOfWeek == 9) {
 				        				dayFlag = true;
 				        			}
@@ -317,7 +317,10 @@ public class HomeFragment extends Fragment {
 				        			}
 				        			else if (dayOfWeek == 10) {
 				        				String exactDate = user.getString("exactDate");
-				        				// FIXME Specify the exact day!
+				        				if(dateEqual(timeCal, exactDate)) {
+				        					dayFlag = true;
+				        				}
+				        				// FIXMED Specify the exact day!
 				        			}
 				        			else {
 				        				if (dayOfWeek == dayTag) {
@@ -325,12 +328,16 @@ public class HomeFragment extends Fragment {
 				        				}
 				        			}
 				        			
-				        			Date time1 = getDate(timeCal, timeStart);
-				        			Date time2 = getDate(timeCal, timeEnd);
 				        			if (dayFlag) {
-					        			if (timeTag.after(time1) && timeTag.before(time2)) {
-					        				
+					        			if (timeDayPart.equals("allday")) {
 					        				timeFlag = true;
+					        			}
+					        			else {
+						        			Date time1 = getDate(timeCal, timeStart);
+						        			Date time2 = getDate(timeCal, timeEnd);
+						        			if (timeTag.after(time1) && timeTag.before(time2)) {
+						        				timeFlag = true;
+						        			}
 					        			}
 				        			}
 			        			} else {
@@ -377,6 +384,14 @@ public class HomeFragment extends Fragment {
 //		        
 //			}
 //		});
+	}
+	
+	private Boolean dateEqual(Calendar calDate, String strDate) {
+		
+		String[] dateElements = strDate.split("\\s*/\\s*");
+		return (Integer.parseInt(dateElements[0]) == calDate.get(Calendar.DAY_OF_MONTH)) &&
+				(Integer.parseInt(dateElements[1])-1 == calDate.get(Calendar.MONTH)) &&
+				(Integer.parseInt(dateElements[2]) == calDate.get(Calendar.YEAR));
 	}
 	
 	private void setPrivacyPrefs(ParseObject user, String userId) {

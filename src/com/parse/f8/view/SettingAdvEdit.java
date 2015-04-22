@@ -72,12 +72,13 @@ public class SettingAdvEdit extends Fragment {
 			Toast.makeText(getActivity().getApplicationContext(), "Error: The user does not exist! Please sign in again.", Toast.LENGTH_SHORT).show();
 		}
 		
-		
+		// FIXMED Load data from Parse DOUBLE!
 		
 		return advEditView;
 	}
 
 	private void fetchRestrictedList() {
+		
 		
 		advItemsLoading.setVisibility(View.VISIBLE);
 		ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_ADV_PRIVACY_CLASS);
@@ -105,6 +106,7 @@ public class SettingAdvEdit extends Fragment {
 					
 					} else {
 						
+						advItemsList.clear();
 						for (ParseObject advItemObj : advList) {
 							
 							// Check items in Restricted List one by one
@@ -273,6 +275,8 @@ public class SettingAdvEdit extends Fragment {
 		super.onResume();
 	}
 }
+
+
 
 class AdvItemsListAdapter extends BaseAdapter {
 

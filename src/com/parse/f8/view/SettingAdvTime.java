@@ -66,8 +66,8 @@ public class SettingAdvTime extends Fragment {
 	public SettingAdvTime() {
 		// Required empty public constructor
 	}
-	// FIXME Check input data validation!
-	// FIXME Add Whole day and put it as default, also put everyday as default
+	// TASK Check input data validation!
+	// FIXMED Add Whole day and put it as default, also put everyday as default
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -149,6 +149,13 @@ public class SettingAdvTime extends Fragment {
 		        case -1:
 		          Log.d("MyDebug", "All Choices cleared!");
 		          break;
+		        case R.id.rbtn_advTime_allday:
+//		          Log.d("MyDebug", "Chose rbtn_advTime_wholeday");
+		          enableTimePickers(v, false);
+		          saveAdvSettingPref("timeDayPart", "allday");
+		          saveAdvSettingPref("timeStart", "0:0");
+		          saveAdvSettingPref("timeEnd", "23:59");
+		          break;
 		        case R.id.rbtn_advTime_mornings:
 		          Log.d("MyDebug", "Chose rbtn_advTime_mornings");
 		          enableTimePickers(v, false);
@@ -157,28 +164,28 @@ public class SettingAdvTime extends Fragment {
 		          saveAdvSettingPref("timeEnd", "10:0");
 		          break;
 		        case R.id.rbtn_advTime_afternoons:
-		          Log.d("MyDebug", "Chose rbtn_advTime_afternoons");
+//		          Log.d("MyDebug", "Chose rbtn_advTime_afternoons");
 		          enableTimePickers(v, false);
 		          saveAdvSettingPref("timeDayPart", "afternoons");
 		          saveAdvSettingPref("timeStart", "12:0");
 		          saveAdvSettingPref("timeEnd", "15:0");
 		          break;
 		        case R.id.rbtn_advTime_evenings:
-		          Log.d("MyDebug", "Chose rbtn_advTime_evenings");
+//		          Log.d("MyDebug", "Chose rbtn_advTime_evenings");
 		          enableTimePickers(v, false);
 		          saveAdvSettingPref("timeDayPart", "evenings");
 		          saveAdvSettingPref("timeStart", "18:0");
 		          saveAdvSettingPref("timeEnd", "23:0");
 		          break;
 		        case R.id.rbtn_advTime_nights:
-		          Log.d("MyDebug", "Chose rbtn_advTime_nights");
+//		          Log.d("MyDebug", "Chose rbtn_advTime_nights");
 		          enableTimePickers(v, false);
 		          saveAdvSettingPref("timeDayPart", "nights");
 		          saveAdvSettingPref("timeStart", "0:0");
 		          saveAdvSettingPref("timeEnd", "6:0");
 		          break;
 		        case R.id.rbtn_advTime_between:
-		          Log.d("MyDebug", "Chose rbtn_advTime_between");
+//		          Log.d("MyDebug", "Chose rbtn_advTime_between");
 		          enableTimePickers(v, true);
 		          saveAdvSettingPref("timeDayPart", "slot");
 		          advTimePickerListener(v);
@@ -472,6 +479,10 @@ public class SettingAdvTime extends Fragment {
 			
 			String timeDayPart = advSettingPref.getString("timeDayPart", null);
 			switch (timeDayPart) {
+			case "allday":
+				RadioButton rbtnallday = (RadioButton) v.findViewById(R.id.rbtn_advTime_allday);
+				rbtnallday.setChecked(true);
+				break;
 			case "mornings":
 				RadioButton rbtnMornings = (RadioButton) v.findViewById(R.id.rbtn_advTime_mornings);
 				rbtnMornings.setChecked(true);

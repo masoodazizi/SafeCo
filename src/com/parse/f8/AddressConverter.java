@@ -32,6 +32,9 @@ public class AddressConverter {
 				addresses = geocoder.getFromLocation(latitude, longitude, 1);
 			} catch (IOException e) {
 				e.printStackTrace();
+				Log.d("AddrCnvr", "The address is Null");
+				firstAddress = null;
+				return;
 			}
             firstAddress = addresses.get(0);
             maxIndex = firstAddress.getMaxAddressLineIndex();

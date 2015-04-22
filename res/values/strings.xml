@@ -124,7 +124,10 @@
     <string name="help_couser">You choose friends with whom you do not want your privacy get disclosed</string>
     <string name="help_viuser">Select friends who are restricted to view posts you are tagged in</string>
     <string name="help_privacy">Specify the privacy level you want to apply on restricted items</string>
+    <string name="help_adventry">There are 5 items can be configured to add a new entry.\nYou have to set at least one of the first four items as well as last item. Privacy profile applies users privacy on the other items which are set. The default profile is "Normal"</string>
+    <string name="help_advmain">In Advanced settings, you are able to add a new entry in the list, or edit/remove existing entries.</string>
     <string name="noAdvItemInfo">There is no restricted list defined in your profile. If you need to make a restricted Item in your privacy preferences, please go back and add a new item.</string>
     <string name="not_set">&lt;Not Set&gt;</string>
+    <string name="pick_friend">In this version of app, you should type the name of friend by such a pattern "Bob, Alice".\nIn the further versions you will be able to pick friends via Facebook API.</string>
 
 </resources>

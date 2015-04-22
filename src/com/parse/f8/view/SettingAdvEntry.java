@@ -15,6 +15,7 @@ import com.parse.f8.R.layout;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -27,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -69,6 +71,12 @@ public class SettingAdvEntry extends Fragment {
 	public SettingAdvEntry() {
 		// Required empty public constructor
 	}
+	// FIXME Data reload problem. which event runs, when the fragment is appeared again?
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -101,6 +109,7 @@ public class SettingAdvEntry extends Fragment {
 		if (editMode) {
 			buttonAddEntry.setText("Edit Entry");
 			buttonRemoveEntry.setVisibility(View.VISIBLE);
+			setItemValues(advEntryView);
 		} else {
 			initialiazeFlags();
 		}
@@ -191,6 +200,26 @@ public class SettingAdvEntry extends Fragment {
 			public void onClick(View v) {
 				
 				removeEntryDialog();
+			}
+		});
+		
+		
+		ImageView imgHelp = (ImageView) advEntryView.findViewById(R.id.image_adventry_help);
+		imgHelp.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+				alertDialog.setTitle("Help");
+				alertDialog.setMessage(getResources().getString(R.string.help_adventry));
+				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+				    new DialogInterface.OnClickListener() {
+				        public void onClick(DialogInterface dialog, int which) {
+				            dialog.dismiss();
+				        }
+				    });
+				alertDialog.show();
+				
 			}
 		});
 		
@@ -343,6 +372,53 @@ public class SettingAdvEntry extends Fragment {
 		return userInfo;
 	}
 
+	private void setItemValues(View v) {
+
+		SharedPreferences pref = getActivity().getSharedPreferences(ADV_SETTING_PREFS, 0);
+		
+		if (pref.getBoolean("timeFlag", false)) {
+			TextView txtTimeValue = (TextView) v.findViewById(R.id.lbl_adventry_timevalue);
+			String timePeriod = getDayofWeek(pref.getInt("dayOfWeek",0));
+			String timeDayPart = "";
+			if (pref.getString("timeDayPart", "null").equals("slot")) {
+				timeDayPart = pref.getString("timeStart", "null") + "-" + pref.getString("timeEnd", "null");
+			} else {
+				timeDayPart = pref.getString("timeDayPart", "null");
+			}
+			String timeValue = timePeriod + ". " + timeDayPart;
+			txtTimeValue.setText(timeValue);
+			txtTimeValue.setTextColor(Color.BLACK);
+		}
+		
+		if (pref.getBoolean("locationFlag", false)) {
+			TextView txtLocValue = (TextView) v.findViewById(R.id.lbl_adventry_locvalue);
+			String locValue = pref.getString("locationAddr", "null");
+			txtLocValue.setText(locValue);
+			txtLocValue.setTextColor(Color.BLACK);
+		}
+		
+		if (pref.getBoolean("coUserFlag", false)) {
+			TextView txtCoUserValue = (TextView) v.findViewById(R.id.lbl_adventry_couservalue);
+			String couserValue = pref.getString("coUserIds", "null");
+			txtCoUserValue.setText(couserValue);
+		}
+		
+		if (pref.getBoolean("viUserFlag", false)) {
+			TextView txtViUserValue = (TextView) v.findViewById(R.id.lbl_adventry_viuservalue);
+			String viuserValue = pref.getString("viUserIds", "null");
+			txtViUserValue.setText(viuserValue);
+			txtViUserValue.setTextColor(Color.BLACK);
+		}
+		
+		TextView txtProfileValue = (TextView) v.findViewById(R.id.lbl_adventry_privacyvalue);
+		String profileValue = pref.getString("profile", "normal") + ": " + 
+						privacyLvlToString(pref.getInt("identityLvl", 0)) + "," +
+						privacyLvlToString(pref.getInt("timeLvl", 0)) + "," +
+						privacyLvlToString(pref.getInt("locationLvl", 0));
+		txtProfileValue.setText(profileValue);
+		txtProfileValue.setTextColor(Color.BLACK);
+	}
+	
 	
 	private void initialiazeFlags() {
 		
@@ -368,6 +444,59 @@ public class SettingAdvEntry extends Fragment {
 			falseAllFlags = true;
 		}
 		return falseAllFlags;
+	}
+	
+private String getDayofWeek(int dayOfWeek) {
+		
+		String dayStr = "N/A";
+		switch (dayOfWeek) {
+		case 1:
+			dayStr = "Sun";
+			break;
+		case 2:
+			dayStr = "Mon";
+			break;
+		case 3:
+			dayStr = "Tue";
+			break;
+		case 4:
+			dayStr = "Wed";
+			break;
+		case 5:
+			dayStr = "Thu";
+			break;
+		case 6:
+			dayStr = "Fri";
+			break;
+		case 7:
+			dayStr = "Sat";
+			break;
+		case 8:
+			dayStr = "Wknd";
+			break;
+		case 9:
+			dayStr = "All";
+			break;
+		case 10:
+			dayStr = "Date";
+			break;
+		default:
+			break;
+		}
+		return dayStr;
+	}
+	
+	private String privacyLvlToString(int level) {
+		
+		if (level == 2) {
+			return "high";
+		}
+		else if (level == 1) {
+			return "med";
+		}
+		else {
+			return "low";
+		}
 	}
 }
 

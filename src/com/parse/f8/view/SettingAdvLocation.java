@@ -58,7 +58,7 @@ public class SettingAdvLocation extends Fragment {
 		// Required empty public constructor
 	}
 	// TASK_NOT_NEEDED Add radiobutton to have an option to show first level generalization
-	// FIXME location markers and text remains despite changing the fragment!
+	// FIXMED? location markers and text remains despite changing the fragment!
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -127,7 +127,7 @@ public class SettingAdvLocation extends Fragment {
 		String provider = locationManager.getBestProvider(criteria, true);
 		Location currentLoc = locationManager.getLastKnownLocation(provider);
 		if (currentLoc != null) {
-			// FIXME currentLoc returns NULL!!!
+			// FIXMED? currentLoc returns NULL!!!
 			double latitude = currentLoc.getLatitude();
 			double longitude = currentLoc.getLongitude();
 			latLng = new LatLng(latitude, longitude);

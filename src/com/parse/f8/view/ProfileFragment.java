@@ -13,10 +13,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -76,8 +78,8 @@ public class ProfileFragment extends Fragment {
 	public ProfileFragment() {
 		
 	}
-	// FIXME Add news feed list of users post to his own profile with removing feature
-	// FIXME Add selecting users from facebook list
+	// TASK Add news feed list of users post to his own profile with removing feature
+	// TASK Add selecting users from facebook list
 	
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -186,6 +188,26 @@ public class ProfileFragment extends Fragment {
 					locationL1 = addressConvertor.generalizeFirstLevel();
 					locationL2 = addressConvertor.generalizeSecondLevel();
 				}
+			}
+		});
+		
+		
+		ImageView imgPickfriend = (ImageView) profileView.findViewById(R.id.image_pick_friend);
+		imgPickfriend.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+				alertDialog.setTitle("Information");
+				alertDialog.setMessage(getResources().getString(R.string.pick_friend));
+				alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+				    new DialogInterface.OnClickListener() {
+				        public void onClick(DialogInterface dialog, int which) {
+				            dialog.dismiss();
+				        }
+				    });
+				alertDialog.show();
+				
 			}
 		});
 		

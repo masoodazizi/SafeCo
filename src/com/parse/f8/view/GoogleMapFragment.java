@@ -139,7 +139,7 @@ public class GoogleMapFragment extends Fragment {
 		String provider = locationManager.getBestProvider(criteria, true);
 		Location currentLoc = locationManager.getLastKnownLocation(provider);
 		if (currentLoc != null) {
-			// FIXME currentLoc returns NULL!!!
+			// FIXMED? currentLoc returns NULL!!!
 			double latitude = currentLoc.getLatitude();
 			double longitude = currentLoc.getLongitude();
 			latLng = new LatLng(latitude, longitude);
